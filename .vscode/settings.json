@@ -1,0 +1,13 @@
+{
+    "liveServer.settings.multiRootWorkspaceName": "WEGO_lightdance",
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "deque": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "array": "cpp",
+        "vector": "cpp",
+        "initializer_list": "cpp"
+    }
+}

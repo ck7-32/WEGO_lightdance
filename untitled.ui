@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1080</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QComboBox" name="color0">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>850</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color1">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>880</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part0">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>850</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part1">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>880</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color3">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>940</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part2">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>910</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part3">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>940</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>910</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color5">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>1000</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part4">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>970</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part5">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>1000</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color4">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>970</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color11">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>1000</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color7">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>880</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color8">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>910</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part11">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>1000</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part6">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>850</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part10">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>970</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part8">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>910</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part9">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>940</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="part7">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>880</y>
+      <width>58</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color9">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>940</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color10">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>970</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="color6">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>850</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="save">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>1000</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>儲存</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="newframe">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>880</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>新增key frame</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="delframe">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>910</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>刪除key frame</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="gettime">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>850</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>get time line</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="html" native="true">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>1191</width>
+      <height>831</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowtime">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>860</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowframe">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>890</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowframetime">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>920</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowframetime_2">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>860</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>當前時間</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowframetime_3">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>890</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>當前幀</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowframetime_4">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>920</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>幀開始時間</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="colorname">
+    <property name="geometry">
+     <rect>
+      <x>1240</x>
+      <y>30</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="colors">
+    <property name="geometry">
+     <rect>
+      <x>1380</x>
+      <y>30</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addcolor">
+    <property name="geometry">
+     <rect>
+      <x>1240</x>
+      <y>60</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>add color</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="delcolor">
+    <property name="geometry">
+     <rect>
+      <x>1540</x>
+      <y>30</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>delete color</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addcolor_2">
+    <property name="geometry">
+     <rect>
+      <x>1380</x>
+      <y>60</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>show color</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1540</x>
+      <y>70</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="choosedancer">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>1000</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>choose dancer</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>850</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dancernow">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>880</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>dancer</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1920</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

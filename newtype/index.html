@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.9.0/system.min.js"></script>
+    <script src="qwebchannel.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    <audio id="myAudio" src="成發(final).mp3" controls></audio>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <script>
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+            window.handler = channel.objects.handler;
+        });
+
+        function getCurrentTime() {
+            var currentTime = audio.currentTime;
+            handler.receiveTime(currentTime);
+        }
+    </script>
+</body>
+</html>

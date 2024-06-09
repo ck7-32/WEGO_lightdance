@@ -7,6 +7,9 @@
             padding: 10px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.9.0/system.min.js"></script>
+    <script src="qwebchannel.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             new QWebChannel(qt.webChannelTransport, function(channel) {
@@ -25,14 +28,11 @@
             }
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.9.0/system.min.js"></script>
-    <script src="qwebchannel.js"></script>
 </head>
 <body>
     <center>
-        <canvas id="myCanvas" width="800" height="500" style="background-color: #000000" autoplay></canvas>
-        <audio id="myAudio" controls autoplay style="width: 800px;">
+        <canvas id="myCanvas" width="900" height="450" style="background-color: #000000" autoplay></canvas>
+        <audio id="myAudio" controls autoplay style="width: 900px;">
             <source src="成發(final).mp3" type="audio/mp3">
         </audio>
     </center>

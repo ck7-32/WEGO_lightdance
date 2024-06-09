@@ -25,7 +25,10 @@ class MainWindow(QtWidgets.QWidget):
 
         # Use relative path to load the HTML file
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.browser.setUrl(QtCore.QUrl.fromLocalFile(os.path.join(current_dir, 'index_new.html')))
+        html_file_path = os.path.join(current_dir, 'index_new.html')
+        
+        # 打印路徑以檢查是否正確
+        print(f"HTML file path: {html_file_path}")
 
         self.button = QtWidgets.QPushButton('Get Current Time', self)
         self.button.move(350, 550)
@@ -33,6 +36,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def get_current_time(self):
         self.browser.page().runJavaScript('getCurrentTime();')
+        print
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

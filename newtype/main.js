@@ -106,16 +106,26 @@ function getTimeSegmentIndex(timeSegments, currentTime) {
   }
   return right;
 }
-function draw_time(time)
-{
-  console.log(time);
+function draw_time(time, frame) {
+  console.log("Time:", time);
+  console.log("Frame:", frame);
+  
   ctx.font = "20px Monospace";
   ctx.fillStyle = "#FFFFFF";
+  
+  // 繪製 frame
   ctx.fillText(
-      time,
-      0,
-      canvas.height-20
-      );
+    frame,
+    0,
+    canvas.height - 40
+  );
+  
+  // 繪製 time
+  ctx.fillText(
+    time,
+    0,
+    canvas.height - 20
+  );
 }
 
 function animate(darr, canvas, ctx, startTime)
@@ -140,7 +150,8 @@ function animate(darr, canvas, ctx, startTime)
 
   for(var i=0; i<N_DANCER; i++)
     darr[i].draw(time);
-  draw_time(time);
+  segment=(getTimeSegmentIndex(frametime,time*1000))
+  draw_time(time,segment);
 
   // request new frame
   requestAnimFrame(function() {

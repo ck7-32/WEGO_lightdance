@@ -53,6 +53,12 @@ window.addEventListener("keydown", (e) => {
   else if(e.keyCode === 39){
     audio.currentTime += 5;
   }
+  else if(e.keyCode === 49){
+    audio.currentTime += 1;
+  }
+  else if(e.keyCode === 50){
+    audio.currentTime += 1;
+  }
 })
 
 function getPos(idx, time)

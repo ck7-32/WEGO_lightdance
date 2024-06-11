@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1429</width>
-    <height>782</height>
+    <height>807</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -691,6 +691,29 @@
     </property>
     <property name="text">
      <string>load this preset</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="settime">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>660</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="settimebtn">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>700</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>載入時間(秒)</string>
     </property>
    </widget>
   </widget>

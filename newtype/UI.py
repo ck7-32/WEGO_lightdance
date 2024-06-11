@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1429, 782)
+        MainWindow.resize(1429, 807)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.color0 = QtWidgets.QComboBox(parent=self.centralwidget)
@@ -211,6 +211,12 @@ class Ui_MainWindow(object):
         self.loadpreset = QtWidgets.QPushButton(parent=self.centralwidget)
         self.loadpreset.setGeometry(QtCore.QRect(840, 610, 111, 28))
         self.loadpreset.setObjectName("loadpreset")
+        self.settime = QtWidgets.QLineEdit(parent=self.centralwidget)
+        self.settime.setGeometry(QtCore.QRect(570, 660, 113, 22))
+        self.settime.setObjectName("settime")
+        self.settimebtn = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.settimebtn.setGeometry(QtCore.QRect(570, 700, 93, 28))
+        self.settimebtn.setObjectName("settimebtn")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1429, 25))
@@ -259,3 +265,4 @@ class Ui_MainWindow(object):
         self.save_3.setText(_translate("MainWindow", "delete this preset"))
         self.nowframetime_6.setText(_translate("MainWindow", "presets"))
         self.loadpreset.setText(_translate("MainWindow", "load this preset"))
+        self.settimebtn.setText(_translate("MainWindow", "載入時間(秒)"))

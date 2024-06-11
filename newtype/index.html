@@ -1,23 +1,48 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
+    <style>
+        body {
+            margin: 0px;
+            padding: 10px;
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.9.0/system.min.js"></script>
     <script src="qwebchannel.js"></script>
-    <script src="main.js"></script>
-</head>
-<body>
-    <audio id="myAudio" src="成發(final).mp3" controls></audio>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
     <script>
-        new QWebChannel(qt.webChannelTransport, function(channel) {
-            window.handler = channel.objects.handler;
+        document.addEventListener('DOMContentLoaded', function() {
+            new QWebChannel(qt.webChannelTransport, function(channel) {
+                window.handler = channel.objects.handler;
+                console.log('QWebChannel initialized');
+            });
         });
 
         function getCurrentTime() {
-            var currentTime = audio.currentTime;
-            handler.receiveTime(currentTime);
+            var currentTime = document.getElementById('myAudio').currentTime;
+            console.log('Current Time:', currentTime);
+            if (typeof handler !== 'undefined') {
+                handler.receiveTime(currentTime);
+            } else {
+                console.error('Handler is not defined');
+            }
         }
+        function setTime(time) {
+        var video = document.getElementById('myAudio');  // 假設你的 video 元素 id 是 'video'
+        video.currentTime = time;
+    }
+
     </script>
+</head>
+<body>
+    <center>
+        <canvas id="myCanvas" width="900" height="450" style="background-color: #000000" autoplay></canvas>
+        <audio id="myAudio" controls autoplay style="width: 900px;">
+            <source src="成發(final).mp3" type="audio/mp3">
+        </audio>
+    </center>
+    <script type="text/javascript" src="data.js" charset="utf-8"></script>
+    <script type="text/javascript" src="pos.js" charset="utf-8"></script>
+    <script type="text/javascript" src="main.js" charset="utf-8"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel
 from UI import Ui_MainWindow
 import sys
 import os
+import json
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
     def receiveTime(self, time):
@@ -43,25 +44,39 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().setWebChannel(self.channel)
         #載入網頁
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        html_file_path = os.path.join(current_dir, 'index_new.html')
+        html_file_path = os.path.join(current_dir, 'index.html')
         # 打印路徑以檢查是否正確
         print(f"HTML file path: {html_file_path}")
         self.html.setUrl(QtCore.QUrl.fromLocalFile(html_file_path))
 
         #按鈕功能綁定
         self.ui.gettime.clicked.connect(self.get_current_time)
-
+        self.ui.settimebtn.clicked.connect(self.settime)
 
         #變數宣告
         self.time=0
-
+#取得時間
     def get_current_time(self):
         self.html.page().runJavaScript('getCurrentTime();')
-
+#收到時間碼
     def receivetime(self,time):
         self.time=time
         self.ui.nowtime.setText(f"{time}")
+        self.ui.settime.setText(f"{time}")
+    
 
+
+#載入時間
+    def settime(self):
+        time=self.ui.settime.text()
+        print(time)
+        self.html.page().runJavaScript(f"setTime({time});")
+
+#快捷鍵
+    def keyPressEvent(self, event):
+        keycode = event.key()             
+        if keycode == 82:
+            self.get_current_time()
 
 
 

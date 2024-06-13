@@ -109,11 +109,14 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.settime.setText(f"{time}")
         self.nowframe=get_time_index(self.data["frametimes"],self.time*1000)
         self.ui.nowframe.setText(f"{self.nowframe}")
+        self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
+        self.loaddancer()
 #將舞者載入
     def loaddancer(self):
         self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])
         for i in range(len(self.setting["dancers"][self.dancerN])):
             self.partlable[i].setText(self.setting["dancers"][self.dancerN][i])
+        self.loadcolor()
 
 
 #選擇舞者選單被按下
@@ -138,8 +141,12 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         if keycode == 82:
             self.get_current_time()
 
-#載入舞者
-
+#載入光效
+    def loadcolor(self):
+        for i in range(len(self.setting["dancers"][self.dancerN])):
+            self.partcolors[i].clear()
+            self.partcolors[i].addItems(self.data["colornames"])
+            self.partcolors[i].setCurrentIndex(self.data["frames"][self.dancerN][self.nowframe][i])
     
 
 

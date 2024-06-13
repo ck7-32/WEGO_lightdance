@@ -3,6 +3,11 @@ from UI import Ui_MainWindow
 import sys
 import os
 import json
+
+
+settingjson_path="setting.json"
+
+
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
     def receiveTime(self, time):
@@ -26,6 +31,14 @@ def getframe(time_segments, current_time):
 
     return right
 
+def loadjson(path):
+    with open(path, 'r', encoding='utf-8') as file:
+        out = json.load(file)
+    return out
+def savejson(path,data):
+    with open(path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
+
 class MainWindow_controller(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -36,6 +49,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.resize(930, 510)
         # 確保調用 setup_control 方法
         self.setup_control()
+#初始化
     def setup_control(self):
         #建立嵌入網頁視窗物件
         self.channel = QtWebChannel.QWebChannel()
@@ -52,9 +66,16 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         #按鈕功能綁定
         self.ui.gettime.clicked.connect(self.get_current_time)
         self.ui.settimebtn.clicked.connect(self.settime)
-
+        #載入setting.json
+        
+        self.setting =loadjson(settingjson_path)
+        self.color=self.setting["color"]
+        self.colornames=self.setting["colornames"]
+        self.dancers=
         #變數宣告
         self.time=0
+#刷新視窗
+        
 #取得時間
     def get_current_time(self):
         self.html.page().runJavaScript('getCurrentTime();')
@@ -66,17 +87,24 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     
 
 
-#載入時間
+#設定html視窗內撥放進度的時間
     def settime(self):
         time=self.ui.settime.text()
         print(time)
         self.html.page().runJavaScript(f"setTime({time});")
-
+#儲存setting.json
+    def savesetting(self):
+        savejson(settingjson_path,self.setting)
+        
 #快捷鍵
     def keyPressEvent(self, event):
         keycode = event.key()             
         if keycode == 82:
             self.get_current_time()
+
+#載入舞者
+
+    
 
 
 

@@ -6,6 +6,7 @@ import json
 
 
 settingjson_path="setting.json"
+datajson_path="data.json"
 
 
 class CallHandler(QtCore.QObject):
@@ -30,7 +31,6 @@ def getframe(time_segments, current_time):
             right = mid - 1
 
     return right
-
 def loadjson(path):
     with open(path, 'r', encoding='utf-8') as file:
         out = json.load(file)
@@ -38,7 +38,22 @@ def loadjson(path):
 def savejson(path,data):
     with open(path, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
+def get_time_index(time_segments, current_time):
+    left = 0
+    right = len(time_segments) - 1
 
+    while left <= right:
+        mid = (left + right) // 2
+        segment = time_segments[mid]
+
+        if current_time >= segment:
+            # If current time is greater than or equal to the segment time, continue searching in the right half
+            left = mid + 1
+        else:
+            # If current time is less than the segment time, continue searching in the left half
+            right = mid - 1
+
+    return right
 class MainWindow_controller(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -61,19 +76,27 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         html_file_path = os.path.join(current_dir, 'index.html')
         # 打印路徑以檢查是否正確
         print(f"HTML file path: {html_file_path}")
-        self.html.setUrl(QtCore.QUrl.fromLocalFile(html_file_path))
-
-        #按鈕功能綁定
-        self.ui.gettime.clicked.connect(self.get_current_time)
-        self.ui.settimebtn.clicked.connect(self.settime)
         #載入setting.json
         
         self.setting =loadjson(settingjson_path)
-        self.color=self.setting["color"]
-        self.colornames=self.setting["colornames"]
-        self.dancers=
+        self.data=loadjson(datajson_path)       
+        self.html.setUrl(QtCore.QUrl.fromLocalFile(html_file_path))
+
+        #按鈕功能綁定 初始化
+        self.ui.gettime.clicked.connect(self.get_current_time)
+        self.ui.settimebtn.clicked.connect(self.settime)
+        self.ui.Dancers.addItems(self.setting["dancersname"])
+        self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
+
         #變數宣告
         self.time=0
+        self.dancerN=0
+        self.nowframe=0
+        self.partcolors=[self.ui.color0,self.ui.color1,self.ui.color2,self.ui.color3,self.ui.color4,self.ui.color5,self.ui.color6,self.ui.color7,self.ui.color8,self.ui.color9,self.ui.color10,self.ui.color11]
+        self.partlable=[self.ui.part0,self.ui.part1,self.ui.part2,self.ui.part3,self.ui.part4,self.ui.part5,self.ui.part6,self.ui.part7,self.ui.part8,self.ui.part9,self.ui.part10,self.ui.part11]
+        self.loaddancer()
+        #self.loadcolor()
+
 #刷新視窗
         
 #取得時間
@@ -84,6 +107,19 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.time=time
         self.ui.nowtime.setText(f"{time}")
         self.ui.settime.setText(f"{time}")
+        self.nowframe=get_time_index(self.data["frametimes"],self.time*1000)
+        self.ui.nowframe.setText(f"{self.nowframe}")
+#將舞者載入
+    def loaddancer(self):
+        self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])
+        for i in range(len(self.setting["dancers"][self.dancerN])):
+            self.partlable[i].setText(self.setting["dancers"][self.dancerN][i])
+
+
+#選擇舞者選單被按下
+    def dancerselected(self):
+        self.dancerN=self.ui.Dancers.currentIndex()
+        self.loaddancer()
     
 
 

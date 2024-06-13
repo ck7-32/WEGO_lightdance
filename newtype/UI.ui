@@ -293,7 +293,7 @@
    <widget class="QPushButton" name="save">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>750</x>
       <y>700</y>
       <width>93</width>
       <height>28</height>
@@ -306,7 +306,7 @@
    <widget class="QPushButton" name="newframe">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>750</x>
       <y>580</y>
       <width>93</width>
       <height>28</height>
@@ -319,7 +319,7 @@
    <widget class="QPushButton" name="delframe">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>750</x>
       <y>610</y>
       <width>93</width>
       <height>28</height>
@@ -332,7 +332,7 @@
    <widget class="QPushButton" name="gettime">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>750</x>
       <y>550</y>
       <width>93</width>
       <height>28</height>
@@ -355,7 +355,7 @@
    <widget class="QLabel" name="nowtime">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>950</x>
       <y>560</y>
       <width>111</width>
       <height>21</height>
@@ -374,7 +374,7 @@
    <widget class="QLabel" name="nowframe">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>950</x>
       <y>590</y>
       <width>121</width>
       <height>21</height>
@@ -393,7 +393,7 @@
    <widget class="QLabel" name="nowframetime">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>980</x>
       <y>620</y>
       <width>121</width>
       <height>21</height>
@@ -412,7 +412,7 @@
    <widget class="QLabel" name="nowframetime_2">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>850</x>
       <y>560</y>
       <width>121</width>
       <height>21</height>
@@ -431,7 +431,7 @@
    <widget class="QLabel" name="nowframetime_3">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>850</x>
       <y>590</y>
       <width>121</width>
       <height>21</height>
@@ -450,7 +450,7 @@
    <widget class="QLabel" name="nowframetime_4">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>850</x>
       <y>620</y>
       <width>121</width>
       <height>21</height>
@@ -548,7 +548,7 @@
      <string>choose dancer</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="Dancers">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -599,7 +599,7 @@
    <widget class="QLabel" name="nowframetime_5">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>1250</x>
       <y>550</y>
       <width>151</width>
       <height>31</height>
@@ -618,7 +618,7 @@
    <widget class="QLineEdit" name="colorname_2">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>1250</x>
       <y>580</y>
       <width>113</width>
       <height>22</height>
@@ -628,7 +628,7 @@
    <widget class="QComboBox" name="presets">
     <property name="geometry">
      <rect>
-      <x>840</x>
+      <x>1120</x>
       <y>580</y>
       <width>80</width>
       <height>22</height>
@@ -638,7 +638,7 @@
    <widget class="QPushButton" name="savepreset">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>1250</x>
       <y>610</y>
       <width>93</width>
       <height>28</height>
@@ -651,7 +651,7 @@
    <widget class="QPushButton" name="save_3">
     <property name="geometry">
      <rect>
-      <x>840</x>
+      <x>1120</x>
       <y>700</y>
       <width>111</width>
       <height>28</height>
@@ -664,7 +664,7 @@
    <widget class="QLabel" name="nowframetime_6">
     <property name="geometry">
      <rect>
-      <x>840</x>
+      <x>1120</x>
       <y>550</y>
       <width>151</width>
       <height>31</height>
@@ -683,7 +683,7 @@
    <widget class="QPushButton" name="loadpreset">
     <property name="geometry">
      <rect>
-      <x>840</x>
+      <x>1120</x>
       <y>610</y>
       <width>111</width>
       <height>28</height>
@@ -696,7 +696,7 @@
    <widget class="QLineEdit" name="settime">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>850</x>
       <y>660</y>
       <width>113</width>
       <height>22</height>
@@ -706,7 +706,7 @@
    <widget class="QPushButton" name="settimebtn">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>850</x>
       <y>700</y>
       <width>93</width>
       <height>28</height>
@@ -723,7 +723,7 @@
      <x>0</x>
      <y>0</y>
      <width>1429</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

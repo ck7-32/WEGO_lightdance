@@ -143,6 +143,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         keycode = event.key()             
         if keycode == 82:
             self.colorchanged()
+            print("r")
 
 #載入光效
     def loadcolor(self):

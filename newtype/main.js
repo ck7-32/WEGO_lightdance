@@ -42,6 +42,9 @@ function fetchDataAndInitialize() {
       console.error('Error fetching data:', error);
     });
 }
+function reloadDataAndRedraw() {
+  fetchDataAndInitialize();
+}
 
 function startAnimation() {
   window.requestAnimFrame = (function(callback) {
@@ -291,22 +294,6 @@ function startAnimation() {
     animate(darr, canvas, ctx, startTime);
   }, 500);
 
-  function reloadDataAndRedraw() {
-    fetchDataAndInitialize();
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for(var i = 0; i < N_DANCER; i++) {
-      for(var j = 0; j < N_PART; j++) {
-        var pos = getPos(i, audio.currentTime + DELAY);
-        darr[i].setBasePos(pos[0], pos[1]);
-      }
-    }
-
-    for(var i = 0; i < N_DANCER; i++) {
-      darr[i].draw(audio.currentTime + DELAY);
-    }
-  }
 }
 
 fetchDataAndInitialize();

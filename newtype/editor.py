@@ -81,12 +81,6 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data=loadjson(datajson_path)       
         self.html.setUrl(QtCore.QUrl.fromLocalFile(html_file_path))
 
-        #按鈕功能綁定 初始化
-        self.ui.gettime.clicked.connect(self.get_current_time)
-        self.ui.settimebtn.clicked.connect(self.settime)
-        self.ui.Dancers.addItems(self.setting["dancersname"])
-        self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
-
         #變數宣告
         self.time=0
         self.dancerN=0
@@ -95,6 +89,13 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.partlable=[self.ui.part0,self.ui.part1,self.ui.part2,self.ui.part3,self.ui.part4,self.ui.part5,self.ui.part6,self.ui.part7,self.ui.part8,self.ui.part9,self.ui.part10,self.ui.part11]
         self.loaddancer()
         #self.loadcolor()
+
+        #按鈕功能綁定 初始化()
+        self.ui.gettime.clicked.connect(self.get_current_time)
+        self.ui.settimebtn.clicked.connect(self.settime)
+        self.ui.Dancers.addItems(self.setting["dancersname"])
+        self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
+        self.ui.save.clicked.connect(self.colorchanged)
 
 #刷新視窗
         
@@ -141,7 +142,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def keyPressEvent(self, event):
         keycode = event.key()             
         if keycode == 82:
-            self.get_current_time()
+            self.colorchanged()
 
 #載入光效
     def loadcolor(self):
@@ -151,7 +152,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             self.partcolors[i].setCurrentIndex(self.data["frames"][self.dancerN][self.nowframe][i])
 #顏色被變更
     def colorchanged(self):
-        pass
+        for i in range(len(self.setting["dancers"][self.dancerN])):
+            self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
+        savejson("data.json",self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
 
 

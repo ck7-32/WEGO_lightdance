@@ -149,7 +149,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             self.partcolors[i].clear()
             self.partcolors[i].addItems(self.data["colornames"])
             self.partcolors[i].setCurrentIndex(self.data["frames"][self.dancerN][self.nowframe][i])
-    
+#顏色被變更
+    def colorchanged(self):
+        pass
 
 
 

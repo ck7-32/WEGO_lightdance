@@ -3,8 +3,6 @@ var N_DANCER = 3;
 
 document.addEventListener('DOMContentLoaded', function() {
   var audioElement = document.getElementById('myAudio');
-
-  // 开始播放音频
   audioElement.play();
 });
 var DELAY = 0.0;
@@ -25,20 +23,19 @@ var BLACK = "#000000";
 var PINK = "#FFC0CB";
 var COLOR=[BLACK,RED,PINK,ORANGE,GREEN,BLUE,PURPLE,WHITE]
 
-function color(c, x)
-{
-  //console.log(x);
+function color(c, x) {
   var percent = (-1) * (1.0 - (x / 255.0));
-  //console.log(percent);
-  return c}
+  return c;
+}
 
 Pos = JSON.parse(Pos);
 alllight = JSON.parse(light);
 frametime = JSON.parse(Data);
+
 window.requestAnimFrame = (function(callback) {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
     function(callback) {
-      window.setTimeout(callback, 1000 );
+      window.setTimeout(callback, 1000);
     };
 })();
 
@@ -61,16 +58,14 @@ window.addEventListener("keydown", (e) => {
   }
 })
 
-function getPos(idx, time)
-{
+function getPos(idx, time) {
   var bx = 0, by = 0;
   var S = Pos[idx].length;
 
   if(S == 0) return [0, 0];
 
   var lb = 0, rb = S-1;
-  while(lb < rb)
-  {
+  while(lb < rb) {
     var mb = (lb + rb + 1) >> 1;
     if(Pos[idx][mb][0] > time)
       rb = mb - 1;
@@ -103,52 +98,28 @@ function getTimeSegmentIndex(timeSegments, currentTime) {
     const segment = timeSegments[mid];
 
     if (currentTime >= segment) {
-      // 如果當前時間大於等於這個區段的時間，繼續在右半部分搜索
       left = mid + 1;
     } else {
-      // 如果當前時間小於這個區段的時間，繼續在左半部分搜索
       right = mid - 1;
     }
   }
   return right;
 }
+
 function draw_time(time, frame) {
-  console.log("Time:", time);
-  console.log("Frame:", frame);
-  
   ctx.font = "20px Monospace";
   ctx.fillStyle = "#FFFFFF";
   
-  // 繪製 frame
-  ctx.fillText(
-    frame,
-    0,
-    canvas.height - 40
-  );
-  
-  // 繪製 time
-  ctx.fillText(
-    time,
-    0,
-    canvas.height - 20
-  );
+  ctx.fillText(frame, 0, canvas.height - 40);
+  ctx.fillText(time, 0, canvas.height - 20);
 }
 
-function animate(darr, canvas, ctx, startTime)
-{
-  // update
-  //var time = ((new Date()).getTime() - startTime) / 1000;
-  
+function animate(darr, canvas, ctx, startTime) {
   var time = audio.currentTime + DELAY;
-
-  // clear
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  for(var i=0; i<N_DANCER; i++)
-  {
-    for(var j=0; j<N_PART; j++)
-    {
-
+  for(var i=0; i<N_DANCER; i++) {
+    for(var j=0; j<N_PART; j++) {
       var pos = getPos(i, time);
       darr[i].setBasePos(pos[0], pos[1]);
     }
@@ -156,29 +127,30 @@ function animate(darr, canvas, ctx, startTime)
 
   for(var i=0; i<N_DANCER; i++)
     darr[i].draw(time);
-  segment=(getTimeSegmentIndex(frametime,time*1000))
-  draw_time(time,segment);
 
-  // request new frame
+  segment = getTimeSegmentIndex(frametime, time * 1000);
+  draw_time(time, segment);
+
   requestAnimFrame(function() {
     animate(darr, canvas, ctx, startTime);
+    getCurrentTime();
   });
 }
 
-function animate_test(dancer, canvas, ctx){
-  ctx.clearRect(0,0, canvas.width, canvas.height);
-  for(var j = 0;j < N_PART; j++){
+function animate_test(dancer, canvas, ctx) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for(var j = 0; j < N_PART; j++) {
     dancer.setLight(j, 255);
   }
-  dancer.setBasePos(canvas.width/2, canvas.height/2);
+  dancer.setBasePos(canvas.width / 2, canvas.height / 2);
   dancer.draw();
 }
-function getcolor(dancer,segment,part){
-  return COLOR[alllight[dancer][segment][part]]
+
+function getcolor(dancer, segment, part) {
+  return COLOR[alllight[dancer][segment][part]];
 }
 
-function Dancer(id, bx, by)
-{
+function Dancer(id, bx, by) {
   this.id = id;
   this.base_x = bx;
   this.base_y = by;
@@ -189,144 +161,142 @@ function Dancer(id, bx, by)
     this.light[i] = 0;
 };
 
-Dancer.prototype.setBasePos = function(bx, by)
-{
+Dancer.prototype.setBasePos = function(bx, by) {
   this.base_x = bx;
   this.base_y = by;
 }
 
-Dancer.prototype.draw = function(time)
-{
-  var miltime=time*1000;
-  var segment;
-  segment=(getTimeSegmentIndex(frametime,miltime))//segment代表是在第幾個關鍵幀
+Dancer.prototype.draw = function(time) {
+  var miltime = time * 1000;
+  var segment = getTimeSegmentIndex(frametime, miltime);
 
-  // reference point
   ctx.strokeStyle = "#FFFFFF";
   ctx.strokeRect(this.base_x, this.base_y, 1, 1);
   ctx.strokeRect(this.base_x + this.width, this.base_y, 1, 1);
   ctx.strokeRect(this.base_x, this.base_y + this.height, 1, 1);
   ctx.strokeRect(this.base_x + this.width, this.base_y + this.height, 1, 1);
 
-  // Number
   var head_radius = 20;
   ctx.font = "20px sans-serif";
   ctx.fillStyle = "#FF0000";
-  ctx.fillText(
-      this.id,
-      this.base_x + this.width / 2 - 5,
-      this.base_y + head_radius + 6
-      );
+  ctx.fillText(this.id, this.base_x + this.width / 2 - 5, this.base_y + head_radius + 6);
 
-  // 2 head
-  ctx.strokeStyle =getcolor(this.id,segment,2);
+  ctx.strokeStyle = getcolor(this.id, segment, 2);
   ctx.beginPath();
-  ctx.arc(
-      this.base_x + this.width / 2,
-      this.base_y + head_radius,
-      head_radius - 3,
-      Math.PI,
-      Math.PI*2
-      );
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 3, this.base_y+0.5*head_radius+5);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 4,this.base_y+1)
-  ctx.lineTo(this.base_x + this.width/2-1 ,this.base_y+3)
-  ctx.moveTo(this.base_x + this.width/2 + head_radius - 3, this.base_y+0.5*head_radius+5);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 4,this.base_y+1)
-  ctx.lineTo(this.base_x + this.width/2+1 ,this.base_y+3)
+  ctx.arc(this.base_x + this.width / 2, this.base_y + head_radius, head_radius - 3, Math.PI, Math.PI * 2);
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 0.5 * head_radius + 5);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 4, this.base_y + 1);
+  ctx.lineTo(this.base_x + this.width / 2 - 1, this.base_y + 3);
+  ctx.moveTo(this.base_x + this.width / 2 + head_radius - 3, this.base_y + 0.5 * head_radius + 5);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 4, this.base_y + 1);
+  ctx.lineTo(this.base_x + this.width / 2 + 1, this.base_y + 3);
   ctx.stroke();
-
 
   var hand_w = 10;
   var hand_h = 25;
 
-  // 5 left arm
-  // 6 right arm
-  ctx.strokeStyle = getcolor(this.id,segment,5);
-  ctx.strokeRect(this.base_x, this.base_y +head_radius-10 + hand_h + 5, hand_w, hand_h*2);
-  ctx.strokeStyle = getcolor(this.id,segment,6);
-  ctx.strokeRect(this.base_x+ this.width - hand_w, this.base_y + head_radius-10 + hand_h + 5, hand_w, hand_h*2);
+  ctx.strokeStyle = getcolor(this.id, segment, 5);
+  ctx.strokeRect(this.base_x, this.base_y + head_radius - 10 + hand_h + 5, hand_w, hand_h * 2);
+  ctx.strokeStyle = getcolor(this.id, segment, 6);
+  ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + head_radius - 10 + hand_h + 5, hand_w, hand_h * 2);
 
-  // 3 left band
-  // 4 right band
-  var hand_radius = 6
-  ctx.strokeStyle = getcolor(this.id,segment,3);
+  var hand_radius = 6;
+  ctx.strokeStyle = getcolor(this.id, segment, 3);
   ctx.beginPath();
-  ctx.strokeRect(this.base_x, this.base_y +3*head_radius+ hand_h + 5, hand_w, 3);
+  ctx.strokeRect(this.base_x, this.base_y + 3 * head_radius + hand_h + 5, hand_w, 3);
   ctx.stroke();
 
-  ctx.strokeStyle = getcolor(this.id,segment,4);
+  ctx.strokeStyle = getcolor(this.id, segment, 4);
   ctx.beginPath();
-  ctx.strokeRect(this.base_x+this.width - hand_w, this.base_y +3*head_radius+ hand_h + 5, hand_w, 3);
+  ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + 3 * head_radius + hand_h + 5, hand_w, 3);
   ctx.stroke();
 
-  // 0 上半衣服
-  ctx.strokeStyle = getcolor(this.id,segment,0);
+  ctx.strokeStyle = getcolor(this.id, segment, 0);
   ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 5, this.base_y + 2*head_radius);
-  ctx.lineTo(this.base_x + this.width/2 , this.base_y + 2*head_radius+4);
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 5, this.base_y + 2*head_radius);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5, this.base_y + 2*head_radius +20);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5, this.base_y + 2*head_radius +20);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5, this.base_y + 2*head_radius);
-  ctx.lineTo(this.base_x + this.width/2 , this.base_y + 2*head_radius+4);
- //1 下半衣服
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius);
+  ctx.lineTo(this.base_x + this.width / 2, this.base_y + 2 * head_radius + 4);
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 20);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 20);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius);
+  ctx.lineTo(this.base_x + this.width / 2, this.base_y + 2 * head_radius + 4);
   ctx.stroke();
-  ctx.strokeStyle = getcolor(this.id,segment,1);
+
+  ctx.strokeStyle = getcolor(this.id, segment, 1);
   ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 5,  this.base_y + 2*head_radius +25);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5,  this.base_y + 2*head_radius +25);
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 5,  this.base_y + 2*head_radius +30);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5,  this.base_y + 2*head_radius +30);
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 25);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 25);
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 30);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 30);
   ctx.stroke();
-  var belt_w = 2*head_radius - 6;
+
+  var belt_w = 2 * head_radius - 6;
   var belt_h = 10;
   var pants_w = 12;
   var pants_h = 35;
-  //8右邊短褲
-  ctx.strokeStyle = getcolor(this.id,segment,8);
+
+  ctx.strokeStyle = getcolor(this.id, segment, 8);
   ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width/2 + head_radius - 5,  this.base_y + 3*head_radius +25);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5,  this.base_y + 5*head_radius);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 7-pants_w,  this.base_y + 5*head_radius);
-  ctx.stroke();
-  //7右邊短褲
-  ctx.strokeStyle = getcolor(this.id,segment,7);
-  ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 5,  this.base_y + 3*head_radius +25);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5,  this.base_y + 5*head_radius);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 7+pants_w,  this.base_y + 5*head_radius);
-  ctx.stroke();
-  //9左邊長褲
-  ctx.strokeStyle = getcolor(this.id,segment,9);
-  ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width/2 - head_radius + 5 +pants_w/2,  this.base_y + 3*head_radius +25);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5,  this.base_y + 4*head_radius +30);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5,  this.base_y + 4*head_radius +30+pants_h);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5 +pants_w,  this.base_y + 4*head_radius +30+pants_h);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5 +pants_w,  this.base_y + 4*head_radius +30);
-  ctx.lineTo(this.base_x + this.width/2 - head_radius + 5 +pants_w/2,  this.base_y + 3*head_radius +25);
-  ctx.stroke();
-  //10右邊長褲
-  ctx.strokeStyle = getcolor(this.id,segment,10);
-  ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width/2 + head_radius - 5 -pants_w/2,  this.base_y + 3*head_radius +25);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5,  this.base_y + 4*head_radius +30);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5,  this.base_y + 4*head_radius +30+pants_h);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5 -pants_w,  this.base_y + 4*head_radius +30+pants_h);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5 -pants_w,  this.base_y + 4*head_radius +30);
-  ctx.lineTo(this.base_x + this.width/2 + head_radius - 5 -pants_w/2,  this.base_y + 3*head_radius +25);
+  ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 3 * head_radius + 25);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 5 * head_radius);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 7 - pants_w, this.base_y + 5 * head_radius);
   ctx.stroke();
 
+  ctx.strokeStyle = getcolor(this.id, segment, 7);
+  ctx.beginPath();
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 3 * head_radius + 25);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 5 * head_radius);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7 + pants_w, this.base_y + 5 * head_radius);
+  ctx.stroke();
+
+  ctx.strokeStyle = getcolor(this.id, segment, 9);
+  ctx.beginPath();
+  ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30 + pants_h);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w, this.base_y + 4 * head_radius + 30 + pants_h);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w, this.base_y + 4 * head_radius + 30);
+  ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
+  ctx.stroke();
+
+  ctx.strokeStyle = getcolor(this.id, segment, 10);
+  ctx.beginPath();
+  ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30 + pants_h);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w, this.base_y + 4 * head_radius + 30 + pants_h);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w, this.base_y + 4 * head_radius + 30);
+  ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
+  ctx.stroke();
 };
 
-
 var darr = Array(N_DANCER);
-for(var i=0; i<N_DANCER; i++)
-  darr[i] = new Dancer(i, 50+100*i, 59);
-
+for(var i = 0; i < N_DANCER; i++)
+  darr[i] = new Dancer(i, 50 + 100 * i, 59);
 
 setTimeout(function() {
   var startTime = (new Date()).getTime();
   animate(darr, canvas, ctx, startTime);
 }, 500);
+
+function reloadDataAndRedraw(newPos, newLight, newFrameTime) {
+  Pos = JSON.parse(newPos);
+  alllight = JSON.parse(newLight);
+  frametime = JSON.parse(newFrameTime);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for(var i = 0; i < N_DANCER; i++) {
+    for(var j = 0; j < N_PART; j++) {
+      var pos = getPos(i, audio.currentTime + DELAY);
+      darr[i].setBasePos(pos[0], pos[1]);
+    }
+  }
+
+  for(var i = 0; i < N_DANCER; i++) {
+    darr[i].draw(audio.currentTime + DELAY);
+  }
+}
+
+// Usage example:
+// reloadDataAndRedraw(newPosData, newLightData, newFrameTimeData);

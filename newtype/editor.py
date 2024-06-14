@@ -12,7 +12,6 @@ datajson_path="data.json"
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
     def receiveTime(self, time):
-        print(f"Current time from JavaScript: {time}")
         MainWindow_controller.receivetime(window,time)
         
 def getframe(time_segments, current_time):
@@ -104,13 +103,16 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript('getCurrentTime();')
 #收到時間碼
     def receivetime(self,time):
-        self.time=time
-        self.ui.nowtime.setText(f"{time}")
-        self.ui.settime.setText(f"{time}")
-        self.nowframe=get_time_index(self.data["frametimes"],self.time*1000)
-        self.ui.nowframe.setText(f"{self.nowframe}")
-        self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
-        self.loaddancer()
+        if self.time==time:
+            pass
+        else:
+            self.time=time
+            self.ui.nowtime.setText(f"{time}")
+            self.ui.settime.setText(f"{time}")
+            self.nowframe=get_time_index(self.data["frametimes"],self.time*1000)
+            self.ui.nowframe.setText(f"{self.nowframe}")
+            self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
+            self.loaddancer()
 #將舞者載入
     def loaddancer(self):
         self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])

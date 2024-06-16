@@ -5,12 +5,24 @@
         body {
             margin: 0px;
             padding: 10px;
+            background-color: #000000; /* Change background color to black */
+            color: #FFFFFF; /* Ensure text is visible on black background */
+        }
+        
+        #waveform {
+            width: 850px;
+            height: 100px;
+            background-color: #000;
+            margin: 0 auto;
+        }
+        #zoom-slider {
+            width: 850px;
+            margin: 20px auto;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.9.0/system.min.js"></script>
     <script src="qwebchannel.js"></script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -21,7 +33,7 @@
         });
 
         function getCurrentTime() {
-            var currentTime = document.getElementById('myAudio').currentTime;
+            var currentTime = wavesurfer.getCurrentTime();
             console.log('Current Time:', currentTime);
             if (typeof handler !== 'undefined') {
                 handler.receiveTime(currentTime);
@@ -29,39 +41,51 @@
                 console.error('Handler is not defined');
             }
         }
-        function setTime(time) {
-        var video = document.getElementById('myAudio');  // 假設你的 video 元素 id 是 'video'
-        video.currentTime = time;
-    }
 
+        function setTime(time) {
+            wavesurfer.setCurrentTime(time);
+        }
     </script>
 
 </head>
 <body>
     <center>
-        <canvas id="myCanvas" width="900" height="450" style="background-color: #000000" autoplay></canvas>
-        <audio id="myAudio" controls autoplay style="width: 900px;">
-            <source src="成發(final).mp3" type="audio/mp3">
-        </audio>
+        <canvas id="myCanvas" width="850" height="300" style="background-color: #000000" autoplay></canvas>
+        <div id="waveform"></div>
+        <input id="zoom-slider" type="range" min="1" max="200" value="100">
     </center>
-   
+
     <script type="text/javascript" src="pos.js" charset="utf-8"></script>
     <script type="text/javascript" src="main.js" charset="utf-8"></script>
     <div id="audiowave"></div>
     <script type="module">
-        import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js'
-        
-        const wavesurfer = WaveSurfer.create({
-          container: '#audiowave',
-          waveColor: '#4F4A85',
-          progressColor: '#383351',
-          url: '成發(final).mp3',
-        })
-        
-        wavesurfer.on('interaction', () => {
-          wavesurfer.play()
-        })
+        import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js';
+
+        window.wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: '#4F4A85',
+            progressColor: '#383351',
+            url: '成發(final).mp3',
+            height: 128,
+            hideScrollbar: true,
+            interact: true  
+        });
+
+        wavesurfer.on('ready', () => {
+            console.log('WaveSurfer is ready');
+        });
+
+        //wavesurfer.on('interaction', () => {
+          //  wavesurfer.play();
+        //});
+
+        document.getElementById('zoom-slider').oninput = function() {
+            wavesurfer.zoom(Number(this.value));
+        };
+        function setTime(time) {
+        const duration = wavesurfer.getDuration();
+        const progress = time / duration;
+        wavesurfer.seekTo(progress);}
     </script>
-    
 </body>
 </html>

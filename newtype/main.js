@@ -3,11 +3,10 @@ var N_DANCER = 3;
 
 document.addEventListener('DOMContentLoaded', function() {
   var audioElement = document.getElementById('myAudio');
-  audioElement.play();
+  wavesurfer.play();
 });
 var DELAY = 0.0;
 
-var audio = document.getElementById("myAudio");
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 ctx.lineWidth = 3;
@@ -56,20 +55,20 @@ function startAnimation() {
 
   window.addEventListener("keydown", (e) => {
     if(e.keyCode === 32){
-      if(audio.paused) audio.play();
-      else audio.pause();
+      if(wavesurfer.isPlaying()) wavesurfer.pause();
+      else wavesurfer.play();
     }
     else if(e.keyCode === 37){
-      audio.currentTime -= 5;
+      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() - 5);
     }
     else if(e.keyCode === 39){
-      audio.currentTime += 5;
+      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() + 5);
     }
     else if(e.keyCode === 49){
-      audio.currentTime += 1;
+      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() + 1);
     }
     else if(e.keyCode === 50){
-      audio.currentTime += 1;
+      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() + 1);
     }
   });
 
@@ -130,7 +129,7 @@ function startAnimation() {
   }
 
   function animate(darr, canvas, ctx, startTime) {
-    var time = audio.currentTime + DELAY;
+    var time = wavesurfer.getCurrentTime() + DELAY;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for(var i=0; i<N_DANCER; i++) {

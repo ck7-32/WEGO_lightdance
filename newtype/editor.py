@@ -92,7 +92,6 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         #self.loadcolor()
 
         #按鈕功能綁定 初始化()
-        self.ui.gettime.clicked.connect(self.get_current_time)
         self.ui.settimebtn.clicked.connect(self.settime)
         self.ui.Dancers.addItems(self.setting["dancersname"])
         self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
@@ -100,9 +99,6 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 
 #刷新視窗
         
-#取得時間
-    def get_current_time(self):
-        self.html.page().runJavaScript('getCurrentTime();')
 #收到時間碼
     def receivetime(self,time):
         if self.time==time:

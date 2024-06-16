@@ -44,7 +44,11 @@ function fetchDataAndInitialize() {
 function reloadDataAndRedraw() {
   fetchDataAndInitialize();
 }
-
+function setTime(time) {
+  const duration = wavesurfer.getDuration();
+  const progress = time / duration;
+  wavesurfer.seekTo(progress);
+}
 function startAnimation() {
   window.requestAnimFrame = (function(callback) {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -59,16 +63,16 @@ function startAnimation() {
       else wavesurfer.play();
     }
     else if(e.keyCode === 37){
-      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() - 5);
+      setTime(wavesurfer.getCurrentTime() - 5);
     }
     else if(e.keyCode === 39){
-      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() + 5);
+      setTime(wavesurfer.getCurrentTime() + 5);
     }
-    else if(e.keyCode === 49){
-      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() + 1);
+    else if(e.keyCode === 190){
+      setTime(wavesurfer.getCurrentTime() + 0.1);
     }
-    else if(e.keyCode === 50){
-      wavesurfer.setCurrentTime(wavesurfer.getCurrentTime() + 1);
+    else if(e.keyCode === 188){
+      setTime(wavesurfer.getCurrentTime() - 0.1);
     }
   });
 

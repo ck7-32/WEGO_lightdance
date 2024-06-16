@@ -5,14 +5,13 @@
         body {
             margin: 0px;
             padding: 10px;
-            background-color: #000000; /* Change background color to black */
-            color: #FFFFFF; /* Ensure text is visible on black background */
+            background-color: #000000; /* 将背景颜色改为黑色 */
+            color: #FFFFFF; /* 确保文本在黑色背景上可见 */
         }
-        
         #waveform {
             width: 850px;
             height: 100px;
-            background-color: #000;
+            background-color: #000000;
             margin: 0 auto;
         }
         #zoom-slider {
@@ -43,7 +42,9 @@
         }
 
         function setTime(time) {
-            wavesurfer.setCurrentTime(time);
+            const duration = wavesurfer.getDuration();
+            const progress = time / duration;
+            wavesurfer.seekTo(progress);
         }
     </script>
 
@@ -68,24 +69,27 @@
             url: '成發(final).mp3',
             height: 128,
             hideScrollbar: true,
-            interact: true  
+            interact: true  // 允许拖动进度条
         });
 
         wavesurfer.on('ready', () => {
             console.log('WaveSurfer is ready');
         });
 
-        //wavesurfer.on('interaction', () => {
-          //  wavesurfer.play();
-        //});
+        // 移除自动播放
+        // wavesurfer.on('interaction', () => {
+        //     wavesurfer.play();
+        // });
+
+        wavesurfer.on('seek', (progress) => {
+            const duration = wavesurfer.getDuration();
+            const newTime = progress * duration;
+            getCurrentTime(newTime);
+        });
 
         document.getElementById('zoom-slider').oninput = function() {
             wavesurfer.zoom(Number(this.value));
         };
-        function setTime(time) {
-        const duration = wavesurfer.getDuration();
-        const progress = time / duration;
-        wavesurfer.seekTo(progress);}
     </script>
 </body>
 </html>

@@ -3,6 +3,7 @@ from UI import Ui_MainWindow
 import sys
 import os
 import json
+import time as la
 
 
 settingjson_path="setting.json"
@@ -141,7 +142,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 #快捷鍵
     def keyPressEvent(self, event):
         keycode = event.key()             
-        if keycode == 82:
+        if keycode == 49: 
             self.colorchanged()
             print("r")
 
@@ -156,6 +157,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         for i in range(len(self.setting["dancers"][self.dancerN])):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
         savejson("data.json",self.data)
+       # time=self.time
+       ## la.sleep(10)
+       # self.html.page().runJavaScript(f"setTime({time});")
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
 

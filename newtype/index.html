@@ -114,9 +114,9 @@
                         regionsPlugin.addRegion({
                             start: startTime,
                             end: endTime,
-                            color: 'rgba(255, 0, 0, 0.5)', // 标记颜色
-                            resize: true, // 允许调整大小
-                            drag: true // 允许拖动
+                            color: i % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
+                            resize: false, // 允许调整大小
+                            drag: false // 允许拖动
                         });
                     }
                     // 添加最后一个时间点的标记
@@ -124,9 +124,9 @@
                     regionsPlugin.addRegion({
                         start: lastStartTime,
                         end: lastStartTime + 0.5, // 给最后一个标记一个默认的持续时间
-                        color: 'rgba(255, 0, 0, 0.5)', // 标记颜色
-                        resize: true, // 允许调整大小
-                        drag: true // 允许拖动
+                        color: frametimes.length % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
+                        resize: false, // 允许调整大小
+                        drag: false // 允许拖动
                     });
                 })
                 .catch(error => console.error('Error loading data.json:', error));

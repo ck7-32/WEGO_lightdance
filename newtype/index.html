@@ -5,8 +5,8 @@
         body {
             margin: 0px;
             padding: 10px;
-            background-color: #000000; /* 将背景颜色改为黑色 */
-            color: #FFFFFF; /* 确保文本在黑色背景上可见 */
+            background-color: #000000;
+            color: #FFFFFF;
         }
         #waveform {
             width: 850px;
@@ -46,8 +46,33 @@
             const progress = time / duration;
             wavesurfer.seekTo(progress);
         }
-    </script>
 
+        async function updateFrameTimes(regions) {
+            const frametimes = regions.map(region => region.start * 1000); // 转换为毫秒
+            frametimes.push(regions[regions.length - 1].end * 1000); // 添加最后一个区域的结束时间
+
+            const data = { frametimes };
+
+            try {
+                const response = await fetch('/update-fraetimes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                console.log('Frame times updated:', result);
+            } catch (error) {
+                console.error('Error updating frame times:', error);
+            }
+        }
+    </script>
 </head>
 <body>
     <center>
@@ -61,6 +86,7 @@
     <div id="audiowave"></div>
     <script type="module">
         import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js';
+        import RegionsPlugin from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/plugins/regions.esm.js';
 
         window.wavesurfer = WaveSurfer.create({
             container: '#waveform',
@@ -69,17 +95,47 @@
             url: '成發(final).mp3',
             height: 128,
             hideScrollbar: true,
-            interact: true  // 允许拖动进度条
+            interact: true // 允许拖动进度条
         });
+
+        const regionsPlugin = RegionsPlugin.create();
+        wavesurfer.registerPlugin(regionsPlugin);
 
         wavesurfer.on('ready', () => {
             console.log('WaveSurfer is ready');
+            // 从data.json加载时间标记
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const frametimes = data.frametimes;
+                    for (let i = 0; i < frametimes.length - 1; i++) {
+                        const startTime = frametimes[i] / 1000; // 转换为秒
+                        const endTime = frametimes[i + 1] / 1000; // 转换为秒
+                        regionsPlugin.addRegion({
+                            start: startTime,
+                            end: endTime,
+                            color: 'rgba(255, 0, 0, 0.5)', // 标记颜色
+                            resize: true, // 允许调整大小
+                            drag: true // 允许拖动
+                        });
+                    }
+                    // 添加最后一个时间点的标记
+                    const lastStartTime = frametimes[frametimes.length - 1] / 1000;
+                    regionsPlugin.addRegion({
+                        start: lastStartTime,
+                        end: lastStartTime + 0.5, // 给最后一个标记一个默认的持续时间
+                        color: 'rgba(255, 0, 0, 0.5)', // 标记颜色
+                        resize: true, // 允许调整大小
+                        drag: true // 允许拖动
+                    });
+                })
+                .catch(error => console.error('Error loading data.json:', error));
         });
 
-        // 移除自动播放
-        // wavesurfer.on('interaction', () => {
-        //     wavesurfer.play();
-        // });
+        regionsPlugin.on('region-update-end', () => {
+            const regions = Object.values(wavesurfer.regions.list);
+            updateFrameTimes(regions);
+        });
 
         wavesurfer.on('seek', (progress) => {
             const duration = wavesurfer.getDuration();

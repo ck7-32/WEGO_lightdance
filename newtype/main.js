@@ -43,6 +43,7 @@ function fetchDataAndInitialize() {
 }
 function reloadDataAndRedraw() {
   fetchDataAndInitialize();
+  reloadRegions(); // 新增這行
 }
 function setTime(time) {
   const duration = wavesurfer.getDuration();

@@ -86,9 +86,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.time=0
         self.dancerN=0
         self.nowframe=0
-        self.partcolors=[self.ui.color0,self.ui.color1,self.ui.color2,self.ui.color3,self.ui.color4,self.ui.color5,self.ui.color6,self.ui.color7,self.ui.color8,self.ui.color9,self.ui.color10,self.ui.color11]
-        self.partlable=[self.ui.part0,self.ui.part1,self.ui.part2,self.ui.part3,self.ui.part4,self.ui.part5,self.ui.part6,self.ui.part7,self.ui.part8,self.ui.part9,self.ui.part10,self.ui.part11]
+        self.partcolors=[self.ui.color0,self.ui.color1,self.ui.color2,self.ui.color3,self.ui.color4,self.ui.color5,self.ui.color6,self.ui.color7,self.ui.color8,self.ui.color9,self.ui.color10,self.ui.color11,self.ui.color12,self.ui.color13,self.ui.color14,self.ui.color15,self.ui.color16,self.ui.color17]
+        self.partlable=[self.ui.part0,self.ui.part1,self.ui.part2,self.ui.part3,self.ui.part4,self.ui.part5,self.ui.part6,self.ui.part7,self.ui.part8,self.ui.part9,self.ui.part10,self.ui.part11,self.ui.part12,self.ui.part13,self.ui.part14,self.ui.part15,self.ui.part16,self.ui.part17]
         self.loaddancer()
+        self.partnum=0
         #self.loadcolor()
 
         #按鈕功能綁定 初始化()
@@ -114,8 +115,14 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 #將舞者載入
     def loaddancer(self):
         self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        self.partnum=len(self.setting["dancers"][self.dancerN])
+        for i in range(self.partnum):
+            self.partlable[i].show()
+            self.partcolors[i].show()
             self.partlable[i].setText(self.setting["dancers"][self.dancerN][i])
+        for i in range(18-self.partnum):
+            self.partlable[17-i].hide()
+            self.partcolors[17-i].hide()
         self.loadcolor()
 
 

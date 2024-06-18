@@ -24,6 +24,8 @@
     <script src="qwebchannel.js"></script>
 
     <script>
+        let regionsPlugin;
+
         document.addEventListener('DOMContentLoaded', function() {
             new QWebChannel(qt.webChannelTransport, function(channel) {
                 window.handler = channel.objects.handler;
@@ -72,6 +74,41 @@
                 console.error('Error updating frame times:', error);
             }
         }
+
+        function reloadRegions() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const frametimes = data.frametimes;
+                    regionsPlugin.clearRegions(); // 清除现有的regions
+                    for (let i = 0; i < frametimes.length - 1; i++) {
+                        const startTime = frametimes[i] / 1000; // 转换为秒
+                        const endTime = frametimes[i + 1] / 1000; // 转换为秒
+                        regionsPlugin.addRegion({
+                            start: startTime,
+                            end: endTime,
+                            color: i % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
+                            resize: false, // 允许调整大小
+                            drag: false // 允许拖动
+                        });
+                    }
+                    // 添加最后一个时间点的标记
+                    const lastStartTime = frametimes[frametimes.length - 1] / 1000;
+                    regionsPlugin.addRegion({
+                        start: lastStartTime,
+                        end: lastStartTime + 0.5, // 给最后一个标记一个默认的持续时间
+                        color: frametimes.length % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
+                        resize: false, // 允许调整大小
+                        drag: false // 允许拖动
+                    });
+                })
+                .catch(error => console.error('Error loading data.json:', error));
+        }
+
+        function reloadDataAndRedraw() {
+            fetchDataAndInitialize();
+            reloadRegions(); // 新增这行
+        }
     </script>
 </head>
 <body>
@@ -90,15 +127,15 @@
 
         window.wavesurfer = WaveSurfer.create({
             container: '#waveform',
-            waveColor: '#4F4A85',
-            progressColor: '#383351',
+            waveColor: '#FFFFFF',
+            progressColor: '#8a8a8a',
             url: '成發(final).mp3',
             height: 128,
             hideScrollbar: true,
             interact: true // 允许拖动进度条
         });
 
-        const regionsPlugin = RegionsPlugin.create();
+        regionsPlugin = RegionsPlugin.create();
         wavesurfer.registerPlugin(regionsPlugin);
 
         wavesurfer.on('ready', () => {

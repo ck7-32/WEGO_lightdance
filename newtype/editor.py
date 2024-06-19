@@ -97,7 +97,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.Dancers.addItems(self.setting["dancersname"])
         self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
         self.ui.save.clicked.connect(self.colorchanged)
-
+        self.ui.savepreset.clicked.connect(self.save_as_preset)
+        self.ui.loadpreset.clicked.connect(self.loadpreset)
+        self.ui.delpreset.clicked.connect(self.delpreset)
+        self.reloadpresets()
 #刷新視窗
         
 #收到時間碼
@@ -164,10 +167,41 @@ class MainWindow_controller(QtWidgets.QMainWindow):
        ## la.sleep(10)
        # self.html.page().runJavaScript(f"setTime({time});")
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
-
-
-
-
+#save as preset
+    def save_as_preset(self):
+        name=self.ui.presetname.text()
+        print("1")
+        if name =="":
+            QtWidgets.QMessageBox.information(self, '警告', '輸入框不能為空')
+            return
+        elif name in self.setting["presetnames"]:
+            QtWidgets.QMessageBox.information(self, '警告', '輸入框不能為空')
+            return
+       
+        preset=[]
+        for i in range(self.partnum):
+            preset.append(self.partcolors[i].currentIndex())
+        self.setting["presets"].append(preset)
+        self.setting["presetnames"].append(name)
+        savejson("setting.json",self.setting)
+        self.reloadpresets()
+#load preset
+    def loadpreset(self):
+        index=self.ui.presets.currentIndex()
+        for i in range(len(self.setting["dancers"][self.dancerN])):
+            self.partcolors[i].setCurrentIndex(self.setting["presets"][index][i])
+        self.colorchanged()
+#del preset
+    def delpreset(self):
+        index=self.ui.presets.currentIndex()
+        del self.setting["presets"][index]
+        del self.setting["presetnames"][index]
+        savejson("setting.json",self.setting)
+        self.reloadpresets()
+#reload presets
+    def reloadpresets(self):
+        self.ui.presets.clear()
+        self.ui.presets.addItems(self.setting["presetnames"])
 
 if __name__ == '__main__':
     import sys

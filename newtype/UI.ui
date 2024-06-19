@@ -589,7 +589,7 @@
      <string>name preset</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="colorname_2">
+   <widget class="QLineEdit" name="presetname">
     <property name="geometry">
      <rect>
       <x>1120</x>
@@ -622,7 +622,7 @@
      <string>save as preset</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="save_3">
+   <widget class="QPushButton" name="delpreset">
     <property name="geometry">
      <rect>
       <x>990</x>
@@ -903,7 +903,7 @@
      <x>0</x>
      <y>0</y>
      <width>1429</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

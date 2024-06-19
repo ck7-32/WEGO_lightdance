@@ -54,6 +54,16 @@ def get_time_index(time_segments, current_time):
             right = mid - 1
 
     return right
+
+def is_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+
 class MainWindow_controller(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -101,6 +111,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.loadpreset.clicked.connect(self.loadpreset)
         self.ui.delpreset.clicked.connect(self.delpreset)
         self.reloadpresets()
+        self.ui.frameadjustbynowtime.clicked.connect(self.frameadjustbynowtime)
+        self.ui.frameadjustbyinput.clicked.connect(self.frameadjustbyinput)
 #刷新視窗
         
 #收到時間碼
@@ -202,6 +214,37 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def reloadpresets(self):
         self.ui.presets.clear()
         self.ui.presets.addItems(self.setting["presetnames"])
+
+#更改當前幀開始時間
+    def changeframetime(self,time=None):
+        time=time*1000
+        if self.nowframe==0:
+            QtWidgets.QMessageBox.information(self, '警告', '不能調整第一幀')
+            return
+        if time == None:
+            time=self.time
+        if self.data["frametimes"][self.nowframe-1] > time:
+            QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過前一幀')
+            return
+        elif self.nowframe< len(self.data["frametimes"])-1 :
+            if self.data["frametimes"][self.nowframe+1] < time:
+                QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀')
+                return
+        self.data["frametimes"][self.nowframe]=time
+        savejson("data.json",self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+#當前時間設為當前偵開始時間
+    def frameadjustbynowtime(self):
+        time=self.time
+        self.changeframetime(time=time)
+    def frameadjustbyinput(self):
+        time=self.ui.frameadjust.text()
+        if not is_float(time):
+            QtWidgets.QMessageBox.information(self, '警告', '請輸入浮點數')
+            return
+        self.changeframetime(time=time)
+        
+        
 
 if __name__ == '__main__':
     import sys

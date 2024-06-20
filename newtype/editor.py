@@ -74,7 +74,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.resize(930, 510)
         # 確保調用 setup_control 方法
         self.setup_control()
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 #初始化
     def setup_control(self):
         #建立嵌入網頁視窗物件
@@ -170,7 +170,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         if keycode == 51:
             self.set_frame_end_bynowtime()
             print("設為結束時間")
-
+        if keycode == 71:
+            self.html.page().runJavaScript("wavesurfer.playPause()")
+            print("播放鍵")
+        return
 #載入光效
     def loadcolor(self):
         for i in range(len(self.setting["dancers"][self.dancerN])):
@@ -256,7 +259,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data["frametimes"][self.nowframe+1]=time
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
-
+#新增關鍵幀
+    def addnewframe(self):
+        del self.data["frames"][]
         
         
 

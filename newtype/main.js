@@ -76,7 +76,10 @@ function startAnimation() {
     else if(e.keyCode === 188){
       setTime(wavesurfer.getCurrentTime() - 0.1);
     }
-  });
+    else if (event.key === 'k' || event.key === 'K') {
+      wavesurfer.playPause();  // 切換播放/暫停
+      console.log("play/pause")
+  }});
 
   function getPos(idx, time) {
     var bx = 0, by = 0;

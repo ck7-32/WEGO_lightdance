@@ -1,4 +1,5 @@
-from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel
+from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel,QtGui
+from PyQt6.QtGui import QShortcut, QKeySequence 
 from UI import Ui_MainWindow
 import sys
 import os
@@ -114,20 +115,39 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.reloadpresets()
         self.ui.set_frame_start_bynowtime.clicked.connect(self.set_frame_start_bynowtime)
         self.ui.set_frame_end_bynowtime.clicked.connect(self.set_frame_end_bynowtime)
+        self.ui.newframe.clicked.connect(self.addnewframe)
+        self.ui.delframe.clicked.connect(self.delframe)
+        #設置全局快捷鍵
+        self.shortcut_colorchanged = QShortcut(QtGui.QKeySequence("1"), self)
+        self.shortcut_colorchanged.activated.connect(self.colorchanged)
+        self.shortcut_set_frame_start = QShortcut(QtGui.QKeySequence("2"), self)
+        self.shortcut_set_frame_start.activated.connect(self.set_frame_start_bynowtime)
+        self.shortcut_set_frame_end = QShortcut(QtGui.QKeySequence("3"), self)
+        self.shortcut_set_frame_end.activated.connect(self.set_frame_end_bynowtime)
+        self.shortcut_play_pause = QShortcut(QtGui.QKeySequence("G"), self)
+        self.shortcut_play_pause.activated.connect(lambda: self.html.page().runJavaScript("wavesurfer.playPause()"))
+        self.shortcut_add_frame = QShortcut(QtGui.QKeySequence("A"), self)
+        self.shortcut_add_frame.activated.connect(self.addnewframe)
+        self.shortcut_del_frame = QShortcut(QtGui.QKeySequence("D"), self)
+        self.shortcut_del_frame.activated.connect(self.delframe)
+
 #刷新視窗
         
 #收到時間碼
     def receivetime(self,time):
         if self.time==time:
-            pass
-        else:
-            self.time=time
-            self.ui.nowtime.setText(f"{time}")
-            self.ui.settime.setText(f"{time}")
-            self.nowframe=get_time_index(self.data["frametimes"],self.time*1000)
-            self.ui.nowframe.setText(f"{self.nowframe}")
-            self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
-            self.loaddancer()
+            return
+        
+        self.time=time
+        self.ui.nowtime.setText(f"{time}")
+        self.ui.settime.setText(f"{time}")
+        frame=get_time_index(self.data["frametimes"],self.time*1000)
+        if self.nowframe==frame:
+            return
+        self.nowframe=frame
+        self.ui.nowframe.setText(f"{self.nowframe}")
+        self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
+        self.loaddancer()
 #將舞者載入
     def loaddancer(self):
         self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])
@@ -158,22 +178,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def savesetting(self):
         savejson(settingjson_path,self.setting)
         
-#快捷鍵
-    def keyPressEvent(self, event):
-        keycode = event.key()             
-        if keycode == 49: 
-            self.colorchanged()
-            print("colorchanged")
-        if keycode == 50:
-            self.set_frame_start_bynowtime()
-            print("設為開始時間")
-        if keycode == 51:
-            self.set_frame_end_bynowtime()
-            print("設為結束時間")
-        if keycode == 71:
-            self.html.page().runJavaScript("wavesurfer.playPause()")
-            print("播放鍵")
-        return
+
 #載入光效
     def loadcolor(self):
         for i in range(len(self.setting["dancers"][self.dancerN])):
@@ -261,7 +266,22 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #新增關鍵幀
     def addnewframe(self):
-        del self.data["frames"][]
+        for i in range(len(self.data["frames"])):
+            self.data["frames"][i].insert(self.nowframe+1,self.data["frames"][i][self.nowframe])
+        self.data["frametimes"].insert(self.nowframe+1,self.time*1000)
+        savejson("data.json",self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+#刪除關鍵幀
+    def delframe(self):
+        if self.nowframe==0:
+            QtWidgets.QMessageBox.information(self, '警告', '不能刪除第一幀')
+            return
+        for i in range(len(self.data["frames"])):
+            del self.data["frames"][i][self.nowframe]
+        del self.data["frametimes"][self.nowframe]
+        savejson("data.json",self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
         
         
 

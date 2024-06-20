@@ -1,2 +1,3 @@
-for i in range(18):
-    print(f"self.ui.part{i},",end="")
+l=[1,3,4]
+l.insert(4,"dfa")
+print(l)

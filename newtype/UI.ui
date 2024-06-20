@@ -841,40 +841,11 @@
      <string>載入幀開始時間(秒)</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="frameadjust">
+   <widget class="QPushButton" name="set_frame_start_bynowtime">
     <property name="geometry">
      <rect>
       <x>1110</x>
-      <y>690</y>
-      <width>113</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="nowframetime_7">
-    <property name="geometry">
-     <rect>
-      <x>1110</x>
-      <y>630</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>微軟正黑體</family>
-      <pointsize>15</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>調整幀開始時間</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="frameadjustbynowtime">
-    <property name="geometry">
-     <rect>
-      <x>1110</x>
-      <y>660</y>
+      <y>610</y>
       <width>221</width>
       <height>28</height>
      </rect>
@@ -883,17 +854,17 @@
      <string>當前時間設為當前偵開始時間</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="frameadjustbyinput">
+   <widget class="QPushButton" name="set_frame_end_bynowtime">
     <property name="geometry">
      <rect>
       <x>1110</x>
-      <y>720</y>
+      <y>640</y>
       <width>221</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
-     <string>輸入時間設為當前偵開始時間</string>
+     <string>當前時間設為當前偵結束時間</string>
     </property>
    </widget>
   </widget>
@@ -903,7 +874,7 @@
      <x>0</x>
      <y>0</y>
      <width>1429</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

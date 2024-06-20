@@ -74,6 +74,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.resize(930, 510)
         # 確保調用 setup_control 方法
         self.setup_control()
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
 #初始化
     def setup_control(self):
         #建立嵌入網頁視窗物件
@@ -111,8 +112,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.loadpreset.clicked.connect(self.loadpreset)
         self.ui.delpreset.clicked.connect(self.delpreset)
         self.reloadpresets()
-        self.ui.frameadjustbynowtime.clicked.connect(self.frameadjustbynowtime)
-        self.ui.frameadjustbyinput.clicked.connect(self.frameadjustbyinput)
+        self.ui.set_frame_start_bynowtime.clicked.connect(self.set_frame_start_bynowtime)
+        self.ui.set_frame_end_bynowtime.clicked.connect(self.set_frame_end_bynowtime)
 #刷新視窗
         
 #收到時間碼
@@ -162,7 +163,13 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         keycode = event.key()             
         if keycode == 49: 
             self.colorchanged()
-            print("r")
+            print("colorchanged")
+        if keycode == 50:
+            self.set_frame_start_bynowtime()
+            print("設為開始時間")
+        if keycode == 51:
+            self.set_frame_end_bynowtime()
+            print("設為結束時間")
 
 #載入光效
     def loadcolor(self):
@@ -176,7 +183,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
         savejson("data.json",self.data)
        # time=self.time
-       ## la.sleep(10)
+       ## la.sleep(10):
        # self.html.page().runJavaScript(f"setTime({time});")
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #save as preset
@@ -195,7 +202,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             preset.append(self.partcolors[i].currentIndex())
         self.setting["presets"].append(preset)
         self.setting["presetnames"].append(name)
-        savejson("setting.json",self.setting)
+        savejson(settingjson_path,self.setting)
         self.reloadpresets()
 #load preset
     def loadpreset(self):
@@ -208,7 +215,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         index=self.ui.presets.currentIndex()
         del self.setting["presets"][index]
         del self.setting["presetnames"][index]
-        savejson("setting.json",self.setting)
+        savejson(settingjson_path,self.setting)
         self.reloadpresets()
 #reload presets
     def reloadpresets(self):
@@ -216,10 +223,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.presets.addItems(self.setting["presetnames"])
 
 #更改當前幀開始時間
-    def changeframetime(self,time=None):
-        time=time*1000
+    def set_frame_start_bynowtime(self):
+        time=self.time*1000
         if self.nowframe==0:
-            QtWidgets.QMessageBox.information(self, '警告', '不能調整第一幀')
+            QtWidgets.QMessageBox.information(self, '警告', '不能調整第一幀開始時間')
             return
         if time == None:
             time=self.time
@@ -231,18 +238,25 @@ class MainWindow_controller(QtWidgets.QMainWindow):
                 QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀')
                 return
         self.data["frametimes"][self.nowframe]=time
-        savejson("data.json",self.data)
+        savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #當前時間設為當前偵開始時間
-    def frameadjustbynowtime(self):
-        time=self.time
-        self.changeframetime(time=time)
-    def frameadjustbyinput(self):
-        time=self.ui.frameadjust.text()
-        if not is_float(time):
-            QtWidgets.QMessageBox.information(self, '警告', '請輸入浮點數')
+    def set_frame_end_bynowtime(self):
+        time=self.time*1000
+        if self.data["frametimes"][self.nowframe] > time:
+            QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過開始時間')
             return
-        self.changeframetime(time=time)
+        elif self.nowframe==len(self.data["frametimes"])-1 :
+            QtWidgets.QMessageBox.information(self, '警告', '請先新增下一幀的開始時間')
+            return
+        elif self.nowframe<len(self.data["frametimes"])-2 :
+            if self.data["frametimes"][self.nowframe+2] < time:
+                QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀的結束時間')
+                return
+        self.data["frametimes"][self.nowframe+1]=time
+        savejson(datajson_path,self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
         
         
 

@@ -6,3 +6,6 @@ self.data["color"]#colorHEX
 self.data["colornames"]
 self.data["frames"][danceN][frameN][parts]
 self.data["frametimes"][frameN]
+
+[0,1,2,3,4,5]
+len=6

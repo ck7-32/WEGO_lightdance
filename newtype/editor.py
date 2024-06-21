@@ -266,10 +266,14 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #新增關鍵幀
     def addnewframe(self):
+        if self.data["frametimes"][self.nowframe]==self.time*1000:
+             QtWidgets.QMessageBox.information(self, '警告', '與當前幀重疊')
+             return
         for i in range(len(self.data["frames"])):
             self.data["frames"][i].insert(self.nowframe+1,self.data["frames"][i][self.nowframe])
         self.data["frametimes"].insert(self.nowframe+1,self.time*1000)
         savejson("data.json",self.data)
+        self.nowframe+=1
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #刪除關鍵幀
     def delframe(self):

@@ -10,17 +10,18 @@ var DELAY = 0.0;
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 ctx.lineWidth = 3;
-
-var BLUE = "#00FFFF";
-var ORANGE = "#FF9400";
-var YELLOW = "#FFFF00";
-var PURPLE = "#AA00FF";
-var RED = "#FF0000";
-var WHITE = "#FFFFFF";
-var GREEN = "#99FF33";
-var BLACK = "#000000";
-var PINK = "#FFC0CB";
-var COLOR=[BLACK,RED,PINK,ORANGE,GREEN,BLUE,PURPLE,WHITE]
+var colors=[];
+fetch('data.json')
+.then(response => response.json())
+.then(data => {
+  alllight = data.frames;
+  frametime = data.frametimes;
+  colors=data.color;
+  startAnimation();
+})
+.catch(error => {
+  console.error('Error fetching data:', error);
+});
 
 function color(c, x) {
   var percent = (-1) * (1.0 - (x / 255.0));
@@ -34,7 +35,7 @@ function fetchDataAndInitialize() {
     .then(data => {
       alllight = data.frames;
       frametime = data.frametimes;
-
+      COLOR=data.color;
       startAnimation();
     })
     .catch(error => {

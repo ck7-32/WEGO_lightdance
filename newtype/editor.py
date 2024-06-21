@@ -112,11 +112,17 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.savepreset.clicked.connect(self.save_as_preset)
         self.ui.loadpreset.clicked.connect(self.loadpreset)
         self.ui.delpreset.clicked.connect(self.delpreset)
+        self.ui.nowframe.setText(f"{self.nowframe}")
+        self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
+        self.loaddancer()
         self.reloadpresets()
         self.ui.set_frame_start_bynowtime.clicked.connect(self.set_frame_start_bynowtime)
         self.ui.set_frame_end_bynowtime.clicked.connect(self.set_frame_end_bynowtime)
         self.ui.newframe.clicked.connect(self.addnewframe)
         self.ui.delframe.clicked.connect(self.delframe)
+        self.ui.delcolor.clicked.connect(self.delcolor)
+        self.ui.loadframestarttime.clicked.connect(self.setframestarttime)
+        self.loadcolors()
         #設置全局快捷鍵
         self.shortcut_colorchanged = QShortcut(QtGui.QKeySequence("1"), self)
         self.shortcut_colorchanged.activated.connect(self.colorchanged)
@@ -172,6 +178,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 #設定html視窗內撥放進度的時間
     def settime(self):
         time=self.ui.settime.text()
+        print(time)
+        self.html.page().runJavaScript(f"setTime({time});")
+   
+    def setframestarttime(self):
+        time=self.data["frametimes"][self.nowframe]/1000
         print(time)
         self.html.page().runJavaScript(f"setTime({time});")
 #儲存setting.json
@@ -285,10 +296,29 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         del self.data["frametimes"][self.nowframe]
         savejson("data.json",self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
-
-        
-        
-
+#載入顏色到上方選項
+    def loadcolors(self):
+        self.ui.colors.clear()
+        self.ui.colors.addItems(self.data["colornames"])
+#刪除該顏色
+    def delcolor(self):
+        index=self.ui.colors.currentIndex()
+        if index==0:
+            QtWidgets.QMessageBox.information(self, '警告', '不能刪除黑色')
+            return
+        del self.data["color"][index]
+        del self.data["colornames"][index]
+        for dN in range(len(self.data["frames"])):
+            for fN in range(len(self.data["frames"][dN])):
+                for parts in range(len(self.data["frames"][dN][fN])):
+                    if self.data["frames"][dN][fN][parts]==index:
+                        self.data["frames"][dN][fN][parts]=0
+                    elif self.data["frames"][dN][fN][parts]>index:
+                        self.data["frames"][dN][fN][parts]-=1
+        savejson(datajson_path,self.data)
+        self.loaddancer()
+        self.loadcolor()
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)

@@ -490,7 +490,7 @@
     <property name="geometry">
      <rect>
       <x>1230</x>
-      <y>50</y>
+      <y>80</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -499,7 +499,7 @@
      <string>delete color</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addcolor_2">
+   <widget class="QPushButton" name="showcolor">
     <property name="geometry">
      <rect>
       <x>1130</x>
@@ -512,11 +512,11 @@
      <string>show color</string>
     </property>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="colorpreview" native="true">
     <property name="geometry">
      <rect>
-      <x>1230</x>
-      <y>90</y>
+      <x>1130</x>
+      <y>120</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -867,6 +867,32 @@
      <string>當前時間設為當前偵結束時間</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="editcolor">
+    <property name="geometry">
+     <rect>
+      <x>1230</x>
+      <y>50</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>edit color</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="renamecolor">
+    <property name="geometry">
+     <rect>
+      <x>1330</x>
+      <y>50</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>renamecolor</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -874,7 +900,7 @@
      <x>0</x>
      <y>0</y>
      <width>1429</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

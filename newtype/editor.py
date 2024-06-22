@@ -1,5 +1,6 @@
 from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel,QtGui
-from PyQt6.QtGui import QShortcut, QKeySequence 
+from PyQt6.QtGui import QShortcut, QKeySequence
+from PyQt6.QtGui import QColor 
 from UI import Ui_MainWindow
 import sys
 import os
@@ -123,6 +124,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.delcolor.clicked.connect(self.delcolor)
         self.ui.loadframestarttime.clicked.connect(self.setframestarttime)
         self.loadcolors()
+        self.ui.addcolor.clicked.connect(self.addnewcolor)
+        self.ui.editcolor.clicked.connect(self.editcolor)
+        self.ui.renamecolor.clicked.connect(self.editcolorname)
+        self.ui.showcolor.clicked.connect(self.colorpreview)
+        self.ui.colors.currentIndexChanged.connect(self.colorpreview)
         #設置全局快捷鍵
         self.shortcut_colorchanged = QShortcut(QtGui.QKeySequence("1"), self)
         self.shortcut_colorchanged.activated.connect(self.colorchanged)
@@ -318,7 +324,62 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         savejson(datajson_path,self.data)
         self.loaddancer()
         self.loadcolor()
+        self.loadcolors()
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+#新增顏色
+    def addnewcolor(self):
+        colorname=self.ui.colorname.text()
+        if colorname in self.data["colornames"]:
+            QtWidgets.QMessageBox.information(self, '警告', '顏色名稱重疊')
+            return
+        if colorname=="":
+            QtWidgets.QMessageBox.information(self, '警告', '顏色名稱不能為空白')
+            return
+        col = QtWidgets.QColorDialog.getColor()
+        if col.isValid():
+            self.data["color"].append(col.name())
+            self.data["colornames"].append(colorname)
+            savejson(datajson_path,self.data)
+            self.loaddancer()
+            self.loadcolor()
+            self.loadcolors()
+            self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+#編輯顏色    
+    def editcolor(self):
+        index=self.ui.colors.currentIndex()
+        if index==0:
+            QtWidgets.QMessageBox.information(self, '警告', '不能編輯黑色')
+            return
+        initial_color = QColor(self.data["color"][index])
+        col = QtWidgets.QColorDialog.getColor(initial=initial_color)
+        if col.isValid():
+            self.data["color"][index]=col.name()
+            savejson(datajson_path,self.data)
+            self.loaddancer()
+            self.loadcolor()
+            self.loadcolors()
+            self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+#編輯顏色名稱
+    def editcolorname(self):
+        colorname=self.ui.colorname.text()
+        index=self.ui.colors.currentIndex()
+        if colorname in self.data["colornames"]:
+            QtWidgets.QMessageBox.information(self, '警告', '顏色名稱重疊')
+            return
+        if colorname=="":
+            QtWidgets.QMessageBox.information(self, '警告', '顏色名稱不能為空白')
+            return
+        self.data["colornames"][index]=colorname
+        savejson(datajson_path,self.data)
+        self.loaddancer()
+        self.loadcolor()
+        self.loadcolors()
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+#showcolor
+    def colorpreview(self):
+        index=self.ui.colors.currentIndex()
+        self.ui.colorpreview.setStyleSheet("QWidget { background-color: %s }" 
+                                   % self.data["color"][index])
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)

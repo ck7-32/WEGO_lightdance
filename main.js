@@ -1,6 +1,6 @@
-var N_PART = 16;
+var N_PART1 = 16;
 var N_DANCER = 3;
-
+var N_PART2= 16;
 document.addEventListener('DOMContentLoaded', function() {
   var audioElement = document.getElementById('myAudio');
   wavesurfer.play();
@@ -143,14 +143,26 @@ function startAnimation() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for(var i=0; i<N_DANCER; i++) {
-      for(var j=0; j<N_PART; j++) {
+      if (i %2 ==0){
+      for(var j=0; j<N_PART1; j++) {
         var pos = getPos(i, time);
         darr[i].setBasePos(pos[0], pos[1]);
+      }}
+      else{
+        for(var j=0; j<N_PART2; j++) {
+          var pos = getPos(i, time);
+          darr[i].setBasePos(pos[0], pos[1]);
+        }
       }
     }
 
     for(var i=0; i<N_DANCER; i++)
-      darr[i].draw(time);
+      if (i %2 ==0){
+        
+        darr[i].draw(time);}
+        
+      else{darr[i].draw2(time);}
+      
 
     segment = getTimeSegmentIndex(frametime, time * 1000);
     draw_time(time, segment);
@@ -161,14 +173,6 @@ function startAnimation() {
     });
   }
 
-  function animate_test(dancer, canvas, ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for(var j = 0; j < N_PART; j++) {
-      dancer.setLight(j, 255);
-    }
-    dancer.setBasePos(canvas.width / 2, canvas.height / 2);
-    dancer.draw();
-  }
 
   function getcolor(dancer, segment, part) {
     return COLOR[alllight[dancer][segment][part]];
@@ -180,8 +184,8 @@ function startAnimation() {
     this.base_y = by;
     this.height = 160;
     this.width = 64;
-    this.light = Array(N_PART);
-    for(var i=0; i<N_PART; i++)
+    this.light = Array(N_PART1);
+    for(var i=0; i<N_PART1; i++)
       this.light[i] = 0;
   };
 
@@ -189,7 +193,109 @@ function startAnimation() {
     this.base_x = bx;
     this.base_y = by;
   }
+  Dancer.prototype.draw2 = function(time) {
+    var miltime = time * 1000;
+    var segment = getTimeSegmentIndex(frametime, miltime);
 
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.strokeRect(this.base_x, this.base_y, 1, 1);
+    ctx.strokeRect(this.base_x + this.width, this.base_y, 1, 1);
+    ctx.strokeRect(this.base_x, this.base_y + this.height, 1, 1);
+    ctx.strokeRect(this.base_x + this.width, this.base_y + this.height, 1, 1);
+
+    var head_radius = 20;
+    ctx.font = "20px sans-serif";
+    ctx.fillStyle = "#FF0000";
+    ctx.fillText(this.id, this.base_x + this.width / 2 - 5, this.base_y + head_radius + 6);
+
+    ctx.strokeStyle = getcolor(this.id, segment, 2);
+    ctx.beginPath();
+    ctx.arc(this.base_x + this.width / 2, this.base_y + head_radius, head_radius - 3, Math.PI, Math.PI * 2);
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 0.5 * head_radius + 5);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 4, this.base_y + 1);
+    ctx.lineTo(this.base_x + this.width / 2 - 1, this.base_y + 3);
+    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 3, this.base_y + 0.5 * head_radius + 5);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 4, this.base_y + 1);
+    ctx.lineTo(this.base_x + this.width / 2 + 1, this.base_y + 3);
+    ctx.stroke();
+
+    var hand_w = 10;
+    var hand_h = 25;
+
+    ctx.strokeStyle = getcolor(this.id, segment, 5);
+    ctx.strokeRect(this.base_x, this.base_y + head_radius - 10 + hand_h + 5, hand_w, hand_h * 2);
+    ctx.strokeStyle = getcolor(this.id, segment, 6);
+    ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + head_radius - 10 + hand_h + 5, hand_w, hand_h * 2);
+
+    var hand_radius = 6;
+    ctx.strokeStyle = getcolor(this.id, segment, 3);
+    ctx.beginPath();
+    ctx.strokeRect(this.base_x, this.base_y + 3 * head_radius + hand_h + 5, hand_w, 3);
+    ctx.stroke();
+
+    ctx.strokeStyle = getcolor(this.id, segment, 4);
+    ctx.beginPath();
+    ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + 3 * head_radius + hand_h + 5, hand_w, 3);
+    ctx.stroke();
+
+    ctx.strokeStyle = getcolor(this.id, segment, 0);
+    ctx.beginPath();
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius);
+    ctx.lineTo(this.base_x + this.width / 2, this.base_y + 2 * head_radius + 4);
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 20);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 20);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius);
+    ctx.lineTo(this.base_x + this.width / 2, this.base_y + 2 * head_radius + 4);
+    ctx.stroke();
+
+    ctx.strokeStyle = getcolor(this.id, segment, 1);
+    ctx.beginPath();
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 25);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 25);
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 30);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 30);
+    ctx.stroke();
+
+    var belt_w = 2 * head_radius - 6;
+    var belt_h = 10;
+    var pants_w = 12;
+    var pants_h = 35;
+
+    ctx.strokeStyle = getcolor(this.id, segment, 8);
+    ctx.beginPath();
+    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 3 * head_radius + 25);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 5 * head_radius);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 7 - pants_w, this.base_y + 5 * head_radius);
+    ctx.stroke();
+
+    ctx.strokeStyle = getcolor(this.id, segment, 7);
+    ctx.beginPath();
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 3 * head_radius + 25);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 5 * head_radius);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7 + pants_w, this.base_y + 5 * head_radius);
+    ctx.stroke();
+
+    ctx.strokeStyle = getcolor(this.id, segment, 9);
+    ctx.beginPath();
+    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30 + pants_h);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w, this.base_y + 4 * head_radius + 30 + pants_h);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w, this.base_y + 4 * head_radius + 30);
+    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
+    ctx.stroke();
+
+    ctx.strokeStyle = getcolor(this.id, segment, 10);
+    ctx.beginPath();
+    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30 + pants_h);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w, this.base_y + 4 * head_radius + 30 + pants_h);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w, this.base_y + 4 * head_radius + 30);
+    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
+    ctx.stroke();
+  };
   Dancer.prototype.draw = function(time) {
     var miltime = time * 1000;
     var segment = getTimeSegmentIndex(frametime, miltime);

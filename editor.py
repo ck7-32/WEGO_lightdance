@@ -93,7 +93,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         
         self.setting =loadjson(settingjson_path)
         self.data=loadjson(datajson_path)       
-        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/newtype/index.html"))
+        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
 
         #變數宣告
         self.time=0

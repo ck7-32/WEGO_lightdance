@@ -1,1 +1,0 @@
-# WEGO_lightdance

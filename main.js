@@ -208,7 +208,7 @@ function startAnimation() {
     ctx.fillStyle = "#FF0000";
     ctx.fillText(this.id, this.base_x + this.width / 2 - 5, this.base_y + head_radius + 6);
     //貓耳
-    ctx.strokeStyle = getcolor(this.id, segment, 2);
+    ctx.strokeStyle = getcolor(this.id, segment, 1);
     ctx.beginPath();
     ctx.arc(this.base_x + this.width / 2, this.base_y + head_radius, head_radius - 3, Math.PI, Math.PI * 2);
     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 0.5 * head_radius + 5);
@@ -219,7 +219,7 @@ function startAnimation() {
     ctx.lineTo(this.base_x + this.width / 2 + 1, this.base_y + 3);
     ctx.stroke();
     //帽子
-    ctx.strokeStyle = getcolor(this.id, segment,4 );
+    ctx.strokeStyle = getcolor(this.id, segment,2 );
     ctx.beginPath();
     ctx.arc(this.base_x + this.width / 2, this.base_y + head_radius+2, head_radius - 5, Math.PI,2 * Math.PI );
     ctx.moveTo(this.base_x+this.width / 2-head_radius + 5 , this.base_y +head_radius + 2);
@@ -230,24 +230,24 @@ function startAnimation() {
     var hand_w = 10;
     var hand_h = 20;
 
-    ctx.strokeStyle = getcolor(this.id, segment, 5);
+    ctx.strokeStyle = getcolor(this.id, segment, 4);
     ctx.strokeRect(this.base_x, this.base_y + head_radius - 8 + hand_h + 5, hand_w, hand_h * 2);
-    ctx.strokeStyle = getcolor(this.id, segment, 6);
+    ctx.strokeStyle = getcolor(this.id, segment, 5);
     ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + head_radius - 8 + hand_h + 5, hand_w, hand_h * 2);
 //手環
     var hand_radius = 6;
-    ctx.strokeStyle = getcolor(this.id, segment, 3);
+    ctx.strokeStyle = getcolor(this.id, segment, 4);
     ctx.beginPath();
     ctx.strokeRect(this.base_x, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
     ctx.stroke();
 
-    ctx.strokeStyle = getcolor(this.id, segment, 4);
+    ctx.strokeStyle = getcolor(this.id, segment, 5);
     ctx.beginPath();
     ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
     ctx.stroke();
 //手套
 ctx.lineWidth=2;
-    ctx.strokeStyle = getcolor(this.id, segment, 4);
+    ctx.strokeStyle = getcolor(this.id, segment, 6);
     ctx.beginPath();
     ctx.moveTo(this.base_x , this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x,this.base_y + 3 * head_radius + hand_h+13);
@@ -260,7 +260,7 @@ ctx.lineWidth=2;
     ctx.moveTo(this.base_x +12, this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x +12,this.base_y + 3 * head_radius + hand_h+11);
     ctx.stroke();
-    ctx.strokeStyle = getcolor(this.id, segment, 4);
+    ctx.strokeStyle = getcolor(this.id, segment, 7);
     ctx.beginPath();
     ctx.moveTo(this.base_x- 1+this.width - hand_w , this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x- 1+this.width - hand_w,this.base_y + 3 * head_radius + hand_h+11);
@@ -275,7 +275,7 @@ ctx.lineWidth=2;
     ctx.stroke();
 //西裝外套
 ctx.lineWidth=3;
-    ctx.strokeStyle = getcolor(this.id, segment, 0);
+    ctx.strokeStyle = getcolor(this.id, segment, 3);
     ctx.beginPath();
     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius-3);
     ctx.lineTo(this.base_x + this.width / 2-6, this.base_y + 2 * head_radius-3 );
@@ -304,7 +304,7 @@ ctx.lineWidth=3;
     ctx.stroke();
     
 //裡面衣服
-  ctx.strokeStyle = getcolor(this.id, segment, 1)
+  ctx.strokeStyle = getcolor(this.id, segment, 0)
   ctx.beginPath();
   ctx.moveTo(this.base_x + this.width / 2 +6, this.base_y + 2 * head_radius+1 );
   ctx.lineTo(this.base_x + this.width / 2 , this.base_y + 2 * head_radius+3 );
@@ -377,7 +377,7 @@ ctx.lineWidth=3;
     ctx.fillStyle = "#FF0000";
     ctx.fillText(this.id, this.base_x + this.width / 2 - 5, this.base_y + head_radius + 6);
     //貓耳
-    ctx.strokeStyle = getcolor(this.id, segment, 2);
+    ctx.strokeStyle = getcolor(this.id, segment, 1);
     ctx.beginPath();
     ctx.arc(this.base_x + this.width / 2, this.base_y + head_radius, head_radius - 3, Math.PI, Math.PI * 2);
     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 0.5 * head_radius + 5);
@@ -388,7 +388,7 @@ ctx.lineWidth=3;
     ctx.lineTo(this.base_x + this.width / 2 + 1, this.base_y + 3);
     ctx.stroke();
     //帽子
-    ctx.strokeStyle = getcolor(this.id, segment,4 );
+    ctx.strokeStyle = getcolor(this.id, segment,2 );
     ctx.beginPath();
     ctx.arc(this.base_x + this.width / 2, this.base_y + head_radius+2, head_radius - 5, Math.PI,2 * Math.PI );
     ctx.moveTo(this.base_x+this.width / 2-head_radius + 5 , this.base_y +head_radius + 2);
@@ -416,7 +416,7 @@ ctx.lineWidth=3;
     ctx.stroke();
 //手套
 ctx.lineWidth=2;
-    ctx.strokeStyle = getcolor(this.id, segment, 4);
+    ctx.strokeStyle = getcolor(this.id, segment, 7);
     ctx.beginPath();
     ctx.moveTo(this.base_x , this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x,this.base_y + 3 * head_radius + hand_h+13);
@@ -429,7 +429,7 @@ ctx.lineWidth=2;
     ctx.moveTo(this.base_x +12, this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x +12,this.base_y + 3 * head_radius + hand_h+11);
     ctx.stroke();
-    ctx.strokeStyle = getcolor(this.id, segment, 4);
+    ctx.strokeStyle = getcolor(this.id, segment, 8);
     ctx.beginPath();
     ctx.moveTo(this.base_x- 1+this.width - hand_w , this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x- 1+this.width - hand_w,this.base_y + 3 * head_radius + hand_h+11);
@@ -455,34 +455,28 @@ ctx.lineWidth=3;
     ctx.lineTo(this.base_x + this.width / 2, this.base_y + 2 * head_radius + 4);
     ctx.stroke();
 
-    ctx.strokeStyle = getcolor(this.id, segment, 1);
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 25);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 25);
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 2 * head_radius + 30);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 2 * head_radius + 30);
-    ctx.stroke();
+    
 //庫子
     var belt_w = 2 * head_radius - 6;
     var belt_h = 10;
     var pants_w = 12;
     var pants_h = 35;
 
-    ctx.strokeStyle = getcolor(this.id, segment, 8);
+    ctx.strokeStyle = getcolor(this.id, segment, 10);
     ctx.beginPath();
     ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 3 * head_radius + 25);
     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 5 * head_radius);
     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 7 - pants_w, this.base_y + 5 * head_radius);
     ctx.stroke();
 
-    ctx.strokeStyle = getcolor(this.id, segment, 7);
+    ctx.strokeStyle = getcolor(this.id, segment, 9);
     ctx.beginPath();
     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 3 * head_radius + 25);
     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 5 * head_radius);
     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7 + pants_w, this.base_y + 5 * head_radius);
     ctx.stroke();
 
-    ctx.strokeStyle = getcolor(this.id, segment, 9);
+    ctx.strokeStyle = getcolor(this.id, segment, 11);
     ctx.beginPath();
     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30);
@@ -492,7 +486,7 @@ ctx.lineWidth=3;
     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
     ctx.stroke();
 
-    ctx.strokeStyle = getcolor(this.id, segment, 10);
+    ctx.strokeStyle = getcolor(this.id, segment, 12);
     ctx.beginPath();
     ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30);

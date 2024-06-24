@@ -25,15 +25,16 @@
 
     <script>
         let regionsPlugin;
-
+        
         document.addEventListener('DOMContentLoaded', function() {
             new QWebChannel(qt.webChannelTransport, function(channel) {
                 window.handler = channel.objects.handler;
                 console.log('QWebChannel initialized');
             });
         });
-
+        
         function getCurrentTime() {
+            
             var currentTime = wavesurfer.getCurrentTime();
             console.log('Current Time:', currentTime);
             if (typeof handler !== 'undefined') {
@@ -42,7 +43,7 @@
                 console.error('Handler is not defined');
             }
         }
-
+        
         function setTime(time) {
             const duration = wavesurfer.getDuration();
             const progress = time / duration;
@@ -130,7 +131,7 @@
             container: '#waveform',
             waveColor: '#FFFFFF',
             progressColor: '#8a8a8a',
-            url: '成發(final).mp3',
+            url: '0701audio.mp3',
             height: 128,
             hideScrollbar: true,
             interact: true // 允许拖动进度条
@@ -158,14 +159,7 @@
                         });
                     }
                     // 添加最后一个时间点的标记
-                    const lastStartTime = frametimes[frametimes.length - 1] / 1000;
-                    regionsPlugin.addRegion({
-                        start: lastStartTime,
-                        end: lastStartTime + 0.5, // 给最后一个标记一个默认的持续时间
-                        color: frametimes.length % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
-                        resize: false, // 允许调整大小
-                        drag: false // 允许拖动
-                    });
+                    
                 })
                 .catch(error => console.error('Error loading data.json:', error));
         });

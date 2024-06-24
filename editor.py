@@ -39,7 +39,7 @@ def loadjson(path):
     return out
 def savejson(path,data):
     with open(path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=4)
+            json.dump(data, file, ensure_ascii=False)
 def get_time_index(time_segments, current_time):
     left = 0
     right = len(time_segments) - 1

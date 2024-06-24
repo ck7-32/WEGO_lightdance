@@ -291,6 +291,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data["frametimes"].insert(self.nowframe+1,self.time*1000)
         savejson("data.json",self.data)
         self.nowframe+=1
+        self.ui.nowframe.setText(f"{self.nowframe}")
+        self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #刪除關鍵幀
     def delframe(self):

@@ -206,10 +206,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def colorchanged(self):
         for i in range(len(self.setting["dancers"][self.dancerN])):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
+        print(f"第{self.nowframe}幀已改變")
         savejson("data.json",self.data)
-       # time=self.time
-       ## la.sleep(10):
-       # self.html.page().runJavaScript(f"setTime({time});")
+        
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #save as preset
     def save_as_preset(self):
@@ -229,6 +228,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.setting["presetnames"].append(name)
         savejson(settingjson_path,self.setting)
         self.reloadpresets()
+        self.ui.presets.setItemData(len(self.setting["presetnames"].append(name))-1)
 #load preset
     def loadpreset(self):
         index=self.ui.presets.currentIndex()
@@ -294,6 +294,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.nowframe.setText(f"{self.nowframe}")
         self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+        self.data=loadjson(datajson_path)
 #刪除關鍵幀
     def delframe(self):
         if self.nowframe==0:

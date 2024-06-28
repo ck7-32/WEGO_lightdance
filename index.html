@@ -144,6 +144,20 @@
             var slider = document.getElementById('zoom-slider');
             updateDisplayValue(slider.value);
         }
+        function scrollWaveSurferLeft() {
+            var currentScroll = wavesurfer.drawer.wrapper.scrollLeft;
+            if (currentScroll > 0) {
+                wavesurfer.drawer.wrapper.scrollLeft = currentScroll - 10; // 每次滾動 10px
+            }
+        }
+
+        function scrollWaveSurferRight() {
+            var maxScroll = wavesurfer.drawer.getWidth() - wavesurfer.drawer.wrapper.clientWidth;
+            var currentScroll = wavesurfer.drawer.wrapper.scrollLeft;
+            if (currentScroll < maxScroll) {
+                wavesurfer.drawer.wrapper.scrollLeft = currentScroll + 10; // 每次滾動 10px
+            }
+        }
     </script>
 </head>
 <body>
@@ -151,6 +165,7 @@
         <canvas id="myCanvas" width="850" height="300" style="background-color: #000000" autoplay></canvas>
         <div id="waveform"></div>
         <input id="zoom-slider" type="range" min="1" max="200" value="100">
+        
     </center>
 
     <script type="text/javascript" src="pos.js" charset="utf-8"></script>
@@ -165,7 +180,7 @@
             waveColor: '#FFFFFF',
             progressColor: '#8a8a8a',
             url: '0701audio.mp3',
-            height: 128,
+            height: 120,
             hideScrollbar: true,
             interact: true // 允许拖动进度条
         });

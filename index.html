@@ -111,6 +111,39 @@
             fetchDataAndInitialize();
             reloadRegions(); // 新增这行
         }
+                // 增加滑動條的值
+        function increaseSliderValue() {
+            var slider = document.getElementById('zoom-slider');
+            var currentValue = parseInt(slider.value, 10);
+            if (currentValue < slider.max) {
+                slider.value = currentValue + 5;
+                updateDisplayValue(slider.value);
+                wavesurfer.zoom(Number( slider.value));
+            }
+        }
+
+        // 減少滑動條的值
+        function decreaseSliderValue() {
+            var slider = document.getElementById('zoom-slider');
+            var currentValue = parseInt(slider.value, 10);
+            if (currentValue > slider.min) {
+                slider.value = currentValue - 5;
+                updateDisplayValue(slider.value);
+                wavesurfer.zoom(Number( slider.value));
+            }
+        }
+
+        // 更新顯示值
+        function updateDisplayValue(value) {
+            var displayValue = document.getElementById('slider-value');
+            wavesurfer.zoom(Number(this.value));
+        }
+
+        // 當網頁載入完成後執行的函式
+        window.onload = function() {
+            var slider = document.getElementById('zoom-slider');
+            updateDisplayValue(slider.value);
+        }
     </script>
 </head>
 <body>

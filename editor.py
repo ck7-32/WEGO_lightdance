@@ -142,6 +142,15 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.shortcut_add_frame.activated.connect(self.addnewframe)
         self.shortcut_del_frame = QShortcut(QtGui.QKeySequence("D"), self)
         self.shortcut_del_frame.activated.connect(self.delframe)
+        self.shortcut_forward=QShortcut(QtGui.QKeySequence("P"), self)
+        self.shortcut_forward.activated.connect(self.forward)
+        self.shortcut_backward=QShortcut(QtGui.QKeySequence("O"), self)
+        self.shortcut_backward.activated.connect(self.backward)
+        self.shortcut_zoomin=QShortcut(QtGui.QKeySequence("9"),self)
+        self.shortcut_zoomin.activated.connect(self.zoomin)
+        self.shortcut_zoomout=QShortcut(QtGui.QKeySequence("8"),self)
+        self.shortcut_zoomout.activated.connect(self.zoomout)
+
 
 #刷新視窗
         
@@ -383,6 +392,15 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         index=self.ui.colors.currentIndex()
         self.ui.colorpreview.setStyleSheet("QWidget { background-color: %s }" 
                                    % self.data["color"][index])
+#快進
+    def forward(self):
+        self.html.page().runJavaScript(f"setTime({self.time+0.1});")
+    def backward(self):
+        self.html.page().runJavaScript(f"setTime({self.time-0.1});") 
+    def zoomin(self):
+        self.html.page().runJavaScript(f"increaseSliderValue();") 
+    def zoomout(self):
+        self.html.page().runJavaScript(f"decreaseSliderValue();") 
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)

@@ -187,7 +187,7 @@ function startAnimation() {
     this.light = Array(N_PART1);
     for(var i=0; i<N_PART1; i++)
       this.light[i] = 0;
-  };
+  };ㄣ
 
   Dancer.prototype.setBasePos = function(bx, by) {
     this.base_x = bx;

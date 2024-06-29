@@ -149,7 +149,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.shortcut_zoomin=QShortcut(QtGui.QKeySequence("9"),self)
         self.shortcut_zoomin.activated.connect(self.zoomin)
         self.shortcut_zoomout=QShortcut(QtGui.QKeySequence("8"),self)
-        self.shortcut_zoomout.activated.connect(self.zoomout)
+        self.shortcut_zoomout.activated.connect(self.zoomㄟ                哀                           out)
         self.shortcut_scrollleft=QShortcut(QtGui.QKeySequence("-"),self)
         self.shortcut_scrollleft.activated.connect(self.scrollleft)
         self.shortcut_scrollright=QShortcut(QtGui.QKeySequence("="),self)

@@ -241,7 +241,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.setting["presetnames"].append(name)
         savejson(settingjson_path,self.setting)
         self.reloadpresets()
-        self.ui.presets.setItemData(len(self.setting["presetnames"].append(name))-1)
+       # self.ui.presets.setItemData((len(self.setting["presetnames"]))-1)
 #load preset
     def loadpreset(self):
         index=self.ui.presets.currentIndex()

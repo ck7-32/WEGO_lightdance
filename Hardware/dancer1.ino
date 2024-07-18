@@ -67,8 +67,12 @@ int FrameNow = 0;
 unsigned long A1 = 0;
 unsigned long A2 = 0;
 
-const char* ssid = "LightDanceServer";
-const char* password = "56781234";
+const char* ssid = "WEGOlightdance";
+const char* password = "Wgld2023wifi";
+WiFiUDP udp;
+unsigned int localUdpPort = 12345;  // 本地端口號
+uint8_t incomingPacket[4];
+
 int y = 0;
 //CRGB LEDs[USEDPIN_NUM];
 CRGB hexToColor(const char* hexCode) {
@@ -108,37 +112,27 @@ void setup()
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
-
+  //UDP
+  udp.begin(localUdpPort);
+  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
 }
 
 void loop()
 {
-  if (WiFi.status() == WL_CONNECTED){
-  while (WiFi.status() == WL_CONNECTED) {
-    delay(150);
-    Serial.println("Wait for release");
-  }
-  A1 = millis();
-  }
-  else
-  {
-    
-    A2 = millis();
-    int A3 = A2 - A1;
-
-    if ((A3 >= timestamp[FrameNow]) && (FrameNow < Frame))
-    {
-      playh(FrameNow);
-      FrameNow ++;
+  //UDP
+  int packetSize = udp.parsePacket();
+  if (packetSize) {
+    // 接收 UDP 數據包
+    int len = udp.read(incomingPacket, 4);
+    if (len == 4) {
+      // 將接收到的 4 字節數據轉換為整數
+      int receivedNumber = (incomingPacket[0] << 24) | (incomingPacket[1] << 16) | (incomingPacket[2] << 8) | incomingPacket[3];
+      
+      Serial.printf("%d\n", receivedNumber);
+      playh(receivedNumber);
     }
-    else if(FrameNow == Frame)
-    {
-      //表演結束
-      delay(1000000000);
-    }
+  }
   
-
-  }
   
   
 

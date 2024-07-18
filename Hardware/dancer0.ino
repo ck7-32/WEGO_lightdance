@@ -61,10 +61,9 @@ int Frame = 214; // 獲取FrameTime的大小
 int FrameNow = 0;
 unsigned long A1 = 0;
 unsigned long A2 = 0;
-
+//UDP
 const char* ssid = "WEGOlightdance";
 const char* password = "Wgld2023wifi";
-
 WiFiUDP udp;
 unsigned int localUdpPort = 12345;  // 本地端口號
 uint8_t incomingPacket[4];
@@ -108,12 +107,15 @@ void setup()
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
+
+  //UDP
   udp.begin(localUdpPort);
   Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
 }
 
 void loop()
 {
+  //UDP
   int packetSize = udp.parsePacket();
   if (packetSize) {
     // 接收 UDP 數據包

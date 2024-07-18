@@ -23,7 +23,6 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 def UDP(nowframe):
     message = struct.pack('>i', nowframe)
     sock.sendto(message, (broadcast_address, broadcast_port))
-    print(f"sent UDP nowframe={nowframe}")
 
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)

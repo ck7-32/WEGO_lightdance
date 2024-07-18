@@ -1,0 +1,50 @@
+#include <Arduino.h>
+#include <FastLED.h>
+#include <WiFi.h>
+
+#define NUM_LEDS1 8//帽子+貓耳+衣服
+#define NUM_LEDS2 25 // 左手套
+#define NUM_LEDS3 25 // 右手套
+#define NUM_LEDS4 8//左半身
+#define NUM_LEDS5 7//右半身
+#define NUM_LEDS6 6//左襪套
+#define NUM_LEDS7 6//右襪套
+#define NUM_LEDS8 4//裙子
+
+
+#define DATA_PIN1 17
+#define DATA_PIN2 16
+#define DATA_PIN3 32
+#define DATA_PIN4 33
+#define DATA_PIN5 25
+#define DATA_PIN6 26
+#define DATA_PIN7 14
+#define DATA_PIN8 27
+
+#define USEDPIN_NUM 8
+
+CRGB LED1[NUM_LEDS1]; 
+CRGB LED2[NUM_LEDS2];
+CRGB LED3[NUM_LEDS3];
+CRGB LED4[NUM_LEDS4];
+CRGB LED5[NUM_LEDS5];
+CRGB LED6[NUM_LEDS6];
+CRGB LED7[NUM_LEDS7];
+CRGB LED8[NUM_LEDS8];
+CRGB* LEDs[] = {
+  LED1, LED2, LED3, LED4, LED5, LED6, LED7,LED8
+};
+//定義部位
+//["0衣服", "1貓耳", "2帽子", "3西裝外套", "4左手臂", "5右手臂", "6左手套", "7右手套", "8裙子", "9左襪套", "10右襪套"]
+
+int LEDPART1[NUM_LEDS1]={0,0,2,2,2,2,1,1};//衣服帽子+貓耳
+int LEDPART2[NUM_LEDS2]={6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6};//左手套
+int LEDPART3[NUM_LEDS3]={7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};//右手套
+int LEDPART4[NUM_LEDS4]={3,3,3,3,5,5,5};//左西裝
+int LEDPART5[NUM_LEDS5]={3,3,3,4,4,4};//右半身
+int LEDPART6[NUM_LEDS6]={10,10,10,10,10,10};//左褲子
+int LEDPART7[NUM_LEDS7]={9,9,9,9,9,9};//右褲子
+int LEDPART8[NUM_LEDS8]={8,8,8,8};//裙子
+int* LEDs[]={
+  LEDPART1,LEDPART2,LEDPART3,LEDPART4,LEDPART5,LEDPART6,LEDPART7,LEDPAERT8
+};

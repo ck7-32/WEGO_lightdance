@@ -62,8 +62,8 @@ int FrameNow = 0;
 unsigned long A1 = 0;
 unsigned long A2 = 0;
 
-const char* ssid = "Wong88";
-const char* password = "20070415";
+const char* ssid = "WEGOlightdance";
+const char* password = "Wgld2023wifi";
 
 WiFiUDP udp;
 unsigned int localUdpPort = 12345;  // 本地端口號
@@ -71,7 +71,6 @@ uint8_t incomingPacket[4];
 
 int y = 0;
 //CRGB LEDs[USEDPIN_NUM];
-
 CRGB hexToColor(const char* hexCode) {
   long number = (long) strtol(hexCode + 1, NULL, 16);
   byte r = number >> 16;

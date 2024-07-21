@@ -8,6 +8,7 @@ import json
 import time as la
 import socket
 import struct
+import math
 
 settingjson_path="setting.json"
 datajson_path="data.json"
@@ -288,7 +289,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             if self.data["frametimes"][self.nowframe+1] < time:
                 QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀')
                 return
-        self.data["frametimes"][self.nowframe]=time
+        self.data["frametimes"][self.nowframe]=math.floor(time)
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #當前時間設為當前偵開始時間
@@ -304,7 +305,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             if self.data["frametimes"][self.nowframe+2] < time:
                 QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀的結束時間')
                 return
-        self.data["frametimes"][self.nowframe+1]=time
+        self.data["frametimes"][self.nowframe+1]=math.floor(time)
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #新增關鍵幀
@@ -314,7 +315,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
              return
         for i in range(len(self.data["frames"])):
             self.data["frames"][i].insert(self.nowframe+1,self.data["frames"][i][self.nowframe])
-        self.data["frametimes"].insert(self.nowframe+1,self.time*1000)
+        self.data["frametimes"].insert(self.nowframe+1,math.floor(self.time*1000))
         savejson("data.json",self.data)
         self.nowframe+=1
         self.ui.nowframe.setText(f"{self.nowframe}")

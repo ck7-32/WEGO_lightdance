@@ -158,6 +158,25 @@
                 wavesurfer.drawer.wrapper.scrollLeft = currentScroll + 10; // 每次滾動 10px
             }
         }
+     
+        async function fetchData(url) {
+            try {
+                const response = await fetch(url);
+                return await response.json();
+            } catch (error) {
+                console.error(`Error fetching data from ${url}:`, error);
+                throw error;
+            }
+        }
+        async function initializeaudio() {
+            try {
+                const data = await fetchData('setting.json');
+                audiopath = data.audio;
+            } catch (error) {
+                console.error('Error initializing settings:', error);
+            }
+        }
+
     </script>
 </head>
 <body>
@@ -169,22 +188,24 @@
     </center>
 
     <script type="text/javascript" src="pos.js" charset="utf-8"></script>
+    <script type="text/javascript" src="dancer.js" charset="utf-8"></script>
     <script type="text/javascript" src="main.js" charset="utf-8"></script>
     <div id="audiowave"></div>
     <script type="module">
         import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js';
         import RegionsPlugin from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/plugins/regions.esm.js';
-
+        
+        
         window.wavesurfer = WaveSurfer.create({
             container: '#waveform',
             waveColor: '#FFFFFF',
             progressColor: '#8a8a8a',
-            url: '0701audio.mp3',
+            url: audiopath,
             height: 120,
             hideScrollbar: true,
             interact: true // 允许拖动进度条
         });
-
+        await initializeaudio();
         regionsPlugin = RegionsPlugin.create();
         wavesurfer.registerPlugin(regionsPlugin);
 

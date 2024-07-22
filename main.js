@@ -5,7 +5,7 @@ var audiopath;
 async function initializeSettings() {
   try {
     const data = await fetchData('setting.json');
-    N_DANCER = data.dancers.length;
+    N_DANCER = data.dancersname.length;
     audiopath=data.audio;
     console.log('N_DANCER:', N_DANCER);
     wavesurfer.load(audiopath);

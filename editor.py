@@ -190,16 +190,16 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 #將舞者載入
     def loaddancer(self):
         self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])
-        self.partnum=len(self.setting["dancers"][self.dancerN])
+        self.partnum=len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])
         for i in range(self.partnum):
             self.partlable[i].show()
             self.partcolors[i].show()
-            self.partlable[i].setText(self.setting["dancers"][self.dancerN][i])
+            self.partlable[i].setText(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"][i])
         for i in range(18-self.partnum):
             self.partlable[17-i].hide()
             self.partcolors[17-i].hide()
         self.loadcolor()
-
+    
 
 #選擇舞者選單被按下
     def dancerselected(self):
@@ -225,13 +225,13 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 
 #載入光效
     def loadcolor(self):
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.partcolors[i].clear()
             self.partcolors[i].addItems(self.data["colornames"])
             self.partcolors[i].setCurrentIndex(self.data["frames"][self.dancerN][self.nowframe][i])
 #顏色被變更
     def colorchanged(self):
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
         print(f"第{self.nowframe}幀已改變")
         savejson("data.json",self.data)
@@ -259,7 +259,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 #load preset
     def loadpreset(self):
         index=self.ui.presets.currentIndex()
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.partcolors[i].setCurrentIndex(self.setting["presets"][index][i])
         self.colorchanged()
 #del preset

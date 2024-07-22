@@ -45,7 +45,7 @@ CRGB* LEDstrings[] = {
 //[0"衣服", 1"貓耳", 2"帽子",3 "左手環",4 "右手環", 5"左手臂",6 "右手臂",7 "左手套",8 "右手套",9 "左短褲",10 "右短褲",11 "左長褲",12 "右長褲"]
 
 int LEDPART1[NUM_LEDS1]={2,2,2,2,1,1};//帽子+貓耳
-int LEDPART2[NUM_LEDS2]={6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6};//左手套
+int LEDPART2[NUM_LEDS2]={8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8};//左手套
 int LEDPART3[NUM_LEDS3]={7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};//右手套
 int LEDPART4[NUM_LEDS4]={0,0,0,0,0,6,4,4,6};//左半身
 int LEDPART5[NUM_LEDS5]={0,0,0,0,5,3,3,5};//右半身
@@ -139,9 +139,20 @@ void loop()
 int playh(int frameN){
 
   for(int ledstring=0;ledstring<USEDPIN_NUM;ledstring++){
-    for(int led=0;led<lednums[ledstring];led++){
-      int nowcolorindex=data[frameN][led];
-      LEDstrings[ledstring][led]= colorArray[nowcolorindex];
+    CRGB* currentString = LEDstrings[ledstring];
+    int* currentParts = leds[ledstring];
+    int numLeds = lednums[ledstring];
+    bool isGlove = (ledstring == 1 || ledstring == 2);
+
+    for(int led=0;led<numLeds;led++){
+      int currentpart = currentParts[led];
+      CRGB color = colorArray[data[frameN][currentpart]];
+      
+      if (isGlove) {
+        color.nscale8_video(4);  // 使用更快的nscale8_video
+      }
+      
+      currentString[led] = color;
     }
   }
   FastLED.show();

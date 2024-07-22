@@ -1,16 +1,16 @@
+
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFi.h>
 
-#define NUM_LEDS1 8//帽子+貓耳+衣服
-#define NUM_LEDS2 25 // 左手套
-#define NUM_LEDS3 25 // 右手套
-#define NUM_LEDS4 7//左半身
-#define NUM_LEDS5 6//右半身
-#define NUM_LEDS6 6//左襪套
-#define NUM_LEDS7 6//右襪套
-#define NUM_LEDS8 4//裙子
-
+#define NUM_LEDS1 8 //衣服帽子
+#define NUM_LEDS2 25 //左手套
+#define NUM_LEDS3 25 //右手套
+#define NUM_LEDS4 7 //左西裝
+#define NUM_LEDS5 6 //右西裝
+#define NUM_LEDS6 6 //左褲子
+#define NUM_LEDS7 6 //右褲子
+#define NUM_LEDS8 4 //裙子
 
 #define DATA_PIN1 17
 #define DATA_PIN2 16
@@ -23,14 +23,12 @@
 
 #define USEDPIN_NUM 8
 #define COLOR_COUNT 13
+            
+#define DANCERN 1 //第幾個舞者
 
-#define DANCERN 0 //第幾個舞者
-// #define DATA_PIN8 27 // Not used in 7 types of lights
-int lednums[]={NUM_LEDS1,NUM_LEDS2,NUM_LEDS3,NUM_LEDS4,NUM_LEDS5,NUM_LEDS6,NUM_LEDS7,NUM_LEDS8};
-int pins[]={DATA_PIN1,DATA_PIN2,DATA_PIN3,DATA_PIN4,DATA_PIN5,DATA_PIN6,DATA_PIN7,DATA_PIN8};
-//顏色
+int lednums[]={NUM_LEDS1, NUM_LEDS2, NUM_LEDS3, NUM_LEDS4, NUM_LEDS5, NUM_LEDS6, NUM_LEDS7, NUM_LEDS8};
+int pins[]={DATA_PIN1, DATA_PIN2, DATA_PIN3, DATA_PIN4, DATA_PIN5, DATA_PIN6, DATA_PIN7, DATA_PIN8};
 char colors[][20]={"#000000", "#269aff", "#ffffff", "#faff95", "#ff67b8", "#ff9d9f", "#ffa5ff", "#d9aeff", "#8ac8ff", "#82f3ff", "#97ffac", "#f5ff9e", "#ff8181"};
-//建立燈帶
 
 CRGB LED1[NUM_LEDS1]; 
 CRGB LED2[NUM_LEDS2];
@@ -40,121 +38,99 @@ CRGB LED5[NUM_LEDS5];
 CRGB LED6[NUM_LEDS6];
 CRGB LED7[NUM_LEDS7];
 CRGB LED8[NUM_LEDS8];
-CRGB* LEDstrings[] = {
-  LED1, LED2, LED3, LED4, LED5, LED6, LED7,LED8
-};
-//定義部位
-//[0"衣服", 1"貓耳", 2"帽子",3 "左手環",4 "右手環", 5"左手臂",6 "右手臂",7 "左手套",8 "右手套",9 "左短褲",10 "右短褲",11 "左長褲",12 "右長褲"]
+CRGB* LEDstrings[] = {LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8};
 
-int LEDPART1[NUM_LEDS1]={0,0,2,2,2,2,1,1};//衣服帽子+貓耳
-int LEDPART2[NUM_LEDS2]={6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6};//左手套
-int LEDPART3[NUM_LEDS3]={7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};//右手套
-int LEDPART4[NUM_LEDS4]={3,3,3,3,5,5,5};//左西裝
-int LEDPART5[NUM_LEDS5]={3,3,3,4,4,4};//右半身
-int LEDPART6[NUM_LEDS6]={10,10,10,10,10,10};//左褲子
-int LEDPART7[NUM_LEDS7]={9,9,9,9,9,9};//右褲子
-int LEDPART8[NUM_LEDS8]={8,8,8,8};//裙子
-int* leds[]={
-  LEDPART1,LEDPART2,LEDPART3,LEDPART4,LEDPART5,LEDPART6,LEDPART7,LEDPART8
-};
-//舞者0的資料
+int LEDPART1[NUM_LEDS1]={0, 0, 2, 2, 2, 2, 1, 1};//衣服帽子
+int LEDPART2[NUM_LEDS2]={6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};//左手套
+int LEDPART3[NUM_LEDS3]={7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};//右手套
+int LEDPART4[NUM_LEDS4]={3, 3, 3, 3, 5, 5, 5};//左西裝
+int LEDPART5[NUM_LEDS5]={3, 3, 3, 4, 4, 4};//右西裝
+int LEDPART6[NUM_LEDS6]={10, 10, 10, 10, 10, 10};//左褲子
+int LEDPART7[NUM_LEDS7]={9, 9, 9, 9, 9, 9};//右褲子
+int LEDPART8[NUM_LEDS8]={8, 8, 8, 8};//裙子
 
+int* leds[] = {LEDPART1, LEDPART2, LEDPART3, LEDPART4, LEDPART5, LEDPART6, LEDPART7, LEDPART8};
 int data[214][11] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2}, {0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1}, {0, 0, 0, 2, 0, 0, 0, 0, 1, 2, 2}, {0, 0, 0, 2, 1, 1, 0, 0, 1, 2, 2}, {1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0}, {2, 2, 2, 2, 1, 0, 1, 0, 2, 2, 2}, {1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0}, {0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0}, {3, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0}, {0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 4, 4}, {2, 1, 2, 1, 2, 2, 4, 4, 4, 1, 1}, {4, 1, 2, 4, 4, 4, 1, 1, 2, 1, 1}, {2, 1, 4, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 4, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0}, {0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0}, {0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0}, {0, 0, 0, 0, 3, 3, 0, 3, 0, 0, 0}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {3, 3, 3, 3, 0, 0, 0, 0, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 0, 0, 0, 0, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 5, 0, 5, 0, 0, 0, 0}, {5, 5, 0, 5, 6, 0, 6, 0, 5, 5, 5}, {6, 6, 6, 6, 7, 5, 7, 5, 6, 6, 6}, {8, 8, 8, 8, 9, 7, 9, 7, 8, 8, 8}, {8, 8, 8, 8, 9, 7, 9, 7, 8, 8, 8}, {9, 9, 9, 9, 10, 8, 10, 8, 9, 9, 9}, {9, 9, 9, 9, 10, 8, 10, 8, 9, 9, 9}, {9, 9, 9, 9, 10, 8, 10, 8, 9, 9, 9}, {9, 9, 9, 9, 10, 8, 10, 8, 9, 9, 9}, {9, 9, 9, 9, 0, 8, 0, 8, 9, 9, 9}, {0, 0, 0, 0, 0, 8, 0, 8, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0}, {3, 3, 3, 3, 0, 0, 3, 3, 0, 3, 3}, {3, 3, 3, 3, 0, 0, 3, 3, 0, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {2, 1, 2, 1, 2, 2, 3, 3, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 7, 4, 4, 4, 4, 2, 2, 4, 7, 7}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 7, 0, 4, 0, 0, 2}, {2, 7, 7, 6, 0, 7, 0, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 3, 3}, {2, 7, 7, 6, 7, 7, 4, 4, 3, 2, 2}, {3, 7, 7, 3, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 3, 3, 4, 4, 7, 2, 2}, {2, 3, 3, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 3, 3, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 7, 7, 6, 7, 7, 4, 4, 7, 2, 2}, {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {8, 8, 9, 1, 8, 8, 8, 8, 1, 8, 8}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}, {2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1}};
-
 
 const char* ssid = "Wong88";
 const char* password = "20070415";
 WiFiUDP udp;
-unsigned int localUdpPort = 12345;  // 本地端口號
+unsigned int localUdpPort = 12345;  
 uint8_t incomingPacket[4];
 
 int y = 0;
-//CRGB LEDs[USEDPIN_NUM];
+
 CRGB hexToColor(const char* hexCode) {
-  long number = (long) strtol(hexCode + 1, NULL, 16);
-  byte r = number >> 16;
-  byte g = number >> 8 & 0xFF;
-  byte b = number & 0xFF;
-  return CRGB(r, g, b);
+    long number = (long) strtol(hexCode + 1, NULL, 16);
+    byte r = number >> 16;
+    byte g = number >> 8 & 0xFF;
+    byte b = number & 0xFF;
+    return CRGB(r, g, b);
 }
 
 CRGB colorArray[COLOR_COUNT];
 
-
-
-
 void setup()
 {
-  Serial.begin(115200);
-  for (y = 0; y < COLOR_COUNT; y++) {
-    colorArray[y] = hexToColor(colors[y]);
-  }
-  FastLED.addLeds<WS2812, DATA_PIN1, GRB>(LEDstrings[0], NUM_LEDS1);
-  FastLED.addLeds<WS2812, DATA_PIN2, GRB>(LEDstrings[1], NUM_LEDS2);
-  FastLED.addLeds<WS2812, DATA_PIN3, GRB>(LEDstrings[2], NUM_LEDS3);
-  FastLED.addLeds<WS2812, DATA_PIN4, GRB>(LEDstrings[3], NUM_LEDS4);
-  FastLED.addLeds<WS2812, DATA_PIN5, GRB>(LEDstrings[4], NUM_LEDS5);
-  FastLED.addLeds<WS2812, DATA_PIN6, GRB>(LEDstrings[5], NUM_LEDS6);
-  FastLED.addLeds<WS2812, DATA_PIN7, GRB>(LEDstrings[6], NUM_LEDS7);
-  FastLED.addLeds<WS2812, DATA_PIN8, GRB>(LEDstrings[7], NUM_LEDS8);
+    Serial.begin(115200);
+    for (y = 0; y < COLOR_COUNT; y++) {
+        colorArray[y] = hexToColor(colors[y]);
+    }
+    FastLED.addLeds<WS2812, DATA_PIN1, GRB>(LEDstrings[0], NUM_LEDS1);
+    FastLED.addLeds<WS2812, DATA_PIN2, GRB>(LEDstrings[1], NUM_LEDS2);
+    FastLED.addLeds<WS2812, DATA_PIN3, GRB>(LEDstrings[2], NUM_LEDS3);
+    FastLED.addLeds<WS2812, DATA_PIN4, GRB>(LEDstrings[3], NUM_LEDS4);
+    FastLED.addLeds<WS2812, DATA_PIN5, GRB>(LEDstrings[4], NUM_LEDS5);
+    FastLED.addLeds<WS2812, DATA_PIN6, GRB>(LEDstrings[5], NUM_LEDS6);
+    FastLED.addLeds<WS2812, DATA_PIN7, GRB>(LEDstrings[6], NUM_LEDS7);
+    FastLED.addLeds<WS2812, DATA_PIN8, GRB>(LEDstrings[7], NUM_LEDS8);
 
-  //直到連接至wifi，不然重新連接
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
 
-  WiFi.begin(ssid, password);
+    WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
-  }
-  //UDP
-  udp.begin(localUdpPort);
-  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(1000);
+        Serial.println("Connecting to WiFi...");
+    }
+
+    udp.begin(localUdpPort);
+    Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
 }
 
 void loop()
 {
-  //UDP
-  int packetSize = udp.parsePacket();
-  if (packetSize) {
-    // 接收 UDP 數據包
-    int len = udp.read(incomingPacket, 4);
-    if (len == 4) {
-      // 將接收到的 4 字節數據轉換為整數
-      int receivedNumber = (incomingPacket[0] << 24) | (incomingPacket[1] << 16) | (incomingPacket[2] << 8) | incomingPacket[3];
-      
-      Serial.printf("%d\n", receivedNumber);
-      playh(receivedNumber);
+    int packetSize = udp.parsePacket();
+    if (packetSize) {
+        int len = udp.read(incomingPacket, 4);
+        if (len == 4) {
+            int receivedNumber = (incomingPacket[0] << 24) | (incomingPacket[1] << 16) | (incomingPacket[2] << 8) | incomingPacket[3];
+            Serial.printf("%d\n", receivedNumber);
+            playh(receivedNumber);
+        }
     }
-  }
-  
-  
-  
-
-
 }
 
-int playh(int frameN){
+int playh(int frameN)
+{
+    for (int ledstring = 0; ledstring < USEDPIN_NUM; ledstring++) {
+        CRGB* currentString = LEDstrings[ledstring];
+        int* currentParts = leds[ledstring];
+        int numLeds = lednums[ledstring];
+        bool isGlove = (ledstring == 1 || ledstring == 2);
 
-  for(int ledstring=0;ledstring<USEDPIN_NUM;ledstring++){
-    CRGB* currentString = LEDstrings[ledstring];
-    int* currentParts = leds[ledstring];
-    int numLeds = lednums[ledstring];
-    bool isGlove = (ledstring == 1 || ledstring == 2);
+        for (int led = 0; led < numLeds; led++) {
+            int currentpart = currentParts[led];
+            CRGB color = colorArray[data[frameN][currentpart]];
 
-    for(int led=0;led<numLeds;led++){
-      int currentpart = currentParts[led];
-      CRGB color = colorArray[data[frameN][currentpart]];
-      
-      if (isGlove) {
-        color.nscale8_video(4);  // 使用更快的nscale8_video
-      }
-      
-      currentString[led] = color;
+            if (isGlove) {
+                color.nscale8_video(4);  // 使用更快的nscale8_video
+            }
+
+            currentString[led] = color;
+        }
     }
-  }
-  FastLED.show();
-  return frameN;
-
+    FastLED.show();
+    return frameN;
 }

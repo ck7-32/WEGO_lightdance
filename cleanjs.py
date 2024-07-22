@@ -1,4 +1,5 @@
 import json
+file_path = 'setting.json' 
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -6,7 +7,7 @@ class CustomJSONEncoder(json.JSONEncoder):
             return obj
         return json.JSONEncoder.default(self, obj)
 
-def custom_indent(obj, level=0, array_threshold=20):
+def custom_indent(obj, level=0, array_threshold=25):
     if isinstance(obj, dict):
         result = "{\n"
         for key, value in obj.items():
@@ -28,7 +29,7 @@ def custom_indent(obj, level=0, array_threshold=20):
     return result
 
 # 讀取 JSON 檔案
-file_path = 'data.json'  # 替換成你的 JSON 檔案路徑
+ # 替換成你的 JSON 檔案路徑
 with open(file_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 

@@ -140,8 +140,8 @@ function animate(darr, canvas, ctx, startTime) {
   draw_time(time, segment);
   
   requestAnimFrame(function() {
-    animate(darr, canvas, ctx, startTime);
     getCurrentTime();
+    animate(darr, canvas, ctx, startTime);
   });
 }
 

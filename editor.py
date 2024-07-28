@@ -24,7 +24,7 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 def UDP(nowframe):
     message = struct.pack('>i', nowframe)
     sock.sendto(message, (broadcast_address, broadcast_port))
-    print(f"現在是第{nowframe}幀")
+    print(f"UDP:{nowframe}幀")
 
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
@@ -432,7 +432,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def scrollleft(self):
         self.html.page().runJavaScript(f"scrollWaveSurferLeft()")
     def scrollright(self):
-        self.html.page().runJavaScript(f"scorllWaveSurferRight()")
+        self.html.page().runJavaScript(f"scrollWaveSurferRight()")
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)

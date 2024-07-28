@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/wavesurfer.js@6.6.3"></script>
     <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.regions.js"></script>
     <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.markers.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.minimap.js"></script>
 
     <!-- 其他样式和脚本 -->
     <style>
@@ -18,12 +19,19 @@
         }
         #waveform {
             width: 850px;
-            height: 100px;
+            height: 120px;
+            background-color: #000000;
+            margin: 0 auto;
+        }
+        #minimap {
+            width: 850px;
+            height: 35px;
             background-color: #000000;
             margin: 0 auto;
         }
         #zoom-slider {
             width: 850px;
+            height: 10px;
             margin: 20px auto;
         }
         #controls {
@@ -164,11 +172,9 @@
         }
 
         function scrollWaveSurferRight() {
-            var maxScroll = wavesurfer.drawer.getWidth() - wavesurfer.drawer.wrapper.clientWidth;
             var currentScroll = wavesurfer.drawer.wrapper.scrollLeft;
-            if (currentScroll < maxScroll) {
-                wavesurfer.drawer.wrapper.scrollLeft = currentScroll + 10; // 每次滾動 10px
-            }
+            wavesurfer.drawer.wrapper.scrollLeft = currentScroll + 10; // 每次滾動 10px
+         
         }
      
         async function fetchData(url) {
@@ -202,7 +208,14 @@
                 interact: true,
                 plugins: [
                     regionsPlugin,
-                    markersPlugin
+                    markersPlugin,
+                    WaveSurfer.minimap.create({
+                    container: '#minimap',
+                    waveColor: '#FFFFFF',
+                    progressColor: '#777',
+                    height: 35
+                    })  ,
+                    
                 ]
             });
 
@@ -339,6 +352,7 @@
     <center>
         <canvas id="myCanvas" width="850" height="300" style="background-color: #000000" autoplay></canvas>
         <div id="waveform"></div>
+        <div id="minimap"></div>
         <input id="zoom-slider" type="range" min="1" max="200" value="100">
        
     </center>

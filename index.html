@@ -129,10 +129,7 @@
                 return;
         }
 
-        function reloadDataAndRedraw() {
-            loadDataFromJSON();
-            reloadRegions(); // 新增这行
-        }
+        
                 // 增加滑動條的值
         function increaseSliderValue() {
             var slider = document.getElementById('zoom-slider');
@@ -333,14 +330,13 @@
                 }
             }
         Object.assign(window, {
-
+        loadDataFromJSON,
         initializeWaveSurfer,
         initializeAudio,
         fetchData,
         getCurrentTime,
         setTime,
         reloadRegions,
-        reloadDataAndRedraw,
         increaseSliderValue,
         decreaseSliderValue,
         scrollWaveSurferLeft,

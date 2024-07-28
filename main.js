@@ -26,10 +26,11 @@ async function initializeData() {
   });
 }
 
-function reloadDataAndRedraw() {
-  window.initializeData();
-  window.reloadRegions(); // 新增這行
-  window.getCurrentTime();
+async function reloadDataAndRedraw() {
+  await initializeData();
+  loadDataFromJSON();
+  reloadRegions(); // 新增這行
+  getCurrentTime();
 }
 
 function handleKeydown(e) {

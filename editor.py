@@ -6,17 +6,34 @@ import sys
 import os
 import json
 import time as la
-
+import socket
+import struct
+import math
 
 settingjson_path="setting.json"
 datajson_path="data.json"
+#我打算讓他editor附上udp的功能
+# 設定廣播地址和埠
+broadcast_address = '255.255.255.255'
+broadcast_port = 12345
 
+# 創建 UDP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+def UDP(nowframe):
+    message = struct.pack('>i', nowframe)
+    sock.sendto(message, (broadcast_address, broadcast_port))
+    print(f"現在是第{nowframe}幀")
 
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
     def receiveTime(self, time):
         MainWindow_controller.receivetime(window,time)
-        
+    @QtCore.pyqtSlot(str, float)
+    def updateframe(self, id, newtime):
+        MainWindow_controller.updateframe(window,id, newtime)
+
 def getframe(time_segments, current_time):
     left = 0
     right = len(time_segments) - 1
@@ -93,7 +110,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         
         self.setting =loadjson(settingjson_path)
         self.data=loadjson(datajson_path)       
-        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
+        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5502/index.html"))
 
         #變數宣告
         self.time=0
@@ -156,8 +173,14 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.shortcut_scrollright.activated.connect(self.scrollright)
 
 
-#刷新視窗
-        
+#刷新正確幀數
+    def updateframe(self,id,newtime):
+        print(f"幀數{id}被更新為{newtime}")
+        del self.data["frametimes"][int(id)]
+        self.data["frametimes"].append(math.floor(newtime*1000))
+        self.data["frametimes"].sort()
+        savejson(datajson_path,self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #收到時間碼
     def receivetime(self,time):
         if self.time==time:
@@ -170,22 +193,23 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         if self.nowframe==frame:
             return
         self.nowframe=frame
+        UDP(frame)
         self.ui.nowframe.setText(f"{self.nowframe}")
         self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
         self.loaddancer()
 #將舞者載入
     def loaddancer(self):
         self.ui.dancernow.setText(self.setting["dancersname"][self.dancerN])
-        self.partnum=len(self.setting["dancers"][self.dancerN])
+        self.partnum=len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])
         for i in range(self.partnum):
             self.partlable[i].show()
             self.partcolors[i].show()
-            self.partlable[i].setText(self.setting["dancers"][self.dancerN][i])
+            self.partlable[i].setText(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"][i])
         for i in range(18-self.partnum):
             self.partlable[17-i].hide()
             self.partcolors[17-i].hide()
         self.loadcolor()
-
+    
 
 #選擇舞者選單被按下
     def dancerselected(self):
@@ -211,13 +235,13 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 
 #載入光效
     def loadcolor(self):
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.partcolors[i].clear()
             self.partcolors[i].addItems(self.data["colornames"])
             self.partcolors[i].setCurrentIndex(self.data["frames"][self.dancerN][self.nowframe][i])
 #顏色被變更
     def colorchanged(self):
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
         print(f"第{self.nowframe}幀已改變")
         savejson("data.json",self.data)
@@ -241,11 +265,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.setting["presetnames"].append(name)
         savejson(settingjson_path,self.setting)
         self.reloadpresets()
-        self.ui.presets.setItemData(len(self.setting["presetnames"].append(name))-1)
+       # self.ui.presets.setItemData((len(self.setting["presetnames"]))-1)
 #load preset
     def loadpreset(self):
         index=self.ui.presets.currentIndex()
-        for i in range(len(self.setting["dancers"][self.dancerN])):
+        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.partcolors[i].setCurrentIndex(self.setting["presets"][index][i])
         self.colorchanged()
 #del preset
@@ -275,7 +299,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             if self.data["frametimes"][self.nowframe+1] < time:
                 QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀')
                 return
-        self.data["frametimes"][self.nowframe]=time
+        self.data["frametimes"][self.nowframe]=math.floor(time)
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #當前時間設為當前偵開始時間
@@ -291,7 +315,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             if self.data["frametimes"][self.nowframe+2] < time:
                 QtWidgets.QMessageBox.information(self, '警告', '調整後的時間不能超過後一幀的結束時間')
                 return
-        self.data["frametimes"][self.nowframe+1]=time
+        self.data["frametimes"][self.nowframe+1]=math.floor(time)
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #新增關鍵幀
@@ -301,7 +325,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
              return
         for i in range(len(self.data["frames"])):
             self.data["frames"][i].insert(self.nowframe+1,self.data["frames"][i][self.nowframe])
-        self.data["frametimes"].insert(self.nowframe+1,self.time*1000)
+        self.data["frametimes"].insert(self.nowframe+1,math.floor(self.time*1000))
         savejson("data.json",self.data)
         self.nowframe+=1
         self.ui.nowframe.setText(f"{self.nowframe}")

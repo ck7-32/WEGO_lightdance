@@ -1,6 +1,14 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>Your Page Title</title>
+    <!-- 首先加载 WaveSurfer 及其插件 -->
+    <script src="https://unpkg.com/wavesurfer.js@6.6.3"></script>
+    <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.regions.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.markers.js"></script>
+
+    <!-- 其他样式和脚本 -->
     <style>
         body {
             margin: 0px;
@@ -18,23 +26,29 @@
             width: 850px;
             margin: 20px auto;
         }
+        #controls {
+            margin: 20px auto;
+            width: 850px;
+            text-align: center;
+        }
+        button {
+            margin-right: 10px;
+        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.9.0/system.min.js"></script>
     <script src="qwebchannel.js"></script>
 
-    <script>
-        let regionsPlugin;
+    <script type="module">
         
-        document.addEventListener('DOMContentLoaded', function() {
-            new QWebChannel(qt.webChannelTransport, function(channel) {
-                window.handler = channel.objects.handler;
-                console.log('QWebChannel initialized');
-            });
-        });
+        let wavesurfer;
+        var regionsPlugin = WaveSurfer.regions.create();
+        var markersPlugin = WaveSurfer.markers.create();
+        let markers = [];
+        let audiopath;
+        
+      
         
         function getCurrentTime() {
-            
+            console.log('getCurrentTime');
             var currentTime = wavesurfer.getCurrentTime();
             console.log('Current Time:', currentTime);
             if (typeof handler !== 'undefined') {
@@ -81,11 +95,11 @@
                 .then(response => response.json())
                 .then(data => {
                     const frametimes = data.frametimes;
-                    regionsPlugin.clearRegions(); // 清除现有的regions
+                    wavesurfer.clearRegions(); // 清除现有的regions
                     for (let i = 0; i < frametimes.length ; i++) {
                         const startTime = frametimes[i] / 1000; // 转换为秒
                         const endTime = frametimes[i + 1] / 1000; // 转换为秒
-                        regionsPlugin.addRegion({
+                        wavesurfer.addRegion({
                             start: startTime,
                             end: endTime,
                             color: i % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
@@ -95,7 +109,7 @@
                     }
                     // 添加最后一个时间点的标记
                     const lastStartTime = frametimes[frametimes.length ] / 1000;
-                    regionsPlugin.addRegion({
+                    wavesurfer.addRegion({
                         start: lastStartTime,
                         end: lastStartTime + 0.5, // 给最后一个标记一个默认的持续时间
                         color: frametimes.length % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
@@ -108,7 +122,7 @@
         }
 
         function reloadDataAndRedraw() {
-            fetchDataAndInitialize();
+            loadDataFromJSON();
             reloadRegions(); // 新增这行
         }
                 // 增加滑動條的值
@@ -135,15 +149,13 @@
 
         // 更新顯示值
         function updateDisplayValue(value) {
-            var displayValue = document.getElementById('slider-value');
-            wavesurfer.zoom(Number(this.value));
+            var displayValue = document.getElementById('zoom-slider');
+          wavesurfer.zoom(Number(value));
+           
         }
 
-        // 當網頁載入完成後執行的函式
-        window.onload = function() {
-            var slider = document.getElementById('zoom-slider');
-            updateDisplayValue(slider.value);
-        }
+        // 当網頁載入完成後執行的函式
+        
         function scrollWaveSurferLeft() {
             var currentScroll = wavesurfer.drawer.wrapper.scrollLeft;
             if (currentScroll > 0) {
@@ -158,6 +170,169 @@
                 wavesurfer.drawer.wrapper.scrollLeft = currentScroll + 10; // 每次滾動 10px
             }
         }
+     
+        async function fetchData(url) {
+            try {
+                const response = await fetch(url);
+                return await response.json();
+            } catch (error) {
+                console.error(`Error fetching data from ${url}:`, error);
+                throw error;
+            }
+        }
+        async function initializeAudio() {
+            try {
+                const data = await fetchData('setting.json');
+                audiopath = data.audio;
+                console.log('Audio path initialized:', audiopath);
+                await initializeWaveSurfer();
+            } catch (error) {
+                console.error('Error initializing audio:', error);
+            }
+        }
+
+        async function initializeWaveSurfer() {
+           
+            wavesurfer = WaveSurfer.create({
+                container: '#waveform',
+                waveColor: '#FFFFFF',
+                progressColor: '#8a8a8a',
+                height: 120,
+                hideScrollbar: true,
+                interact: true,
+                plugins: [
+                    regionsPlugin,
+                    markersPlugin
+                ]
+            });
+
+
+            if (!regionsPlugin || !markersPlugin) {
+                console.error('WaveSurfer 插件未正确初始化');
+                return;
+            }
+
+            // 加载音频
+            try {
+                await wavesurfer.load(audiopath);
+            } catch (error) {
+                console.error('加载音频时出错:', error);
+                return;
+            }
+            // 加载音频
+            await wavesurfer.load(audiopath);
+
+            wavesurfer.on('ready', () => {
+                console.log('WaveSurfer is ready');
+                loadDataFromJSON();
+                console.log('載入數據');
+                setupEventListeners();
+                console.log('綁定事件');
+                var slider = document.getElementById('zoom-slider');
+                console.log('綁定滑動條');
+                slider.addEventListener('input', function() {
+                updateDisplayValue(this.value);
+                });
+                Object.assign(window, {
+                    wavesurfer,
+                });
+
+                // 启动动画
+                var startTime = (new Date()).getTime();
+                animate(darr, canvas, ctx, startTime);
+            });
+        }
+
+        function setupEventListeners() {
+            wavesurfer.on('region-update-end', updateJSON);
+            wavesurfer.on('marker-drop', function(marker) {
+                updateMarker(marker.label,marker.time);
+            });
+        }
+
+        
+        function updateMarker(id,newtime) {
+            handler.updateframe(id, newtime);
+        }
+
+        function updateJSON() {
+            const data = { 
+                frametimes: regionsPlugin.getRegions().map(r => r.start * 1000),
+                markers: markers.map(m => m.time * 1000)
+            };
+            localStorage.setItem('audioData', JSON.stringify(data));
+            updateFrameTimes(regionsPlugin.getRegions());
+        }
+
+        function loadDataFromJSON() {
+            const savedData = localStorage.getItem('audioData');
+            if (savedData) {
+
+                loadData(JSON.parse(savedData));
+                
+            } else {
+                console.log('載入數據1');
+                fetch('data.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        loadData(data);
+                    })
+                    .catch(error => console.error('Error loading data:', error));
+            }
+        }
+
+        function loadData(data) {
+                // 加载 regions
+                wavesurfer.clearRegions();
+
+                if (data.frametimes) {
+                    for (let i = 0; i < data.frametimes.length - 1; i++) {
+                        const startTime = data.frametimes[i] / 1000;
+                        const endTime = data.frametimes[i + 1] / 1000;
+                        wavesurfer.addRegion({
+                            start: startTime,
+                            end: endTime,
+                            color: i % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)',
+                            resize: false,
+                            drag: false
+                        });
+                    }
+                }
+
+                // 加载 markers
+               
+                wavesurfer.clearMarkers();
+                
+
+                markers = [];
+                if (data.frametimes) {
+                    data.frametimes.forEach((time, index) => {
+                        const markerId = wavesurfer.addMarker({
+                            time: time / 1000,
+                            color: 'rgba(120, 179, 150, 1)',
+                            position: 'top',
+                            id:index.toString(),
+                            label:index.toString(),
+                            draggable: true
+                        });
+                        markers.push({ id: markerId, time: time / 1000 });
+                    });
+                }
+            }
+        Object.assign(window, {
+
+        initializeWaveSurfer,
+        initializeAudio,
+        fetchData,
+        getCurrentTime,
+        setTime,
+        reloadRegions,
+        reloadDataAndRedraw,
+        increaseSliderValue,
+        decreaseSliderValue,
+        scrollWaveSurferLeft,
+        scrollWaveSurferRight,
+    });
     </script>
 </head>
 <body>
@@ -165,74 +340,28 @@
         <canvas id="myCanvas" width="850" height="300" style="background-color: #000000" autoplay></canvas>
         <div id="waveform"></div>
         <input id="zoom-slider" type="range" min="1" max="200" value="100">
-        
+       
     </center>
 
     <script type="text/javascript" src="pos.js" charset="utf-8"></script>
+    <script type="text/javascript" src="dancer.js" charset="utf-8"></script>
+    <script src="qwebchannel.js"></script>
+
+    <script>
+        function initializeQWebChannel() {
+            new QWebChannel(qt.webChannelTransport, function(channel) {
+                window.handler = channel.objects.handler;
+                console.log('QWebChannel initialized');
+            });
+        }
+        document.addEventListener('DOMContentLoaded', async function() {
+            initializeQWebChannel();
+            await initializeAudio();
+            await initializeSettings();
+            await initializeData();
+        });
+        
+    </script> 
     <script type="text/javascript" src="main.js" charset="utf-8"></script>
-    <div id="audiowave"></div>
-    <script type="module">
-        import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js';
-        import RegionsPlugin from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/plugins/regions.esm.js';
-
-        window.wavesurfer = WaveSurfer.create({
-            container: '#waveform',
-            waveColor: '#FFFFFF',
-            progressColor: '#8a8a8a',
-            url: '0701audio.mp3',
-            height: 120,
-            hideScrollbar: true,
-            interact: true // 允许拖动进度条
-        });
-
-        regionsPlugin = RegionsPlugin.create();
-        wavesurfer.registerPlugin(regionsPlugin);
-
-        wavesurfer.on('ready', () => {
-            console.log('WaveSurfer is ready');
-            // 从data.json加载时间标记
-            fetch('data.json')
-                .then(response => response.json())
-                .then(data => {
-                    const frametimes = data.frametimes;
-                    for (let i = 0; i < frametimes.length ; i++) {
-                        const startTime = frametimes[i] / 1000; // 转换为秒
-                        const endTime = frametimes[i + 1] / 1000; // 转换为秒
-                        regionsPlugin.addRegion({
-                            start: startTime,
-                            end: endTime,
-                            color: i % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
-                            resize: false, // 允许调整大小
-                            drag: false // 允许拖动
-                        });
-                    }
-                    // 添加最后一个时间点的标记
-                    const lastStartTime = frametimes[frametimes.length+1 ] / 1000;
-                    regionsPlugin.addRegion({
-                        start: lastStartTime,
-                        end: lastStartTime + 0.5, // 给最后一个标记一个默认的持续时间
-                        color: frametimes.length % 2 === 0 ? 'rgba(50, 0, 0, 0.5)' : 'rgba(0, 50, 0, 0.5)', // 基数偶数段不同颜色
-                        resize: false, // 允许调整大小
-                        drag: false // 允许拖动
-                    });
-                })
-                .catch(error => console.error('Error loading data.json:', error));
-        });
-
-        regionsPlugin.on('region-update-end', () => {
-            const regions = Object.values(wavesurfer.regions.list);
-            updateFrameTimes(regions);
-        });
-
-        wavesurfer.on('seek', (progress) => {
-            const duration = wavesurfer.getDuration();
-            const newTime = progress * duration;
-            getCurrentTime(newTime);
-        });
-
-        document.getElementById('zoom-slider').oninput = function() {
-            wavesurfer.zoom(Number(this.value));
-        };
-    </script>
 </body>
 </html>

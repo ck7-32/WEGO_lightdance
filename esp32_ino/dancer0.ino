@@ -3,13 +3,13 @@
 #include <FastLED.h>
 #include <WiFi.h>
 
-#define NUM_LEDS1 6 //帽子
-#define NUM_LEDS2 25 //貓耳
-#define NUM_LEDS3 25 //左手套
-#define NUM_LEDS4 9 //右手套
-#define NUM_LEDS5 8 //左半身
-#define NUM_LEDS6 7 //右半身
-#define NUM_LEDS7 7 //左褲子
+#define NUM_LEDS1 6 //帽子+貓耳
+#define NUM_LEDS2 25 //左手套
+#define NUM_LEDS3 25 //右手套
+#define NUM_LEDS4 9 //左半身
+#define NUM_LEDS5 8 //右半身
+#define NUM_LEDS6 7 //左褲子
+#define NUM_LEDS7 7 //右褲子
 #define NUM_LEDS8 0 //
 
 #define DATA_PIN1 17
@@ -40,13 +40,13 @@ CRGB LED7[NUM_LEDS7];
 CRGB LED8[NUM_LEDS8];
 CRGB* LEDstrings[] = {LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8};
 
-int LEDPART1[NUM_LEDS1]={2, 2, 2, 2, 1, 1};//帽子
-int LEDPART2[NUM_LEDS2]={8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};//貓耳
-int LEDPART3[NUM_LEDS3]={7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};//左手套
-int LEDPART4[NUM_LEDS4]={0, 0, 0, 0, 0, 6, 4, 4, 6};//右手套
-int LEDPART5[NUM_LEDS5]={0, 0, 0, 0, 5, 3, 3, 5};//左半身
-int LEDPART6[NUM_LEDS6]={10, 12, 12, 10, 12, 12, 12};//右半身
-int LEDPART7[NUM_LEDS7]={9, 11, 11, 9, 11, 11, 11};//左褲子
+int LEDPART1[NUM_LEDS1]={2, 2, 2, 2, 1, 1};//帽子+貓耳
+int LEDPART2[NUM_LEDS2]={8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};//左手套
+int LEDPART3[NUM_LEDS3]={7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};//右手套
+int LEDPART4[NUM_LEDS4]={0, 0, 0, 0, 0, 6, 4, 4, 6};//左半身
+int LEDPART5[NUM_LEDS5]={0, 0, 0, 0, 5, 3, 3, 5};//右半身
+int LEDPART6[NUM_LEDS6]={10, 12, 12, 10, 12, 12, 12};//左褲子
+int LEDPART7[NUM_LEDS7]={9, 11, 11, 9, 11, 11, 11};//右褲子
 int LEDPART8[NUM_LEDS8]={};//
 
 int* leds[] = {LEDPART1, LEDPART2, LEDPART3, LEDPART4, LEDPART5, LEDPART6, LEDPART7, LEDPART8};

@@ -24,12 +24,16 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 def UDP(nowframe):
     message = struct.pack('>i', nowframe)
     sock.sendto(message, (broadcast_address, broadcast_port))
+    print(f"現在是第{nowframe}幀")
 
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
     def receiveTime(self, time):
         MainWindow_controller.receivetime(window,time)
-        
+    @QtCore.pyqtSlot(str, float)
+    def updateframe(self, id, newtime):
+        MainWindow_controller.updateframe(window,id, newtime)
+
 def getframe(time_segments, current_time):
     left = 0
     right = len(time_segments) - 1
@@ -106,7 +110,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         
         self.setting =loadjson(settingjson_path)
         self.data=loadjson(datajson_path)       
-        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
+        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5502/index.html"))
 
         #變數宣告
         self.time=0
@@ -169,8 +173,14 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.shortcut_scrollright.activated.connect(self.scrollright)
 
 
-#刷新視窗
-        
+#刷新正確幀數
+    def updateframe(self,id,newtime):
+        print(f"幀數{id}被更新為{newtime}")
+        del self.data["frametimes"][int(id)]
+        self.data["frametimes"].append(math.floor(newtime*1000))
+        self.data["frametimes"].sort()
+        savejson(datajson_path,self.data)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #收到時間碼
     def receivetime(self,time):
         if self.time==time:

@@ -1,14 +1,12 @@
 
 var N_DANCER = 0;
-var audiopath;
 
 async function initializeSettings() {
   try {
-    const data = await fetchData('setting.json');
+    const data = await window.fetchData('setting.json');
     N_DANCER = data.dancersname.length;
-    audiopath=data.audio;
+    audiopath = data.audio; // 使用全局变量，不再重新声明
     console.log('N_DANCER:', N_DANCER);
-    wavesurfer.load(audiopath);
     // 初始化 darr 数组
     darr = Array(N_DANCER);
     for (let i = 0; i < N_DANCER; i++) {
@@ -20,7 +18,7 @@ async function initializeSettings() {
 }
 
 async function initializeData() {
-  return fetchData('data.json').then(data => {
+  return window.fetchData('data.json').then(data => {
     alllight = data.frames;
     frametime = data.frametimes;
     colors = data.color;
@@ -29,40 +27,43 @@ async function initializeData() {
 }
 
 function reloadDataAndRedraw() {
-  initializeData();
-  reloadRegions(); // 新增這行
-  getCurrentTime();
+  window.initializeData();
+  window.reloadRegions(); // 新增這行
+  window.getCurrentTime();
 }
 
 function handleKeydown(e) {
-const currentTime = wavesurfer.getCurrentTime();
+  const currentTime = window.wavesurfer.getCurrentTime();
   switch (e.keyCode) {
     case 32:
-      wavesurfer.playPause();
+      window.wavesurfer.playPause();
       break;
     case 37:
-      setTime(currentTime - 5);
+      window.setTime(currentTime - 5);
       break;
     case 39:
-      setTime(currentTime + 5);
+      window.setTime(currentTime + 5);
       break;
     case 190:
-      setTime(currentTime + 0.1);
+      window.setTime(currentTime + 0.1);
       break;
     case 188:
-      setTime(currentTime - 0.1);
+      window.setTime(currentTime - 0.1);
       break;
     case 75: // 'k' or 'K'
-      wavesurfer.playPause();
+      window.wavesurfer.playPause();
       console.log("play/pause");
       break;
   }
 }
-
 function color(c, x) {
   var percent = (-1) * (1.0 - (x / 255.0));
   return c;
 }
+// 将需要在全局作用域使用的函数添加到 window 对象
+window.initializeSettings = initializeSettings;
+window.initializeData = initializeData;
+window.handleKeydown = handleKeydown;
 
 
 function getPos(idx, time) {
@@ -114,6 +115,9 @@ function draw_time(time, frame) {
 }
 
 function animate(darr, canvas, ctx, startTime) {
+  if (!window.wavesurfer) {
+    console.error('WaveSurfer is not initialized');
+  }
   var time = wavesurfer.getCurrentTime() + DELAY;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -134,7 +138,7 @@ function animate(darr, canvas, ctx, startTime) {
 
   segment = getTimeSegmentIndex(frametime, time * 1000);
   draw_time(time, segment);
-
+  
   requestAnimFrame(function() {
     animate(darr, canvas, ctx, startTime);
     getCurrentTime();
@@ -173,12 +177,7 @@ Dancer.prototype.setBasePos = function(bx, by) {
   this.base_y = by;
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
-  var audioElement = document.getElementById('myAudio');
-  wavesurfer.play();
-  await initializeSettings();
-  await initializeData();
-});
+
 window.addEventListener("keydown", handleKeydown);
 var DELAY = 0;
 var canvas = document.getElementById('myCanvas');
@@ -192,10 +191,7 @@ var darr = Array(N_DANCER);
 for(var i = 0; i < N_DANCER; i++)
   darr[i] = new Dancer(i, 50 + 100 * i, 59);
 
-setTimeout(function() {
-  var startTime = (new Date()).getTime();
-  animate(darr, canvas, ctx, startTime);
-}, 500);
+
 
 
 Dancer.prototype.draw2 = function(time) {
@@ -283,8 +279,8 @@ ctx.lineWidth=3;
   ctx.strokeStyle = getcolor(this.id, segment, 3);
   ctx.beginPath();
   ctx.moveTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius-3);
-  ctx.lineTo(this.base_x + this.width / 2-6, this.base_y + 2 * head_radius-3 );
-  ctx.lineTo(this.base_x + this.width / 2-6, this.base_y + 2 * head_radius + 40);
+  ctx.lineTo(this.base_x + this.width / 2 - 6, this.base_y + 2 * head_radius-3 );
+  ctx.lineTo(this.base_x + this.width / 2 - 6, this.base_y + 2 * head_radius + 40);
   ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius + 40);
   ctx.lineTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 2 * head_radius +20);
   ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius-3);

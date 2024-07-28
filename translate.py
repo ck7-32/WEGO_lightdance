@@ -12,6 +12,11 @@ frames = data.get("frames", [])
 
 # 建立輸出資料夾
 output_dir = 'esp32_ino'
+WIFI_SSID="Wong88"
+WIFI_PASSWORD="20070415"
+
+
+
 os.makedirs(output_dir, exist_ok=True)
 
 def array_to_string(arr):
@@ -104,8 +109,8 @@ CRGB* LEDstrings[] = {{LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8}};
 int* leds[] = {{LEDPART1, LEDPART2, LEDPART3, LEDPART4, LEDPART5, LEDPART6, LEDPART7, LEDPART8}};
 {framedata}
 
-const char* ssid = "Wong88";
-const char* password = "20070415";
+const char* ssid = "{WIFI_SSID}";
+const char* password = "{WIFI_PASSWORD}";
 WiFiUDP udp;
 unsigned int localUdpPort = 12345;  
 uint8_t incomingPacket[4];

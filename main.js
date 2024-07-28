@@ -1,5 +1,14 @@
 
 var N_DANCER = 0;
+window.addEventListener("keydown", handleKeydown);
+var DELAY = 0;
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+ctx.lineWidth = 3;
+var colors=[];
+Pos = JSON.parse(Pos);
+var darr = Array(N_DANCER);
+var arrow = 0;
 
 async function initializeSettings() {
   try {
@@ -129,13 +138,17 @@ function animate(darr, canvas, ctx, startTime) {
 
   }
   //決定要怎麼畫
-  for(var i=0; i<N_DANCER; i++)
+  for(var i=0; i<N_DANCER; i++){
     if (i %2 ==0){
       
-      darr[i].draw(time);}
+      darr[i].draw(time);
+      }
       
     else{darr[i].draw2(time);}
-    
+    if (i == arrow){
+      darr[i].drawArrow();
+    }}
+
 
   segment = getTimeSegmentIndex(frametime, time * 1000);
   draw_time(time, segment);
@@ -168,6 +181,11 @@ function startAnimation() {
   })();
 }
 
+function setArrow(arrowN) {
+  arrow = arrowN;
+  reloadDataAndRedraw();
+}
+
 function setTime(time) {
   const duration = wavesurfer.getDuration();
   const progress = time / duration;
@@ -179,14 +197,6 @@ Dancer.prototype.setBasePos = function(bx, by) {
 }
 
 
-window.addEventListener("keydown", handleKeydown);
-var DELAY = 0;
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext('2d');
-ctx.lineWidth = 3;
-var colors=[];
-Pos = JSON.parse(Pos);
-var darr = Array(N_DANCER);
 
 
 for(var i = 0; i < N_DANCER; i++)
@@ -194,7 +204,17 @@ for(var i = 0; i < N_DANCER; i++)
 
 
 
+Dancer.prototype.drawArrow=function(){
 
+  ctx.strokeStyle = "#a0e0aa";
+  //draw an arrow on the top of dencer
+  ctx.beginPath();
+  ctx.moveTo(this.base_x + this.width / 2, this.base_y - 10);
+  ctx.lineTo(this.base_x + this.width / 2 + 10, this.base_y - 10 - 20);
+  ctx.lineTo(this.base_x + this.width / 2 - 10, this.base_y - 10 - 20);
+  ctx.lineTo(this.base_x + this.width / 2 , this.base_y - 10);
+  ctx.stroke();
+}
 Dancer.prototype.draw2 = function(time) {
   var miltime = time * 1000;
   var segment = getTimeSegmentIndex(frametime, miltime);

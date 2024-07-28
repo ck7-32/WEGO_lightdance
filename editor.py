@@ -12,6 +12,7 @@ import math
 
 settingjson_path="setting.json"
 datajson_path="data.json"
+presetsjson_path="presets.json"
 #我打算讓他editor附上udp的功能
 # 設定廣播地址和埠
 broadcast_address = '255.255.255.255'
@@ -109,7 +110,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         #載入setting.json
         
         self.setting =loadjson(settingjson_path)
-        self.data=loadjson(datajson_path)       
+        self.data=loadjson(datajson_path)
+        self.presets=loadjson(presetsjson_path)       
         self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
 
         #變數宣告
@@ -132,6 +134,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.delpreset.clicked.connect(self.delpreset)
         self.ui.nowframe.setText(f"{self.nowframe}")
         self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
+        self.dancerselected()
         self.loaddancer()
         self.reloadpresets()
         self.ui.set_frame_start_bynowtime.clicked.connect(self.set_frame_start_bynowtime)
@@ -146,6 +149,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.renamecolor.clicked.connect(self.editcolorname)
         self.ui.showcolor.clicked.connect(self.colorpreview)
         self.ui.colors.currentIndexChanged.connect(self.colorpreview)
+
         #設置全局快捷鍵
         self.shortcut_colorchanged = QShortcut(QtGui.QKeySequence("1"), self)
         self.shortcut_colorchanged.activated.connect(self.colorchanged)
@@ -208,12 +212,15 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         for i in range(18-self.partnum):
             self.partlable[17-i].hide()
             self.partcolors[17-i].hide()
+        
         self.loadcolor()
     
 
 #選擇舞者選單被按下
     def dancerselected(self):
         self.dancerN=self.ui.Dancers.currentIndex()
+        self.html.page().runJavaScript(f"setArrow({self.dancerN});")
+        print(f"設置箭頭為{self.dancerN}")
         self.loaddancer()
     
 
@@ -254,35 +261,35 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         if name =="":
             QtWidgets.QMessageBox.information(self, '警告', '輸入框不能為空')
             return
-        elif name in self.setting["presetnames"]:
+        elif name in self.presets["presetnames"]:
             QtWidgets.QMessageBox.information(self, '警告', '輸入框不能為空')
             return
        
         preset=[]
         for i in range(self.partnum):
             preset.append(self.partcolors[i].currentIndex())
-        self.setting["presets"].append(preset)
-        self.setting["presetnames"].append(name)
-        savejson(settingjson_path,self.setting)
+        self.presets["presets"].append(preset)
+        self.presets["presetnames"].append(name)
+        savejson(presetsjson_path,self.presets)
         self.reloadpresets()
-       # self.ui.presets.setItemData((len(self.setting["presetnames"]))-1)
+       # self.ui.presets.setItemData((len(self.presets["presetnames"]))-1)
 #load preset
     def loadpreset(self):
         index=self.ui.presets.currentIndex()
         for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
-            self.partcolors[i].setCurrentIndex(self.setting["presets"][index][i])
+            self.partcolors[i].setCurrentIndex(self.presets["presets"][index][i])
         self.colorchanged()
 #del preset
     def delpreset(self):
         index=self.ui.presets.currentIndex()
-        del self.setting["presets"][index]
-        del self.setting["presetnames"][index]
-        savejson(settingjson_path,self.setting)
+        del self.presets["presets"][index]
+        del self.presets["presetnames"][index]
+        savejson(presetsjson_path,self.presets)
         self.reloadpresets()
 #reload presets
     def reloadpresets(self):
         self.ui.presets.clear()
-        self.ui.presets.addItems(self.setting["presetnames"])
+        self.ui.presets.addItems(self.presets["presetnames"])
 
 #更改當前幀開始時間
     def set_frame_start_bynowtime(self):

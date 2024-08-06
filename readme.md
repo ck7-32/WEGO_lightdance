@@ -21,25 +21,43 @@
 
 
 
-入門篇
----
 - [光舞入門](https://hackmd.io/@Wego-lightdance/intro)
-- [焊接](/TZH31NiTQPaqkQyXs0dV5g)
-- [材料與衣服製作](/wdzomZMaRb2g_TDo4X09uQ)
-- [軟體總架構與概念](/Hac68Ah0Q4eYGM_2nUO6Mw)
-- [光效程式操作](/0aCiybSfStyNsGH1wYQeTg)
 
+# 光效程式操作
+## 1.確認環境
+* #### Live Server
+安裝這個Vscode套件
+     ![image](https://hackmd.io/_uploads/Hk-5bCBYA.png)
+    安裝成功後右下角會有
+    ![image](https://hackmd.io/_uploads/r1Sh-0HFR.png)
+的圖標
+* #### 安裝必要的Python packages
+一樣打開終端機輸入並且執行(可以分行貼上執行或者一次貼上執行)
+```
+pip install PyQt6
+pip install PyQt6-WebEngine
+```
 
-硬體進階篇
----
-- [LED進階篇](/LynVWLdETD6mjzksJkZl2A)
-- [示波器使用](/upKHCVubSYGCQsm-19vEZQ)
-- [主控板硬體](/Va1ZuAahTiqG8bcWHlAizQ)
+更詳細的環境架設可以參考
+* [架設開發環境](https://hackmd.io/@Wego-lightdance/Ftutorials/%2FVjSY-xlTSROaxDT1woqKQg)
+## 2.啟動Live Server
+1.先點右下角 `Go Live`
+![image](https://hackmd.io/_uploads/BJM_Mvkc0.png)
+之後會跳出
+![image](https://hackmd.io/_uploads/BJnOfDkq0.png)
+並且Vscode右下角變成
+![image](https://hackmd.io/_uploads/HJCYMDk50.png)
 
-軟體進階篇
----
-- [UDP網路通訊](/IATeXuyPSwOWQ0w5NXogtw)
-- [光效資料結構](/1-Vl3LxaQhCD5IsgK7G5XA)
-- [編輯器介面實現](/fxkUwRlrRjWs4-aPx1yJNg)
-- [光效模擬動畫](/_jZRZ8IATrCMkD8JeEP7tQ)
-- [主控板程式](/-WecN4MvRtGOeNyspvwg1g)
+這樣就成功了
+
+## 3.啟動編輯器
+開啟`editor.py`
+點擊執行
+![image](https://hackmd.io/_uploads/HJUgQwy5C.png)
+或者在終端機輸入
+```bash
+python editor.py
+```
+
+接著編輯器就會彈出來了!!
+![image](https://hackmd.io/_uploads/BkKvmDyq0.png)

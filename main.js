@@ -34,14 +34,27 @@ async function initializeData() {
     startAnimation();
   });
 }
-
+async function initializeposData() {
+  return window.fetchData('pos.json').then(data => {
+    pos = data.pos;
+    postime=data.postimes;
+    
+    startAnimation();
+    handler.debug(postime[1]); 
+  });
+}
 async function reloadDataAndRedraw() {
   await initializeData();
+  await initializeposData();
   loadDataFromJSON();
   reloadRegions(); // 新增這行
   getCurrentTime();
 }
-
+function dragdancer(x,y){
+  while(isdragging){
+    handler.updatepos(arrow,x,y);
+  }
+}
 function handleKeydown(e) {
   const currentTime = window.wavesurfer.getCurrentTime();
   switch (e.keyCode) {
@@ -64,6 +77,8 @@ function handleKeydown(e) {
       window.wavesurfer.playPause();
       console.log("play/pause");
       break;
+    case 85://"U"
+      isdragging=true;
   }
 }
 function color(c, x) {
@@ -76,26 +91,24 @@ window.initializeData = initializeData;
 window.handleKeydown = handleKeydown;
 
 
-function getPos(idx, time) {
+function getPos(idx, time,nowPos) {
   var bx = 0, by = 0;
-  var S = Pos[idx].length;
+  S=len(postime);
 
-  if(S == 0) return [0, 0];
+  var t1 = postime[nowPos];
+  var x1 = pos[nowPos][idx][0];
+  var y1 = pos[nowPos][idx][1];
 
-  var lb = 0
-  var t1 = Pos[idx][lb][0];
-  var x1 = Pos[idx][lb][1];
-  var y1 = Pos[idx][lb][2];
-
-  if(lb == S-1) return [x1, y1];
+  if(nowPos == S-1) return [x1, y1];
   
-  var t2 = Pos[idx][lb+1][0];
-  var x2 = Pos[idx][lb+1][1];
-  var y2 = Pos[idx][lb+1][2];
+  var t2 = postime[nowPos+1];
+  var x2 = pos[nowPos+1][idx][0];
+  var y2 = pos[nowPos+1][idx][1];
 
   bx = x1 + (x2-x1) * (time-t1) / (t2-t1);
   by = y1 + (y2-y1) * (time-t1) / (t2-t1);
-
+  
+ 
   return [bx, by];
 }
 
@@ -130,10 +143,11 @@ function animate(darr, canvas, ctx, startTime) {
   }
   var time = wavesurfer.getCurrentTime() + DELAY;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  nowPos=getTimeSegmentIndex(postime,time);
 
   for(var i=0; i<N_DANCER; i++) {
 
-      var pos = getPos(i, time);
+      var pos = getPos(i, time,nowPos);
       darr[i].setBasePos(pos[0], pos[1]);
 
   }

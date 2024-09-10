@@ -13,6 +13,7 @@ import math
 settingjson_path="setting.json"
 datajson_path="data.json"
 presetsjson_path="presets.json"
+pos_path="pos.json"
 #我打算讓他editor附上udp的功能
 # 設定廣播地址和埠
 broadcast_address = '255.255.255.255'
@@ -34,7 +35,15 @@ class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(str, float)
     def updateframe(self, id, newtime):
         MainWindow_controller.updateframe(window,id, newtime)
-
+    @QtCore.pyqtSlot(str, float, )
+    def updateposetime(self, id, newtime):
+        MainWindow_controller.updateposetime(window,id, newtime)
+    @QtCore.pyqtSlot(int, float , float)
+    def updatepose(self, id, dancerid,x,y):
+        MainWindow_controller.updatepose(window, dancerid,x,y)
+    @QtCore.pyqtSlot(str)
+    def debug(self, context):
+       print(context)
 def getframe(time_segments, current_time):
     left = 0
     right = len(time_segments) - 1
@@ -111,6 +120,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         
         self.setting =loadjson(settingjson_path)
         self.data=loadjson(datajson_path)
+        self.Pos=loadjson(pos_path)
         self.presets=loadjson(presetsjson_path)       
         self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
 
@@ -118,6 +128,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.time=0
         self.dancerN=0
         self.nowframe=0
+        self.nowPos=0
         self.partcolors=[self.ui.color0,self.ui.color1,self.ui.color2,self.ui.color3,self.ui.color4,self.ui.color5,self.ui.color6,self.ui.color7,self.ui.color8,self.ui.color9,self.ui.color10,self.ui.color11,self.ui.color12,self.ui.color13,self.ui.color14,self.ui.color15,self.ui.color16,self.ui.color17]
         self.partlable=[self.ui.part0,self.ui.part1,self.ui.part2,self.ui.part3,self.ui.part4,self.ui.part5,self.ui.part6,self.ui.part7,self.ui.part8,self.ui.part9,self.ui.part10,self.ui.part11,self.ui.part12,self.ui.part13,self.ui.part14,self.ui.part15,self.ui.part16,self.ui.part17]
         self.loaddancer()
@@ -185,6 +196,44 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data["frametimes"].sort()
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
+#處裡移動flag
+    def updateposetime(self,id,time):
+        print(f"位置幀數{id}被更新為{time}")
+        del self.Pos["postimess"][int(id)]
+        self.Pos["postimess"].append(time)
+        self.Pos["postimess"].sort()
+        savejson(datajson_path,self.Pos)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+# 處理位置更新
+    def updatepose(self,dancerid,x,y):
+        print(f"位置幀數{self.nowPos}的舞者{id}被移動至({x},{y})")
+        self.Pos["pos"][self.nowPos][dancerid]=[x,y]
+
+        savejson(datajson_path,self.Pos)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+    def newpos(self):
+        if self.Pos["postimes"][self.nowPos]==self.time:
+             QtWidgets.QMessageBox.information(self, '警告', '與當前幀重疊')
+             return
+        for i in range(len(self.dancerN)):
+            self.Pos["pos"][i].insert(self.nowPos+1,self.Pos["pos"][i][self.nowPos])
+        self.data["postimes"].insert(self.nowPos+1,self.time)
+        savejson("pos.json",self.Pos)
+        self.nowPos+=1
+        self.ui.pos.setText(f"{self.nowPos}")
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+        self.Pos=loadjson(pos_path)
+    def delpos(self):
+        if self.pos==0:
+            QtWidgets.QMessageBox.information(self, '警告', '不能刪除第一幀')
+            return
+        for i in range(len(self.dancerN)):
+            del self.data["Pos"][i][self.nowPos]
+        del self.data["postimes"][self.nowPos]
+        savejson("pos.json",self.Pos)
+        self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
 #收到時間碼
     def receivetime(self,time):
         if self.time==time:
@@ -194,6 +243,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.nowtime.setText(f"{time}")
         self.ui.settime.setText(f"{time}")
         frame=get_time_index(self.data["frametimes"],self.time*1000)
+        posframe=get_time_index(self.Pos["postimes"],self.time)
+        if self.nowPos!=posframe:
+            self.nowPosPos=posframe
         if self.nowframe==frame:
             return
         self.nowframe=frame

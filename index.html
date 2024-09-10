@@ -52,7 +52,7 @@
         var markersPlugin = WaveSurfer.markers.create();
         let markers = [];
         let audiopath;
-        
+
       
         
         function getCurrentTime() {
@@ -358,6 +358,7 @@
     <script src="qwebchannel.js"></script>
 
     <script>
+        var isdragging = false;
         function initializeQWebChannel() {
             new QWebChannel(qt.webChannelTransport, function(channel) {
                 window.handler = channel.objects.handler;
@@ -369,8 +370,24 @@
             await initializeAudio();
             await initializeSettings();
             await initializeData();
+            await initializeposData();
         });
-        
+        // 偵測左鍵按下
+        document.addEventListener('mousedown', (event) => {
+            if (event.button === 0) { // 左鍵按下
+                isdragging = false;
+                console.log("左鍵按下，停止拖曳舞者");
+            }
+        });
+        document.addEventListener('mousemove', (event) => {
+            if (isdragging) {
+                let x = event.clientX; // 滑鼠在頁面中的 X 座標
+                let y = event.clientY; // 滑鼠在頁面中的 Y 座標
+
+                // 呼叫 dragdancer 函式並傳遞座標
+                dragdancer(x, y);
+            }
+        });
     </script> 
     <script type="text/javascript" src="main.js" charset="utf-8"></script>
 </body>

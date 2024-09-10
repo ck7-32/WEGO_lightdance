@@ -893,6 +893,44 @@
      <string>renamecolor</string>
     </property>
    </widget>
+   <widget class="QLabel" name="nowframetime_7">
+    <property name="geometry">
+     <rect>
+      <x>1110</x>
+      <y>680</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>當前位置幀</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nowpos">
+    <property name="geometry">
+     <rect>
+      <x>1220</x>
+      <y>680</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

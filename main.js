@@ -9,6 +9,7 @@ var colors=[];
 Pos = JSON.parse(Pos);
 var darr = Array(N_DANCER);
 var arrow = 0;
+var postime=[]
 
 async function initializeSettings() {
   try {
@@ -38,22 +39,20 @@ async function initializeposData() {
   return window.fetchData('pos.json').then(data => {
     pos = data.pos;
     postime=data.postimes;
-    
-    startAnimation();
-    handler.debug(postime[1]); 
   });
 }
 async function reloadDataAndRedraw() {
-  await initializeData();
   await initializeposData();
+  await initializeData();
+  
   loadDataFromJSON();
   reloadRegions(); // 新增這行
   getCurrentTime();
 }
+
 function dragdancer(x,y){
-  while(isdragging){
     handler.updatepos(arrow,x,y);
-  }
+
 }
 function handleKeydown(e) {
   const currentTime = window.wavesurfer.getCurrentTime();
@@ -78,9 +77,19 @@ function handleKeydown(e) {
       console.log("play/pause");
       break;
     case 85://"U"
-      isdragging=true;
+    if (!isdragging) {
+      nowPos=getTimeSegmentIndex(postime,wavesurfer.getCurrentTime());
+      window.setTime(postime[nowPos])
+      isdragging = true;
+
+      // 設定每 10ms 呼叫一次 dragdancer
+      intervalId = setInterval(() => {
+          if (isdragging) {
+              dragdancer(lastX, lastY);
+          }
+      }, 50);
   }
-}
+}}
 function color(c, x) {
   var percent = (-1) * (1.0 - (x / 255.0));
   return c;
@@ -93,12 +102,11 @@ window.handleKeydown = handleKeydown;
 
 function getPos(idx, time,nowPos) {
   var bx = 0, by = 0;
-  S=len(postime);
+  S=postime.length;
 
   var t1 = postime[nowPos];
   var x1 = pos[nowPos][idx][0];
   var y1 = pos[nowPos][idx][1];
-
   if(nowPos == S-1) return [x1, y1];
   
   var t2 = postime[nowPos+1];
@@ -143,6 +151,8 @@ function animate(darr, canvas, ctx, startTime) {
   }
   var time = wavesurfer.getCurrentTime() + DELAY;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
   nowPos=getTimeSegmentIndex(postime,time);
 
   for(var i=0; i<N_DANCER; i++) {
@@ -184,7 +194,7 @@ function startAnimation() {
   window.requestAnimFrame = (function(callback) {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
       function(callback) {
-        window.setTimeout(callback, 1000);
+        window.setTimeout(callback, 1000/60);
       };
   })();
 }

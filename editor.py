@@ -35,12 +35,12 @@ class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(str, float)
     def updateframe(self, id, newtime):
         MainWindow_controller.updateframe(window,id, newtime)
-    @QtCore.pyqtSlot(str, float, )
+    @QtCore.pyqtSlot(str, float )
     def updateposetime(self, id, newtime):
-        MainWindow_controller.updateposetime(window,id, newtime)
-    @QtCore.pyqtSlot(int, float , float)
-    def updatepose(self, id, dancerid,x,y):
-        MainWindow_controller.updatepose(window, dancerid,x,y)
+        MainWindow_controller.updatepostime(window,id, newtime)
+    @QtCore.pyqtSlot(int , float,float)
+    def updatepos(self,dancerid,x,y):
+        MainWindow_controller.updatepos(window, dancerid,x,y)
     @QtCore.pyqtSlot(str)
     def debug(self, context):
        print(context)
@@ -198,19 +198,19 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
 #處裡移動flag
-    def updateposetime(self,id,time):
+    def updatepostime(self,id,time):
         print(f"位置幀數{id}被更新為{time}")
         del self.Pos["postimess"][int(id)]
         self.Pos["postimess"].append(time)
         self.Pos["postimess"].sort()
-        savejson(datajson_path,self.Pos)
+        savejson(pos_path,self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 # 處理位置更新
-    def updatepose(self,dancerid,x,y):
-        print(f"位置幀數{self.nowPos}的舞者{id}被移動至({x},{y})")
-        self.Pos["pos"][self.nowPos][dancerid]=[x,y]
+    def updatepos(self,dancerid,x,y):
+        print(f"位置幀數{self.nowPos}的舞者{dancerid}被移動至({x},{y})")
+        self.Pos["pos"][self.nowPos][dancerid]=[int(x),int(y)]
 
-        savejson(datajson_path,self.Pos)
+        savejson(pos_path,self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
     def newpos(self):
         if self.Pos["postimes"][self.nowPos]==self.time:
@@ -243,9 +243,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.nowtime.setText(f"{time}")
         self.ui.settime.setText(f"{time}")
         frame=get_time_index(self.data["frametimes"],self.time*1000)
+        
         posframe=get_time_index(self.Pos["postimes"],self.time)
         if self.nowPos!=posframe:
-            self.nowPosPos=posframe
+            self.nowPos=posframe
+            self.ui.nowpos.setText(f"{self.nowPos}")
         if self.nowframe==frame:
             return
         self.nowframe=frame

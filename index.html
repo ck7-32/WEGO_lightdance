@@ -51,8 +51,9 @@
         var regionsPlugin = WaveSurfer.regions.create();
         var markersPlugin = WaveSurfer.markers.create();
         let markers = [];
+        let posmarkers=[];
         let audiopath;
-
+        let p;
       
         
         function getCurrentTime() {
@@ -262,7 +263,17 @@
 
         
         function updateMarker(id,newtime) {
-            handler.updateframe(id, newtime);
+            switch (true) {
+                // 檢查是否為數字字串（可以是多位數）
+                case /^[0-9]+$/.test(id):
+                    handler.updateframe(id, newtime);
+                
+                // 檢查是否為 "p" 開頭的字串，後接多位數字
+                case /^p[0-9]+$/.test(id):
+                    p=id.slice(1);
+                    handler.updatepostime(p,newtime);
+            }
+           
         }
 
         function updateJSON() {
@@ -317,6 +328,9 @@
                 markers = [];
                 if (data.frametimes) {
                     data.frametimes.forEach((time, index) => {
+                        if(index==0){
+                            return;
+                        }
                         const markerId = wavesurfer.addMarker({
                             time: time / 1000,
                             color: 'rgba(120, 179, 150, 1)',
@@ -326,6 +340,23 @@
                             draggable: true
                         });
                         markers.push({ id: markerId, time: time / 1000 });
+                    });
+                }
+                posmarkers = [];
+                if (postime) {
+                    postime.forEach((time, index) => {
+                        if(index==0){
+                            return
+                        }
+                        const posmarkerId = wavesurfer.addMarker({
+                            time: time ,
+                            color: 'rgba(120, 179, 150, 1)',
+                            position: 'bottom',
+                            id:"p"+index.toString(),
+                            label:"p"+index.toString(),
+                            draggable: true
+                        });
+                        posmarkers.push({ id: posmarkerId, time: time });
                     });
                 }
             }

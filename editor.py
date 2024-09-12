@@ -36,7 +36,7 @@ class CallHandler(QtCore.QObject):
     def updateframe(self, id, newtime):
         MainWindow_controller.updateframe(window,id, newtime)
     @QtCore.pyqtSlot(str, float )
-    def updateposetime(self, id, newtime):
+    def updatepostime(self, id, newtime):
         MainWindow_controller.updatepostime(window,id, newtime)
     @QtCore.pyqtSlot(int , float,float)
     def updatepos(self,dancerid,x,y):
@@ -200,9 +200,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
 #處裡移動flag
     def updatepostime(self,id,time):
         print(f"位置幀數{id}被更新為{time}")
-        del self.Pos["postimess"][int(id)]
-        self.Pos["postimess"].append(time)
-        self.Pos["postimess"].sort()
+        del self.Pos["postimes"][int(id)]
+        self.Pos["postimes"].append(time)
+        self.Pos["postimes"].sort()
         savejson(pos_path,self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 # 處理位置更新

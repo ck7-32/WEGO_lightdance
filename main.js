@@ -82,12 +82,6 @@ function handleKeydown(e) {
       window.setTime(postime[nowPos])
       isdragging = true;
 
-      // 設定每 10ms 呼叫一次 dragdancer
-      intervalId = setInterval(() => {
-          if (isdragging) {
-              dragdancer(lastX, lastY);
-          }
-      }, 50);
   }
 }}
 function color(c, x) {
@@ -160,6 +154,9 @@ function animate(darr, canvas, ctx, startTime) {
       var pos = getPos(i, time,nowPos);
       darr[i].setBasePos(pos[0], pos[1]);
 
+  }
+  if(isdragging){
+    darr[arrow].setBasePos(lastX-30, lastY-10);
   }
   //決定要怎麼畫
   for(var i=0; i<N_DANCER; i++){

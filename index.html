@@ -379,6 +379,7 @@
         document.addEventListener('mousedown', (event) => {
     if (event.button === 0 && isdragging) { // 左鍵為 button 0
         isdragging = false;
+        dragdancer(lastX-30, lastY-10);
         clearInterval(intervalId); // 停止調用 dragdancer
     }
 });

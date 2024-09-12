@@ -237,6 +237,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         
         del self.Pos["pos"][self.nowPos]
         del self.Pos["postimes"][self.nowPos]
+        self.nowPos-=1
+        self.ui.nowpos.setText(f"{self.nowPos}")
         savejson("pos.json",self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
@@ -409,6 +411,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         for i in range(len(self.data["frames"])):
             del self.data["frames"][i][self.nowframe]
         del self.data["frametimes"][self.nowframe]
+        self.nowframe-=1
+        self.ui.nowframe.setText(f"{self.nowframe}")
         savejson("data.json",self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #載入顏色到上方選項

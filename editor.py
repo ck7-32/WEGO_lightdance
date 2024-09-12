@@ -186,7 +186,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.shortcut_scrollleft.activated.connect(self.scrollleft)
         self.shortcut_scrollright=QShortcut(QtGui.QKeySequence("="),self)
         self.shortcut_scrollright.activated.connect(self.scrollright)
-
+        self.shortcut_add_pos = QShortcut(QtGui.QKeySequence("Z"), self)
+        self.shortcut_add_pos.activated.connect(self.newpos)
+        self.shortcut_del_pos = QShortcut(QtGui.QKeySequence("C"), self)
+        self.shortcut_del_pos.activated.connect(self.delpos)
 
 #刷新正確幀數
     def updateframe(self,id,newtime):
@@ -216,21 +219,22 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         if self.Pos["postimes"][self.nowPos]==self.time:
              QtWidgets.QMessageBox.information(self, '警告', '與當前幀重疊')
              return
-        for i in range(len(self.dancerN)):
+        for i in range(self.dancerN):
             self.Pos["pos"][i].insert(self.nowPos+1,self.Pos["pos"][i][self.nowPos])
-        self.data["postimes"].insert(self.nowPos+1,self.time)
+            print("a")
+        self.Pos["postimes"].insert(self.nowPos+1,self.time)
         savejson("pos.json",self.Pos)
         self.nowPos+=1
-        self.ui.pos.setText(f"{self.nowPos}")
+        self.ui.nowpos.setText(f"{self.nowPos}")
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
         self.Pos=loadjson(pos_path)
     def delpos(self):
         if self.pos==0:
             QtWidgets.QMessageBox.information(self, '警告', '不能刪除第一幀')
             return
-        for i in range(len(self.dancerN)):
-            del self.data["Pos"][i][self.nowPos]
-        del self.data["postimes"][self.nowPos]
+        for i in range(self.dancerN):
+            del self.Pos["Pos"][i][self.nowPos]
+        del self.Pos["postimes"][self.nowPos]
         savejson("pos.json",self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 

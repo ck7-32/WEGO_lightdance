@@ -219,9 +219,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         if self.Pos["postimes"][self.nowPos]==self.time:
              QtWidgets.QMessageBox.information(self, '警告', '與當前幀重疊')
              return
-        for i in range(self.dancerN):
-            self.Pos["pos"][i].insert(self.nowPos+1,self.Pos["pos"][i][self.nowPos])
-            print("a")
+        
+        self.Pos["pos"].insert(self.nowPos+1,self.Pos["pos"][self.nowPos])
         self.Pos["postimes"].insert(self.nowPos+1,self.time)
         savejson("pos.json",self.Pos)
         self.nowPos+=1
@@ -229,11 +228,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
         self.Pos=loadjson(pos_path)
     def delpos(self):
-        if self.pos==0:
+        if self.nowPos==0:
             QtWidgets.QMessageBox.information(self, '警告', '不能刪除第一幀')
             return
-        for i in range(self.dancerN):
-            del self.Pos["Pos"][i][self.nowPos]
+        
+        del self.Pos["pos"][self.nowPos]
         del self.Pos["postimes"][self.nowPos]
         savejson("pos.json",self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")

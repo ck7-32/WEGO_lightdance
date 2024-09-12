@@ -44,6 +44,9 @@ class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(str)
     def debug(self, context):
        print(context)
+    @QtCore.pyqtSlot(int)
+    def selectdancer(self,dancerN):
+        MainWindow_controller.selectdancer(window,dancerN)
 def getframe(time_segments, current_time):
     left = 0
     right = len(time_segments) - 1
@@ -280,7 +283,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         print(f"設置箭頭為{self.dancerN}")
         self.loaddancer()
     
-
+    def selectdancer(self,dancerN):
+        self.ui.Dancers.setCurrentIndex(dancerN)
+        
 
 #設定html視窗內撥放進度的時間
     def settime(self):

@@ -5,13 +5,16 @@ function Dancer(id, bx, by) {
     this.height = 160;
     this.width = 64;
   };
-
+Dancer.prototype.isClicked = function(mouseX, mouseY) {
+    return mouseX >= this.base_x && mouseX <= this.base_x + this.width &&
+           mouseY >= this.base_y && mouseY <= this.base_y + this.height;
+};
 Dancer.prototype.setBasePos = function(bx, by) {
     this.base_x = bx;
     this.base_y = by;
   }
 Dancer.prototype.drawArrow=function(){
-
+ 
     ctx.strokeStyle = "#a0e0aa";
     //draw an arrow on the top of dencer
     ctx.beginPath();

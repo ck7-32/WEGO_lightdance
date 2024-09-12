@@ -392,6 +392,10 @@
         let intervalId;
         var isdragging = false;
         let lastX = 0, lastY = 0;
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+
+
         function initializeQWebChannel() {
             new QWebChannel(qt.webChannelTransport, function(channel) {
                 window.handler = channel.objects.handler;
@@ -407,19 +411,32 @@
             
         });
         // 偵測左鍵按下
-        document.addEventListener('mousedown', (event) => {
-    if (event.button === 0 && isdragging) { // 左鍵為 button 0
-        isdragging = false;
-        dragdancer(lastX-30, lastY-10);
-        clearInterval(intervalId); // 停止調用 dragdancer
-    }
-});
-        document.addEventListener('mousemove', (event) => {
-    if (isdragging) {
-        lastX = event.pageX;
-        lastY = event.pageY;
-    }
-});
+        canvas.addEventListener('click', (event) => {
+            if (event.button === 0 && isdragging) { // 左鍵為 button 0
+                isdragging = false;
+                dragdancer(lastX-30, lastY-10);
+                clearInterval(intervalId); // 停止調用 dragdancer
+            }
+        });
+        canvas.addEventListener('mousemove', (event) => {
+            if (isdragging) {
+                lastX = event.pageX;
+                lastY = event.pageY;
+            }
+        });
+        canvas.addEventListener('click', function(event) {
+            var rect = canvas.getBoundingClientRect();
+            var mouseX = event.clientX - rect.left;
+            var mouseY = event.clientY - rect.top;
+
+            // 逆序檢查 dancers 陣列（最後繪製的物件優先）
+            for (var i = darr.length - 1; i >= 0; i--) {
+                if (darr[i].isClicked(mouseX, mouseY)) {
+                    handler.selectdancer(i);
+                    break; // 停止檢查，因為點擊到最上層的物件
+                }
+            }
+        });    
     </script> 
     <script type="text/javascript" src="main.js" charset="utf-8"></script>
 </body>

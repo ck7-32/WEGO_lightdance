@@ -267,11 +267,12 @@
                 // 檢查是否為數字字串（可以是多位數）
                 case /^[0-9]+$/.test(id):
                     handler.updateframe(id, newtime);
-                
+                    break;
                 // 檢查是否為 "p" 開頭的字串，後接多位數字
                 case /^p[0-9]+$/.test(id):
                     p=id.slice(1);
                     handler.updatepostime(p,newtime);
+                    break;
             }
            
         }

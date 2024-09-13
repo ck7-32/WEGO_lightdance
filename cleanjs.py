@@ -1,5 +1,5 @@
 import json
-file_path = 'setting.json' 
+file_path = 'pos.json' 
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):

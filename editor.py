@@ -1,13 +1,11 @@
 from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel,QtGui
 from PyQt6.QtWidgets import QStyledItemDelegate
-from PyQt6.QtGui import QShortcut, QKeySequence,QFont,QBrush
-from PyQt6.QtGui import QStandardItemModel, QStandardItem,QColor , QPalette
+from PyQt6.QtGui import QShortcut,QStandardItemModel, QStandardItem,QColor , QPalette
 from PyQt6.QtCore import Qt
 from UI import Ui_MainWindow
 import sys
 import os
 import json
-import time as la
 import socket
 import struct
 import math
@@ -16,7 +14,7 @@ settingjson_path="setting.json"
 datajson_path="data.json"
 presetsjson_path="presets.json"
 pos_path="pos.json"
-#我打算讓他editor附上udp的功能
+
 # 設定廣播地址和埠
 broadcast_address = '255.255.255.255'
 broadcast_port = 12345
@@ -30,20 +28,39 @@ def UDP(nowframe):
     sock.sendto(message, (broadcast_address, broadcast_port))
     print(f"UDP:{nowframe}幀")
 
-def is_light_color(color):
-    """ 簡單方法檢查顏色是否為淺色，來決定文字使用黑色或白色 """
-    qcolor = QColor(color)
-    # 使用 YIQ 或其他類似公式決定顏色亮度
-    yiq = ((qcolor.red() * 299) + (qcolor.green() * 587) + (qcolor.blue() * 114)) / 1000
-    return yiq >= 128  # 如果亮度值高於128，則為淺色
+def loadjson(path):
+    with open(path, 'r', encoding='utf-8') as file:
+        out = json.load(file)
+    return out
 
+def savejson(path,data):
+    with open(path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False)
 
+#用二分搜尋法取得當前是第幾幀，輸入:(時間點陣列,時間點)
+def get_time_index(time_segments, current_time):
+    left = 0
+    right = len(time_segments) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        segment = time_segments[mid]
+
+        if current_time >= segment:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return right
+
+#設定顏色編輯區會用到的不同顏色的combobox連結到的物件
 class ColorDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         # 使用模型中的背景顏色
         color = index.data(Qt.ItemDataRole.BackgroundRole)
         if color:
             painter.fillRect(option.rect, color)
+
+#處理來自前端的訊號
 class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(float)
     def receiveTime(self, time):
@@ -63,53 +80,6 @@ class CallHandler(QtCore.QObject):
     @QtCore.pyqtSlot(int)
     def selectdancer(self,dancerN):
         MainWindow_controller.selectdancer(window,dancerN)
-def getframe(time_segments, current_time):
-    left = 0
-    right = len(time_segments) - 1
-
-    while left <= right:
-        mid = (left + right) // 2
-        segment = time_segments[mid]
-
-        if current_time >= segment:
-            # If current time is greater than or equal to the segment time, continue searching in the right half
-            left = mid + 1
-        else:
-            # If current time is less than the segment time, continue searching in the left half
-            right = mid - 1
-
-    return right
-def loadjson(path):
-    with open(path, 'r', encoding='utf-8') as file:
-        out = json.load(file)
-    return out
-def savejson(path,data):
-    with open(path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False)
-def get_time_index(time_segments, current_time):
-    left = 0
-    right = len(time_segments) - 1
-
-    while left <= right:
-        mid = (left + right) // 2
-        segment = time_segments[mid]
-
-        if current_time >= segment:
-            # If current time is greater than or equal to the segment time, continue searching in the right half
-            left = mid + 1
-        else:
-            # If current time is less than the segment time, continue searching in the left half
-            right = mid - 1
-
-    return right
-
-def is_float(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-
 
 
 class MainWindow_controller(QtWidgets.QMainWindow):
@@ -144,16 +114,16 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
 
         #變數宣告
-        self.time=0
-        self.dancerN=0
-        self.nowframe=0
-        self.nowPos=0
+        self.time=0 #編輯器的游標時間
+        self.dancerN=0 #現在所選擇的舞者是哪一個
+        self.nowframe=0 #現在跑到第幾幀(顏色)
+        self.nowPos=0 #現在跑到第幾幀(位置)
         self.partcolors=[self.ui.color0,self.ui.color1,self.ui.color2,self.ui.color3,self.ui.color4,self.ui.color5,self.ui.color6,self.ui.color7,self.ui.color8,self.ui.color9,self.ui.color10,self.ui.color11,self.ui.color12,self.ui.color13,self.ui.color14,self.ui.color15,self.ui.color16,self.ui.color17]
         self.partlable=[self.ui.part0,self.ui.part1,self.ui.part2,self.ui.part3,self.ui.part4,self.ui.part5,self.ui.part6,self.ui.part7,self.ui.part8,self.ui.part9,self.ui.part10,self.ui.part11,self.ui.part12,self.ui.part13,self.ui.part14,self.ui.part15,self.ui.part16,self.ui.part17]
         self.loaddancer()
-        self.partnum=0
+        self.partnum=0 #現在所選的舞者的部位數量
         self.colormodel=QStandardItemModel()
-        #self.loadcolor()
+    
 
         #按鈕功能綁定 初始化()
         self.ui.settimebtn.clicked.connect(self.settime)
@@ -174,7 +144,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.delframe.clicked.connect(self.delframe)
         self.ui.delcolor.clicked.connect(self.delcolor)
         self.ui.loadframestarttime.clicked.connect(self.setframestarttime)
-        self.loadcolors()
+        self.colorupdate()
         self.ui.addcolor.clicked.connect(self.addnewcolor)
         self.ui.editcolor.clicked.connect(self.editcolor)
         self.ui.renamecolor.clicked.connect(self.editcolorname)
@@ -232,7 +202,6 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def updatepos(self,dancerid,x,y):
         print(f"位置幀數{self.nowPos}的舞者{dancerid}被移動至({x},{y})")
         self.Pos["pos"][self.nowPos][dancerid]=[int(x),int(y)]
-
         savejson(pos_path,self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 # 新增位置關鍵幀    
@@ -268,12 +237,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def receivetime(self,time):
         if self.time==time:
             return
-        
         self.time=time
         self.ui.nowtime.setText(f"{time}")
         self.ui.settime.setText(f"{time}")
         frame=get_time_index(self.data["frametimes"],self.time*1000)
-        
         posframe=get_time_index(self.Pos["postimes"],self.time)
         if self.nowPos!=posframe:
             self.nowPos=posframe
@@ -297,7 +264,6 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         for i in range(18-self.partnum):
             self.partlable[17-i].hide()
             self.partcolors[17-i].hide()
-        
         self.loadcolor()
     
 
@@ -307,9 +273,10 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript(f"setArrow({self.dancerN});")
         print(f"設置箭頭為{self.dancerN}")
         self.loaddancer()
-    
+#透過前端點擊收到切換舞者    
     def selectdancer(self,dancerN):
         self.ui.Dancers.setCurrentIndex(dancerN)
+        self.dancerN=dancerN
         
 
 #設定html視窗內撥放進度的時間
@@ -317,7 +284,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         time=self.ui.settime.text()
         print(time)
         self.html.page().runJavaScript(f"setTime({time});")
-   
+#將時間調整至該幀的起始時間   
     def setframestarttime(self):
         time=self.data["frametimes"][self.nowframe]/1000
         print(time)
@@ -340,21 +307,34 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             # 添加到模型
             self.colormodel.appendRow(item)
 #載入光效
+
+#設定該顏色combobox的內容
+    def set_combobox_color(self, part_index, dancer_index, frame_index):#(self,第幾個部位,第幾個舞者,第幾幀)
+        combo_box = self.partcolors[part_index]
+        
+        # 設置顏色模型和自定義的 ColorDelegate
+        combo_box.setModel(self.colormodel)
+        combo_box.setItemDelegate(ColorDelegate())
+        
+        # 設置當前幀的顏色索引
+        combo_box.setCurrentIndex(self.data["frames"][dancer_index][frame_index][part_index])
+        
+        # 更新 QComboBox 的背景顏色
+        index = combo_box.currentIndex()
+        selected_color = self.data["color"][index]
+        palette = combo_box.palette()
+        palette.setColor(QPalette.ColorRole.Base, QColor(selected_color))  
+        combo_box.setPalette(palette)
+
+        # 當索引變更時，更新顏色背景
+        combo_box.currentIndexChanged.connect(self.update_combobox_background)
+
+#將資料載入到下方顏色編輯區
     def loadcolor(self):
-        for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
- 
-            self.partcolors[i].setModel(self.colormodel)
-            # 使用自定義的 delegate 來確保 hover 和 selected 狀態下保持原本的顏色
-            self.partcolors[i].setItemDelegate(ColorDelegate())
-            self.partcolors[i].setCurrentIndex(self.data["frames"][self.dancerN][self.nowframe][i])
-            index=self.partcolors[i].currentIndex()
-            selected_color = self.data["color"][index]
-            # 使用 palette 設置編輯區域的背景顏色
-            palette = self.partcolors[i].palette()
-            palette.setColor(QPalette.ColorRole.Base, QColor(selected_color))  # 設置 QComboBox 顯示框的背景顏色
-            self.partcolors[i].setPalette(palette)
-            # 連接信號，當索引改變時更新顯示框的背景顏色
-            self.partcolors[i].currentIndexChanged.connect(self.update_combobox_background)
+        for i in range(self.partnum):
+            self.set_combobox_color(i, self.dancerN, self.nowframe)
+
+#下方顏色編輯區變更後 更新combobox背景
     def update_combobox_background(self, index):
         # 根據當前索引設置 combo_box 顯示框的背景顏色
         selected_color = self.data["color"][index]
@@ -367,14 +347,15 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         palette = self.partcolors[combo_index].palette()
         palette.setColor(QPalette.ColorRole.Base, QColor(selected_color))  # 設置 QComboBox 顯示框的背景顏色
         self.partcolors[combo_index].setPalette(palette)    
-#顏色被變更
+
+#下方編輯區顏色資料送出變更
     def colorchanged(self):
         for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
         print(f"第{self.nowframe}幀已改變")
         savejson("data.json",self.data)
-        
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
 #將當前舞者的顏色儲存為preset(預設檔)
     def save_as_preset(self):
         name=self.ui.presetname.text()
@@ -385,7 +366,6 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         elif name in self.presets["presetnames"]:
             QtWidgets.QMessageBox.information(self, '警告', '輸入框不能為空')
             return
-       
         preset=[]
         for i in range(self.partnum):
             preset.append(self.partcolors[i].currentIndex())
@@ -393,13 +373,15 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.presets["presetnames"].append(name)
         savejson(presetsjson_path,self.presets)
         self.reloadpresets()
-       # self.ui.presets.setItemData((len(self.presets["presetnames"]))-1)
+
+
 #將選中的preset載入當前的舞者
     def loadpreset(self):
         index=self.ui.presets.currentIndex()
         for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.partcolors[i].setCurrentIndex(self.presets["presets"][index][i])
         self.colorchanged()
+
 #刪除 preset
     def delpreset(self):
         index=self.ui.presets.currentIndex()
@@ -407,6 +389,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         del self.presets["presetnames"][index]
         savejson(presetsjson_path,self.presets)
         self.reloadpresets()
+
 #r刷新 presets 的 combobox
     def reloadpresets(self):
         self.ui.presets.clear()
@@ -430,6 +413,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data["frametimes"][self.nowframe]=math.floor(time)
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+    
 #當前時間設為當前偵開始時間
     def set_frame_end_bynowtime(self):
         time=self.time*1000
@@ -446,6 +430,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data["frametimes"][self.nowframe+1]=math.floor(time)
         savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
 #新增關鍵幀
     def addnewframe(self):
         if self.data["frametimes"][self.nowframe]==self.time*1000:
@@ -460,6 +445,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
         self.data=loadjson(datajson_path)
+
 #刪除關鍵幀
     def delframe(self):
         if self.nowframe==0:
@@ -472,8 +458,11 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.ui.nowframe.setText(f"{self.nowframe}")
         savejson("data.json",self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+
+#右上角顏色區
+
 #載入 顏色到上方colors combobox
-    def loadcolors(self):
+    def colorupdate(self):
         self.ui.colors.clear()
         self.ui.colors.addItems(self.data["colornames"])
 #刪除該顏色
@@ -495,8 +484,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.setcomboboxcolor()
         self.loadcolor()
         self.loaddancer()
-        
-        self.loadcolors()
+        self.colorupdate()
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #新增顏色
     def addnewcolor(self):
@@ -515,7 +503,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             self.setcomboboxcolor()
             self.loaddancer()
             self.loadcolor()
-            self.loadcolors()
+            self.colorupdate()
             self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #編輯顏色    
     def editcolor(self):
@@ -531,7 +519,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             self.setcomboboxcolor()
             self.loaddancer()
             self.loadcolor()
-            self.loadcolors()
+            self.colorupdate()
             self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #編輯顏色名稱
     def editcolorname(self):
@@ -547,13 +535,14 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         savejson(datajson_path,self.data)
         self.loaddancer()
         self.loadcolor()
-        self.loadcolors()
+        self.colorupdate()
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 #預覽顏色
     def colorpreview(self):
         index=self.ui.colors.currentIndex()
         self.ui.colorpreview.setStyleSheet("QWidget { background-color: %s }" 
                                    % self.data["color"][index])
+
 #快進快退
     def forward(self):
         self.html.page().runJavaScript(f"setTime({self.time+0.1});")
@@ -569,9 +558,38 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().runJavaScript(f"scrollWaveSurferLeft()")
     def scrollright(self):
         self.html.page().runJavaScript(f"scrollWaveSurferRight()")
+
+
+
+
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow_controller()
     window.show()
     sys.exit(app.exec())
+
+#
+#                       _oo0oo_
+#                      o8888888o
+#                      88" . "88
+#                      (| -_- |)
+#                      0\  =  /0
+#                    ___/`---'\___
+#                  .' \\|     |# '.
+#                 / \\|||  :  |||# \
+#                / _||||| -:- |||||- \
+#               |   | \\\  -  #/ |   |
+#               | \_|  ''\---/''  |_/ |
+#               \  .-\__  '-'  ___/-. /
+#             ___'. .'  /--.--\  `. .'___
+#          ."" '<  `.___\_<|>_/___.' >' "".
+#         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+#         \  \ `_.   \_ __\ /__ _/   .-` /  /
+#     =====`-.____`.___ \_____/___.-`___.-'=====
+#                       `=---='
+#
+#
+#     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#              佛祖保佑          永無BUG

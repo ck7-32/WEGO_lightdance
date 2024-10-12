@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel,QtGui
 from PyQt6.QtWidgets import QStyledItemDelegate
 from PyQt6.QtGui import QShortcut,QStandardItemModel, QStandardItem,QColor , QPalette
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt,QTimer
 from UI import Ui_MainWindow
 import sys
 import os
@@ -126,60 +126,103 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     
 
         #按鈕功能綁定 初始化()
-        self.ui.settimebtn.clicked.connect(self.settime)
-        self.ui.Dancers.addItems(self.setting["dancersname"])
-        self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
-        self.ui.save.clicked.connect(self.colorchanged)
-        self.ui.savepreset.clicked.connect(self.save_as_preset)
-        self.ui.loadpreset.clicked.connect(self.loadpreset)
-        self.ui.delpreset.clicked.connect(self.delpreset)
         self.ui.nowframe.setText(f"{self.nowframe}")
         self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
+        self.ui.Dancers.addItems(self.setting["dancersname"])
+        self.ui.Dancers.currentIndexChanged.connect(self.dancerselected)
+        self.ui.colors.currentIndexChanged.connect(self.colorpreview)
+        #設定全局快捷鍵
+        self.setup_shortcuts()
+        #設定介面按鍵
+        self.setup_btn()
+
+        self.colorupdate()
         self.dancerselected()
         self.loaddancer()
         self.reloadpresets()
-        self.ui.set_frame_start_bynowtime.clicked.connect(self.set_frame_start_bynowtime)
-        self.ui.set_frame_end_bynowtime.clicked.connect(self.set_frame_end_bynowtime)
-        self.ui.newframe.clicked.connect(self.addnewframe)
-        self.ui.delframe.clicked.connect(self.delframe)
-        self.ui.delcolor.clicked.connect(self.delcolor)
-        self.ui.loadframestarttime.clicked.connect(self.setframestarttime)
-        self.colorupdate()
-        self.ui.addcolor.clicked.connect(self.addnewcolor)
-        self.ui.editcolor.clicked.connect(self.editcolor)
-        self.ui.renamecolor.clicked.connect(self.editcolorname)
-        self.ui.showcolor.clicked.connect(self.colorpreview)
-        self.ui.colors.currentIndexChanged.connect(self.colorpreview)
-
-        #設置全局快捷鍵
-        self.shortcut_colorchanged = QShortcut(QtGui.QKeySequence("1"), self)
-        self.shortcut_colorchanged.activated.connect(self.colorchanged)
-        self.shortcut_set_frame_start = QShortcut(QtGui.QKeySequence("2"), self)
-        self.shortcut_set_frame_start.activated.connect(self.set_frame_start_bynowtime)
-        self.shortcut_set_frame_end = QShortcut(QtGui.QKeySequence("3"), self)
-        self.shortcut_set_frame_end.activated.connect(self.set_frame_end_bynowtime)
-        self.shortcut_play_pause = QShortcut(QtGui.QKeySequence("G"), self)
-        self.shortcut_play_pause.activated.connect(lambda: self.html.page().runJavaScript("wavesurfer.playPause()"))
-        self.shortcut_add_frame = QShortcut(QtGui.QKeySequence("A"), self)
-        self.shortcut_add_frame.activated.connect(self.addnewframe)
-        self.shortcut_del_frame = QShortcut(QtGui.QKeySequence("D"), self)
-        self.shortcut_del_frame.activated.connect(self.delframe)
-        self.shortcut_forward=QShortcut(QtGui.QKeySequence("P"), self)
-        self.shortcut_forward.activated.connect(self.forward)
-        self.shortcut_backward=QShortcut(QtGui.QKeySequence("O"), self)
-        self.shortcut_backward.activated.connect(self.backward)
-        self.shortcut_zoomin=QShortcut(QtGui.QKeySequence("9"),self)
-        self.shortcut_zoomin.activated.connect(self.zoomin)
-        self.shortcut_zoomout=QShortcut(QtGui.QKeySequence("8"),self)
-        self.shortcut_zoomout.activated.connect(self.zoomout)
-        self.shortcut_scrollleft=QShortcut(QtGui.QKeySequence("-"),self)
-        self.shortcut_scrollleft.activated.connect(self.scrollleft)
-        self.shortcut_scrollright=QShortcut(QtGui.QKeySequence("="),self)
-        self.shortcut_scrollright.activated.connect(self.scrollright)
-        self.shortcut_add_pos = QShortcut(QtGui.QKeySequence("Z"), self)
-        self.shortcut_add_pos.activated.connect(self.newpos)
-        self.shortcut_del_pos = QShortcut(QtGui.QKeySequence("C"), self)
-        self.shortcut_del_pos.activated.connect(self.delpos)
+        
+#介面按鍵綁定
+    def setup_btn(self):
+        events = {
+        self.ui.settimebtn: self.settime,
+        self.ui.save: self.colorchanged,
+        self.ui.savepreset: self.save_as_preset,
+        self.ui.loadpreset: self.loadpreset,
+        self.ui.delpreset: self.delpreset,
+        self.ui.set_frame_start_bynowtime: self.set_frame_start_bynowtime,
+        self.ui.set_frame_end_bynowtime: self.set_frame_end_bynowtime,
+        self.ui.newframe: self.addnewframe,
+        self.ui.delframe: self.delframe,
+        self.ui.delcolor: self.delcolor,
+        self.ui.loadframestarttime: self.setframestarttime,
+        self.ui.addcolor: self.addnewcolor,
+        self.ui.editcolor: self.editcolor,
+        self.ui.renamecolor: self.editcolorname,
+        self.ui.showcolor: self.colorpreview,
+        self.ui.UDP: self.UDP_now,
+        self.ui.debug:self.debug_btn,
+        self.ui.Begining:self.jump_to_begining
+        }
+        # 使用迴圈批量綁定信號與槽
+        for control, event_handler in events.items():
+            control.clicked.connect(event_handler)
+    
+#快捷鍵綁定
+    def setup_shortcuts(self):
+        # 將快捷鍵和處理函數關聯在一起
+        shortcuts = {
+            '1': self.colorchanged,
+            '2': self.set_frame_start_bynowtime,
+            '3': self.set_frame_end_bynowtime,
+            'G': lambda: self.html.page().runJavaScript("wavesurfer.playPause()"),
+            'A': self.addnewframe,
+            'D': self.delframe,
+            'P': self.forward,
+            'O': self.backward,
+            '9': self.zoomin,
+            '8': self.zoomout,
+            '-': self.scrollleft,
+            '=': self.scrollright,
+            "R": self.UDP_now,
+            '5': self.jump_to_begining,
+            'Z': self.newpos,
+            'C': self.delpos
+        }
+        # 批量綁定快捷鍵
+        for key, action in shortcuts.items():
+            shortcut = QShortcut(QtGui.QKeySequence(key), self)
+            shortcut.activated.connect(action)
+#廣播
+    def UDP_now(self):
+        UDP(self.nowframe)
+#DEBUG模式按鈕    
+    def debug_btn(self):
+        # 如果 DEBUG 已經是開啟狀態，則關閉它
+        if hasattr(self, 'debug_active') and self.debug_active:
+            # 停止定時器
+            self.timer.stop()
+            self.ui.debug.setText("DEBUG ON")  # 更新按鈕文字
+            self.debug_active = False
+        else:
+            # 啟動 DEBUG 模式
+            self.ui.debug.setText("DEBUG OFF")  # 更新按鈕文字
+            self.debug_active = True
+            
+            # 設定定時器，每 10 秒切換一次幀
+            self.timer = QTimer(self)
+            self.timer.timeout.connect(self.debug)  # 連結每 10 秒執行的函數
+            self.timer.start(500)  # 設置每 10 秒觸發一次
+#debug模式-閃爍全暗(第一幀)全亮(最後一幀)
+    def debug(self):
+          # 根據當前幀使用 self.settime 進行跳轉
+        if self.nowframe == 0:
+            # 跳轉到最後一幀
+            last_frame_time = self.data["frametimes"][-1] / 1000  # 最後一幀的時間
+            self.html.page().runJavaScript(f"setTime({last_frame_time});")
+        else:
+            # 跳轉到第 0 幀
+            first_frame_time = self.data["frametimes"][0] / 1000  # 第 0 幀的時間
+            self.html.page().runJavaScript(f"setTime({first_frame_time});")
 
 #刷新正確幀數
     def updateframe(self,id,newtime):
@@ -559,7 +602,9 @@ class MainWindow_controller(QtWidgets.QMainWindow):
     def scrollright(self):
         self.html.page().runJavaScript(f"scrollWaveSurferRight()")
 
-
+#跳至開頭
+    def jump_to_begining(self):
+        self.html.page().runJavaScript(f"setTime({0});") 
 
 
 if __name__ == '__main__':

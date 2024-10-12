@@ -625,8 +625,8 @@
    <widget class="QPushButton" name="delpreset">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>340</y>
+      <x>1270</x>
+      <y>210</y>
       <width>111</width>
       <height>28</height>
      </rect>
@@ -687,7 +687,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>載入時間(秒)</string>
+     <string>跳至時間(秒)</string>
     </property>
    </widget>
    <widget class="QLabel" name="part12">
@@ -851,7 +851,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>當前時間設為當前偵開始時間</string>
+     <string>當前時間設為當前偵開始時間(2)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="set_frame_end_bynowtime">
@@ -864,7 +864,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>當前時間設為當前偵結束時間</string>
+     <string>當前時間設為當前偵結束時間(3)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="editcolor">
@@ -929,6 +929,126 @@
     </property>
     <property name="text">
      <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="UDP">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>470</y>
+      <width>151</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>UDP</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="text_2">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>440</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>重新廣播此幀(R)</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="text_3">
+    <property name="geometry">
+     <rect>
+      <x>1160</x>
+      <y>440</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>跳至第0幀(5)</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Begining">
+    <property name="geometry">
+     <rect>
+      <x>1160</x>
+      <y>470</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Begining</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="debug">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>350</y>
+      <width>281</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>DEBUG ON</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="text_4">
+    <property name="geometry">
+     <rect>
+      <x>1010</x>
+      <y>320</y>
+      <width>381</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微軟正黑體</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>debug模式(來回閃爍第一幀與最後一幀</string>
     </property>
    </widget>
   </widget>

@@ -1,7 +1,9 @@
 import json
-setting_jsonpath="setting.json"
-data_jsonpath="data.json"
-pos_jsonpath="pos.json"
+import os
+print(os.getcwd())
+setting_jsonpath="data\setting.json"
+data_jsonpath="data\data.json"
+pos_jsonpath="data\pos.json"
 data={"color": [
         "#000000"
     ],

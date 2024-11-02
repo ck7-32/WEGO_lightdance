@@ -13,7 +13,7 @@ var postime=[]
 
 async function initializeSettings() {
   try {
-    const data = await window.fetchData('setting.json');
+    const data = await window.fetchData('../data/setting.json');
     N_DANCER = data.dancersname.length;
     audiopath = data.audio; // 使用全局变量，不再重新声明
     console.log('N_DANCER:', N_DANCER);
@@ -28,7 +28,7 @@ async function initializeSettings() {
 }
 
 async function initializeData() {
-  return window.fetchData('data.json').then(data => {
+  return window.fetchData('../data/data.json').then(data => {
     alllight = data.frames;
     frametime = data.frametimes;
     colors = data.color;
@@ -36,7 +36,7 @@ async function initializeData() {
   });
 }
 async function initializeposData() {
-  return window.fetchData('pos.json').then(data => {
+  return window.fetchData('../data/pos.json').then(data => {
     pos = data.pos;
     postime=data.postimes;
   });

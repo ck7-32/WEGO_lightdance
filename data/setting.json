@@ -1,5 +1,5 @@
 {
-  "audio": "audio.mp3",
+  "audio": "../audio.mp3",
   "dancersname": ["dancer0", "dancer1", "dancer2"],
   "dancers": {
     "dancer0": {

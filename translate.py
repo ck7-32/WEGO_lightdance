@@ -6,8 +6,8 @@ def load_json(file_path):
     with open(file_path, 'r', encoding="utf-8") as file:
         return json.load(file)
 
-data = load_json('data.json')
-setting = load_json('setting.json')
+data = load_json('data/data.json')
+setting = load_json('data/setting.json')
 frames = data.get("frames", [])
 
 # 建立輸出資料夾

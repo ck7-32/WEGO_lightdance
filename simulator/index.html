@@ -100,7 +100,7 @@
         }
 
         function reloadRegions() {
-            fetch('data.json')
+            fetch('../data/data.json')
                 .then(response => response.json())
                 .then(data => {
                     const frametimes = data.frametimes;
@@ -186,7 +186,7 @@
         }
         async function initializeAudio() {
             try {
-                const data = await fetchData('setting.json');
+                const data = await fetchData('../data/setting.json');
                 audiopath = data.audio;
                 console.log('Audio path initialized:', audiopath);
                 await initializeWaveSurfer();
@@ -294,7 +294,7 @@
                 
             } else {
                 console.log('載入數據1');
-                fetch('data.json')
+                fetch('../data/data.json')
                     .then(response => response.json())
                     .then(data => {
                         loadData(data);

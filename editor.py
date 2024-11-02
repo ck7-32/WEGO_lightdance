@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets,QtCore, QtWebEngineWidgets, QtWebChannel,QtGui
 from PyQt6.QtWidgets import QStyledItemDelegate
 from PyQt6.QtGui import QShortcut,QStandardItemModel, QStandardItem,QColor , QPalette
 from PyQt6.QtCore import Qt,QTimer
-from UI import Ui_MainWindow
+from UI.UI import Ui_MainWindow
 import sys
 import os
 import json
@@ -10,11 +10,11 @@ import socket
 import struct
 import math
 
-settingjson_path="setting.json"
-datajson_path="data.json"
-presetsjson_path="presets.json"
-pos_path="pos.json"
-
+settingjson_path="data\setting.json"
+datajson_path="data\data.json"
+presetsjson_path="data\presets.json"
+pos_path="data\pos.json"
+index_html_path="simulator/index.html"
 # 設定廣播地址和埠
 broadcast_address = '255.255.255.255'
 broadcast_port = 12345
@@ -102,7 +102,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html.page().setWebChannel(self.channel)
         #載入網頁
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        html_file_path = os.path.join(current_dir, 'index.html')
+        html_file_path = os.path.join(current_dir, index_html_path)
         # 打印路徑以檢查是否正確
         print(f"HTML file path: {html_file_path}")
         #載入setting.json
@@ -111,7 +111,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.data=loadjson(datajson_path)
         self.Pos=loadjson(pos_path)
         self.presets=loadjson(presetsjson_path)       
-        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/index.html"))
+        self.html.setUrl(QtCore.QUrl("http://127.0.0.1:5500/simulator/index.html"))
 
         #變數宣告
         self.time=0 #編輯器的游標時間
@@ -270,7 +270,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         del self.Pos["postimes"][self.nowPos]
         self.nowPos-=1
         self.ui.nowpos.setText(f"{self.nowPos}")
-        savejson("pos.json",self.Pos)
+        savejson(pos_path,self.Pos)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
 
@@ -396,7 +396,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         for i in range(len(self.setting["dancers"][self.setting["dancersname"][self.dancerN]]["parts"])):
             self.data["frames"][self.dancerN][self.nowframe][i]=self.partcolors[i].currentIndex()
         print(f"第{self.nowframe}幀已改變")
-        savejson("data.json",self.data)
+        savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
 #將當前舞者的顏色儲存為preset(預設檔)
@@ -482,7 +482,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         for i in range(len(self.data["frames"])):
             self.data["frames"][i].insert(self.nowframe+1,self.data["frames"][i][self.nowframe])
         self.data["frametimes"].insert(self.nowframe+1,math.floor(self.time*1000))
-        savejson("data.json",self.data)
+        savejson(datajson_path,self.data)
         self.nowframe+=1
         self.ui.nowframe.setText(f"{self.nowframe}")
         self.ui.nowframetime.setText(str((self.data["frametimes"][self.nowframe])/1000))
@@ -499,7 +499,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         del self.data["frametimes"][self.nowframe]
         self.nowframe-=1
         self.ui.nowframe.setText(f"{self.nowframe}")
-        savejson("data.json",self.data)
+        savejson(datajson_path,self.data)
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")
 
 #右上角顏色區

@@ -160,12 +160,11 @@ function animate(darr, canvas, ctx, startTime) {
   }
   //決定要怎麼畫
   for(var i=0; i<N_DANCER; i++){
-    if (i %2 ==0){
+
       
-      darr[i].draw(time);
-      }
+    darr[i].draw(time);
       
-    else{darr[i].draw2(time);}
+   
     if (i == arrow){
       darr[i].drawArrow();
     }}

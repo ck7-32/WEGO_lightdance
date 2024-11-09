@@ -255,7 +255,7 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         
         self.Pos["pos"].insert(self.nowPos+1,self.Pos["pos"][self.nowPos])
         self.Pos["postimes"].insert(self.nowPos+1,self.time)
-        savejson("pos.json",self.Pos)
+        savejson(pos_path,self.Pos)
         self.nowPos+=1
         self.ui.nowpos.setText(f"{self.nowPos}")
         self.html.page().runJavaScript(f"reloadDataAndRedraw();")

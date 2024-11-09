@@ -182,11 +182,6 @@ int playh(int frameN)
         for (int led = 0; led < numLeds; led++) {
             int currentpart = currentParts[led];
             CRGB color = colorArray[data[frameN][currentpart]];
-
-            if (isGlove) {
-                color.nscale8_video(4);  // 使用更快的nscale8_video
-            }
-
             currentString[led] = color;
         }
     }

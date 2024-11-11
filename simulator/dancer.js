@@ -143,22 +143,6 @@ Dancer.prototype.drawArrow=function(){
   ctx.moveTo(this.base_x + this.width / 2 +6, this.base_y + 2 * head_radius +25);
   ctx.lineTo(this.base_x + this.width / 2 -6, this.base_y + 2 * head_radius +25);
   ctx.stroke();
-  //裙子
-    var belt_w = 2 * head_radius - 6;
-    var belt_h = 10;
-    var pants_w = 12;
-    var pants_h = 35;
-    ctx.lineWidth=2;
-    ctx.strokeStyle = getcolor(this.id, segment, 8);
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 4, this.base_y + 3 * head_radius + 20);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 2, this.base_y + 5 * head_radius);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 2, this.base_y + 5 * head_radius);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 4, this.base_y + 3 * head_radius + 20);
-    ctx.moveTo(this.base_x + this.width / 2 +5, this.base_y + 2 * head_radius +35);
-    ctx.lineTo(this.base_x + this.width / 2 -5, this.base_y + 2 * head_radius +35);
-    ctx.stroke();
-  
   //左襪套
     ctx.strokeStyle = getcolor(this.id, segment, 9);
     ctx.beginPath();
@@ -212,7 +196,7 @@ Dancer.prototype.drawArrow=function(){
      ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7 + pants_w, this.base_y + 5 * head_radius);
      ctx.stroke();
    
-     ctx.strokeStyle = getcolor(this.id, segment, 11);
+     ctx.strokeStyle = getcolor(this.id, segment, 9);
      ctx.beginPath();
      ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
      ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30);
@@ -222,7 +206,7 @@ Dancer.prototype.drawArrow=function(){
      ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
      ctx.stroke();
    
-     ctx.strokeStyle = getcolor(this.id, segment, 12);
+     ctx.strokeStyle = getcolor(this.id, segment, 10);
      ctx.beginPath();
      ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
      ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30);

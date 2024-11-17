@@ -65,21 +65,12 @@ Dancer.prototype.drawArrow=function(){
     ctx.strokeRect(this.base_x, this.base_y + head_radius - 8 + hand_h + 5, hand_w, hand_h * 2);
     ctx.strokeStyle = getcolor(this.id, segment, 5);
     ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + head_radius - 8 + hand_h + 5, hand_w, hand_h * 2);
-  //手環
-    var hand_radius = 6;
-    ctx.strokeStyle = getcolor(this.id, segment, 4);
-    ctx.beginPath();
-    ctx.strokeRect(this.base_x, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
-    ctx.stroke();
   
-    ctx.strokeStyle = getcolor(this.id, segment, 5);
-    ctx.beginPath();
-    ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
-    ctx.stroke();
   //手套
   ctx.lineWidth=2;
     ctx.strokeStyle = getcolor(this.id, segment, 6);
     ctx.beginPath();
+    ctx.strokeRect(this.base_x, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
     ctx.moveTo(this.base_x , this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x,this.base_y + 3 * head_radius + hand_h+13);
     ctx.moveTo(this.base_x +3, this.base_y + 3 * head_radius + hand_h+5);
@@ -93,6 +84,7 @@ Dancer.prototype.drawArrow=function(){
     ctx.stroke();
     ctx.strokeStyle = getcolor(this.id, segment, 7);
     ctx.beginPath();
+    ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
     ctx.moveTo(this.base_x- 1+this.width - hand_w , this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x- 1+this.width - hand_w,this.base_y + 3 * head_radius + hand_h+11);
     ctx.moveTo(this.base_x- 1+this.width - hand_w +3, this.base_y + 3 * head_radius + hand_h+5);
@@ -104,78 +96,57 @@ Dancer.prototype.drawArrow=function(){
     ctx.moveTo(this.base_x- 1+this.width - hand_w +12, this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x- 1+this.width - hand_w +12,this.base_y + 3 * head_radius + hand_h+13);
     ctx.stroke();
-  //西裝外套
-  ctx.lineWidth=3;
-    ctx.strokeStyle = getcolor(this.id, segment, 3);
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius-3);
-    ctx.lineTo(this.base_x + this.width / 2 - 6, this.base_y + 2 * head_radius-3 );
-    ctx.lineTo(this.base_x + this.width / 2 - 6, this.base_y + 2 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 2 * head_radius +20);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius-3);
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius-3); 
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 8, this.base_y + 2 * head_radius+11);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 10, this.base_y + 2 * head_radius+10);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 12, this.base_y + 2 * head_radius+20);
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius); 
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius-3);
-    ctx.lineTo(this.base_x + this.width / 2 +6, this.base_y + 2 * head_radius-3 );
-    ctx.lineTo(this.base_x+ this.width / 2 +6, this.base_y + 2 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 3, this.base_y + 2 * head_radius +20);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius-3);
-    ctx.moveTo(this.base_x+ this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius-3); 
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 8, this.base_y + 2 * head_radius+11);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 10, this.base_y + 2 * head_radius+10);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 12, this.base_y + 2 * head_radius+20);
-    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius);    
-    ctx.stroke();
+// 左外套
+ctx.lineWidth = 3;
+ctx.strokeStyle = getcolor(this.id, segment, 2);
+ctx.beginPath();
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 2, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 - 2, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 - 2, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 2 * head_radius + 20);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 8, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 15, this.base_y + 2 * head_radius + 4); 
+ctx.lineTo(this.base_x + this.width / 2 - 2, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius + 7); //口袋
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 14, this.base_y + 2 * head_radius + 7);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 14, this.base_y + 2 * head_radius + 17);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius + 17);
+ctx.closePath();
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius + 11);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 14, this.base_y + 2 * head_radius + 11
+);
+
+ctx.stroke();
+
+// 右外套
+ctx.lineWidth = 3;
+ctx.strokeStyle = getcolor(this.id, segment, 3);
+ctx.beginPath();
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 + 2, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 + 2, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 3, this.base_y + 2 * head_radius + 20);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 8, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 15, this.base_y + 2 * head_radius + 4); 
+ctx.lineTo(this.base_x + this.width / 2 + 2, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius + 7); //口袋
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 14, this.base_y + 2 * head_radius + 7);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 14, this.base_y + 2 * head_radius + 17);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius + 17);
+ctx.closePath();
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius + 11);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 14, this.base_y + 2 * head_radius + 11);
+
+ctx.stroke();
+
+
+
     
-  //裡面衣服
-  ctx.strokeStyle = getcolor(this.id, segment, 0)
-  ctx.beginPath();
-  ctx.moveTo(this.base_x + this.width / 2 +6, this.base_y + 2 * head_radius+1 );
-  ctx.lineTo(this.base_x + this.width / 2 , this.base_y + 2 * head_radius+3 );
-  ctx.lineTo(this.base_x + this.width / 2-6, this.base_y + 2 * head_radius+1 );
-  ctx.moveTo(this.base_x + this.width / 2 +6, this.base_y + 2 * head_radius +25);
-  ctx.lineTo(this.base_x + this.width / 2 -6, this.base_y + 2 * head_radius +25);
-  ctx.stroke();
-  //左襪套
-    ctx.strokeStyle = getcolor(this.id, segment, 9);
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 65);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 +pants_w, this.base_y + 4 * head_radius + 65);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5+pants_w, this.base_y + 4 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 40);
-    ctx.stroke();
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius + 10, this.base_y + 4 * head_radius + 45);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius +pants_w, this.base_y + 4 * head_radius + 60);
-    ctx.moveTo(this.base_x + this.width / 2 - head_radius +pants_w+1, this.base_y + 4 * head_radius + 45);
-    ctx.lineTo(this.base_x + this.width / 2 - head_radius +9, this.base_y + 4 * head_radius + 60);
-    ctx.stroke();
     
-  //右襪套
-    ctx.strokeStyle = getcolor(this.id, segment, 10);
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 65);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 -pants_w, this.base_y + 4 * head_radius + 65);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5-pants_w, this.base_y + 4 * head_radius + 40);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 40);
-    ctx.stroke();
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(this.base_x + this.width / 2 + head_radius -9, this.base_y + 4 * head_radius + 45);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius -pants_w, this.base_y + 4 * head_radius + 60);
-    ctx.moveTo(this.base_x + this.width / 2 + head_radius -pants_w, this.base_y + 4 * head_radius + 45);
-    ctx.lineTo(this.base_x + this.width / 2 + head_radius -10, this.base_y + 4 * head_radius + 60);
-    ctx.stroke();
     //褲子
      var belt_w = 2 * head_radius - 6;
      var belt_h = 10;

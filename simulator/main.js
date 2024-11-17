@@ -41,6 +41,13 @@ async function initializeposData() {
     postime=data.postimes;
   });
 }
+async function initializedanceData() {
+  return window.fetchData('../data/dance.json').then(data => {
+    dancemovement = data.data;
+    movementNum = dancemovement.length;
+    depthdata=data.depth;
+  });
+}
 async function reloadDataAndRedraw() {
   await initializeposData();
   await initializeData();
@@ -92,7 +99,7 @@ function color(c, x) {
 window.initializeSettings = initializeSettings;
 window.initializeData = initializeData;
 window.handleKeydown = handleKeydown;
-
+window.initializedanceData= initializedanceData;
 
 function getPos(idx, time,nowPos) {
   var bx = 0, by = 0;
@@ -180,9 +187,7 @@ function animate(darr, canvas, ctx, startTime) {
 }
 
 
-function getcolor(dancer, segment, part) {
-  return colors[alllight[dancer][segment][part]];
-}
+
 
 
 

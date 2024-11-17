@@ -1,6 +1,6 @@
 {
   "audio": "../audio.mp3",
-  "dancersname": ["dancer1", "dancer1", "dancer1", "dancer1","dancer1"],
+  "dancersname": ["dancer1","dancer1","dancer1","dancer1","dancer1"],
   "dancers": {
     "dancer1": {
       "LED": [

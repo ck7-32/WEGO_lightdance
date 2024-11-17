@@ -189,8 +189,13 @@ Dancer.prototype.originaldraw = function(head_radius,segment) {
     ctx.strokeRect(this.base_x + this.width - hand_w, this.base_y + head_radius - 8 + hand_h + 5, hand_w, hand_h * 2);
   
   //手套
+<<<<<<< HEAD
     ctx.lineWidth=2;
     ctx.strokeStyle = getcolor(this.id, segment, 7);
+=======
+  ctx.lineWidth=2;
+    ctx.strokeStyle = getcolor(this.id, segment, 6);
+>>>>>>> fe47307778de5aa63a902f7ca2c7395cec1bf705
     ctx.beginPath();
     ctx.strokeRect(this.base_x, this.base_y + 3 * head_radius + hand_h , hand_w, 3);
     ctx.moveTo(this.base_x , this.base_y + 3 * head_radius + hand_h+5);
@@ -218,6 +223,7 @@ Dancer.prototype.originaldraw = function(head_radius,segment) {
     ctx.moveTo(this.base_x- 1+this.width - hand_w +12, this.base_y + 3 * head_radius + hand_h+5);
     ctx.lineTo(this.base_x- 1+this.width - hand_w +12,this.base_y + 3 * head_radius + hand_h+13);
     ctx.stroke();
+<<<<<<< HEAD
     // 左外套
     ctx.lineWidth = 3;
     ctx.strokeStyle = getcolor(this.id, segment, 3);
@@ -307,6 +313,98 @@ Dancer.prototype.originaldraw = function(head_radius,segment) {
     ctx.moveTo(this.base_x + this.width / 2 + 1, this.base_y + 3 * head_radius + 38); 
     ctx.lineTo(this.base_x + this.width / 2 + 5, this.base_y + 5 * head_radius + pants_h); 
     ctx.stroke(); 
+=======
+// 左外套
+ctx.lineWidth = 3;
+ctx.strokeStyle = getcolor(this.id, segment, 2);
+ctx.beginPath();
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 2, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 - 2, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 - 2, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 3, this.base_y + 2 * head_radius + 20);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 1, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 8, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 15, this.base_y + 2 * head_radius + 4); 
+ctx.lineTo(this.base_x + this.width / 2 - 2, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius + 7); //口袋
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 14, this.base_y + 2 * head_radius + 7);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 14, this.base_y + 2 * head_radius + 17);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius + 17);
+ctx.closePath();
+ctx.moveTo(this.base_x + this.width / 2 - head_radius + 7, this.base_y + 2 * head_radius + 11);
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 14, this.base_y + 2 * head_radius + 11
+);
+
+ctx.stroke();
+
+// 右外套
+ctx.lineWidth = 3;
+ctx.strokeStyle = getcolor(this.id, segment, 3);
+ctx.beginPath();
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 + 2, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 + 2, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius + 40);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 3, this.base_y + 2 * head_radius + 20);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 1, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 8, this.base_y + 2 * head_radius - 3);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 15, this.base_y + 2 * head_radius + 4); 
+ctx.lineTo(this.base_x + this.width / 2 + 2, this.base_y + 2 * head_radius - 3);
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius + 7); //口袋
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 14, this.base_y + 2 * head_radius + 7);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 14, this.base_y + 2 * head_radius + 17);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius + 17);
+ctx.closePath();
+ctx.moveTo(this.base_x + this.width / 2 + head_radius - 7, this.base_y + 2 * head_radius + 11);
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 14, this.base_y + 2 * head_radius + 11);
+
+ctx.stroke();
+
+
+
+    
+    
+    //褲子
+     var belt_w = 2 * head_radius - 6;
+     var belt_h = 10;
+     var pants_w = 12;
+     var pants_h = 35;
+   
+     ctx.strokeStyle = getcolor(this.id, segment, 10);
+     ctx.beginPath();
+     ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 3 * head_radius + 25);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 5 * head_radius);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 7 - pants_w, this.base_y + 5 * head_radius);
+     ctx.stroke();
+   
+     ctx.strokeStyle = getcolor(this.id, segment, 9);
+     ctx.beginPath();
+     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 3 * head_radius + 25);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 5 * head_radius);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 7 + pants_w, this.base_y + 5 * head_radius);
+     ctx.stroke();
+   
+     ctx.strokeStyle = getcolor(this.id, segment, 9);
+     ctx.beginPath();
+     ctx.moveTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5, this.base_y + 4 * head_radius + 30 + pants_h);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w, this.base_y + 4 * head_radius + 30 + pants_h);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w, this.base_y + 4 * head_radius + 30);
+     ctx.lineTo(this.base_x + this.width / 2 - head_radius + 5 + pants_w / 2, this.base_y + 3 * head_radius + 25);
+     ctx.stroke();
+   
+     ctx.strokeStyle = getcolor(this.id, segment, 10);
+     ctx.beginPath();
+     ctx.moveTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5, this.base_y + 4 * head_radius + 30 + pants_h);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w, this.base_y + 4 * head_radius + 30 + pants_h);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w, this.base_y + 4 * head_radius + 30);
+     ctx.lineTo(this.base_x + this.width / 2 + head_radius - 5 - pants_w / 2, this.base_y + 3 * head_radius + 25);
+     ctx.stroke();
+>>>>>>> fe47307778de5aa63a902f7ca2c7395cec1bf705
    };
 Dancer.prototype.movementskeleton = function(NowMovement,cX,cY){
   

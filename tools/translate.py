@@ -12,8 +12,8 @@ frames = data.get("frames", [])
 
 # 建立輸出資料夾
 output_dir = 'esp32_ino'
-WIFI_SSID="Wong88"
-WIFI_PASSWORD="20070415"
+WIFI_SSID="WEGOlightdance"
+WIFI_PASSWORD="Wgld2023wifi"
 
 
 

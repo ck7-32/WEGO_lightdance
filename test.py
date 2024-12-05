@@ -8,7 +8,7 @@ mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
 # 打開影片
-cap = cv2.VideoCapture("chinodance2.mp4")
+cap = cv2.VideoCapture("chinodance2.MOV")
 pose_data = []  # 儲存每幀的骨架數據
 simplified_pose_data = {"data": [],"depth":[]}  # 簡化數據
 cY=None

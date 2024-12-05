@@ -589,6 +589,9 @@ Dancer.prototype.Head = function(NowMovement,segment,id,cX,cY){
    ctx.moveTo(nose[0]+12 - 3, nose[1]- 0.5 * 15 -1);
    ctx.lineTo(nose[0]+12 - 4, nose[1]- 0.5 * 15 - 7);
    ctx.lineTo(nose[0]+12 - 10, nose[1]- 0.5 * 15 -4);
+   ctx.stroke();
+   ctx.strokeStyle = getcolor(id, segment,2 );
+   ctx.beginPath();
    ctx.moveTo(nose[0]+12 , nose[1]+2);
    ctx.lineTo(nose[0]-12 , nose[1]+2);
    ctx.moveTo(nose[0]+12 , nose[1]+4);

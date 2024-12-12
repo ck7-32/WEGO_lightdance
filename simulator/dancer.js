@@ -153,19 +153,19 @@ Dancer.prototype.originaldraw = function(head_radius,segment) {
     ctx.strokeStyle = getcolor(this.id, segment, 2);
     ctx.lineWidth = 2;
     ctx.beginPath();
-    var glass_width = 14; 
-    var glass_height = 10; 
+    var glass_width = 12; 
+    var glass_height = 8; 
     var glass_y_offset = head_radius + 10; 
     var bridge_width = 6; 
     ctx.rect(
       this.base_x + this.width / 2 - head_radius / 2 - glass_width / 2,
-      this.base_y + glass_y_offset -10,
+      this.base_y + glass_y_offset -12,
       glass_width,
       glass_height
     );
     ctx.rect(
       this.base_x + this.width / 2 + head_radius / 2 - glass_width / 2,
-      this.base_y + glass_y_offset-10,
+      this.base_y + glass_y_offset-12,
       glass_width,
       glass_height
     );

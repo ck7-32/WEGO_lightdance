@@ -311,10 +311,10 @@ Dancer.prototype.originaldraw = function(head_radius,segment) {
 ctx.beginPath();
 ctx.strokeStyle = getcolor(this.id, segment, 11); // 設定左鞋的顏色
 
-ctx.moveTo(this.base_x + this.width / 2 - head_radius - 5, this.base_y + 3 * head_radius + 100); // 左鞋起點
-ctx.lineTo(this.base_x + this.width / 2 + head_radius - 25, this.base_y + 3 * head_radius + 100); // 左鞋底邊
-ctx.lineTo(this.base_x + this.width / 2 + head_radius - 25, this.base_y + 3 * head_radius + 110); // 左鞋後跟
-ctx.lineTo(this.base_x + this.width / 2 - head_radius - 10, this.base_y + 3 * head_radius + 110); // 左鞋前端
+ctx.moveTo(this.base_x + this.width / 2 - head_radius - 2, this.base_y + 3 * head_radius + 100); // 左鞋起點
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 26, this.base_y + 3 * head_radius + 100); // 左鞋底邊
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 25, this.base_y + 3 * head_radius + 108); // 左鞋後跟
+ctx.lineTo(this.base_x + this.width / 2 - head_radius - 6, this.base_y + 3 * head_radius + 108); // 左鞋前端
 ctx.closePath();
 
 ctx.stroke();
@@ -323,10 +323,10 @@ ctx.stroke();
 ctx.beginPath();
 ctx.strokeStyle = getcolor(this.id, segment, 12); // 設定右鞋的顏色
 
-ctx.moveTo(this.base_x + this.width / 2 + head_radius + 5, this.base_y + 3 * head_radius + 100); // 左鞋起點
-ctx.lineTo(this.base_x + this.width / 2 - head_radius + 25, this.base_y + 3 * head_radius + 100); // 左鞋底邊
-ctx.lineTo(this.base_x + this.width / 2 - head_radius + 25, this.base_y + 3 * head_radius + 110); // 左鞋後跟
-ctx.lineTo(this.base_x + this.width / 2 + head_radius + 10, this.base_y + 3 * head_radius + 110); // 左鞋前端
+ctx.moveTo(this.base_x + this.width / 2 + head_radius + 2, this.base_y + 3 * head_radius + 100); // 右鞋起點
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 26, this.base_y + 3 * head_radius + 100); // 右鞋底邊
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 25, this.base_y + 3 * head_radius + 108); // 右鞋後跟
+ctx.lineTo(this.base_x + this.width / 2 + head_radius + 6, this.base_y + 3 * head_radius + 108); // 右鞋前端
 ctx.closePath();
 
 ctx.stroke();

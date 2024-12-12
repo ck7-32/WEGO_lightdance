@@ -307,7 +307,31 @@ Dancer.prototype.originaldraw = function(head_radius,segment) {
     ctx.moveTo(this.base_x + this.width / 2 + 1, this.base_y + 3 * head_radius + 38); 
     ctx.lineTo(this.base_x + this.width / 2 + 5, this.base_y + 5 * head_radius + pants_h); 
     ctx.stroke(); 
-   };
+    // 左鞋
+ctx.beginPath();
+ctx.strokeStyle = getcolor(this.id, segment, 11); // 設定左鞋的顏色
+
+ctx.moveTo(this.base_x + this.width / 2 - head_radius - 5, this.base_y + 3 * head_radius + 100); // 左鞋起點
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 25, this.base_y + 3 * head_radius + 100); // 左鞋底邊
+ctx.lineTo(this.base_x + this.width / 2 + head_radius - 25, this.base_y + 3 * head_radius + 110); // 左鞋後跟
+ctx.lineTo(this.base_x + this.width / 2 - head_radius - 10, this.base_y + 3 * head_radius + 110); // 左鞋前端
+ctx.closePath();
+
+ctx.stroke();
+
+// 右鞋
+ctx.beginPath();
+ctx.strokeStyle = getcolor(this.id, segment, 12); // 設定右鞋的顏色
+
+ctx.moveTo(this.base_x + this.width / 2 + head_radius + 5, this.base_y + 3 * head_radius + 100); // 左鞋起點
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 25, this.base_y + 3 * head_radius + 100); // 左鞋底邊
+ctx.lineTo(this.base_x + this.width / 2 - head_radius + 25, this.base_y + 3 * head_radius + 110); // 左鞋後跟
+ctx.lineTo(this.base_x + this.width / 2 + head_radius + 10, this.base_y + 3 * head_radius + 110); // 左鞋前端
+ctx.closePath();
+
+ctx.stroke();
+
+  };
 Dancer.prototype.movementskeleton = function(NowMovement,cX,cY){
   
   ctx.strokeStyle = "#2c2c2c";

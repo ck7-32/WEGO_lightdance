@@ -186,7 +186,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             "R": self.UDP_now,
             '5': self.jump_to_begining,
             'Z': self.newpos,
-            'C': self.delpos
+            'C': self.delpos,
+            "L": self.loadpreset
         }
         # 批量綁定快捷鍵
         for key, action in shortcuts.items():

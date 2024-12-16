@@ -167,14 +167,12 @@ function animate(darr, canvas, ctx, startTime) {
   }
   //決定要怎麼畫
   for(var i=0; i<N_DANCER; i++){
-
-      
-    darr[i].draw(time);
-      
-   
     if (i == arrow){
-      darr[i].drawArrow();
-    }}
+      darr[i].drawArrow();  
+    }
+    darr[i].draw(time);
+    
+    }
 
 
   segment = getTimeSegmentIndex(frametime, time * 1000);

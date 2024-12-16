@@ -40,12 +40,13 @@ Dancer.prototype.draw = function(time) {
   ctx.strokeRect(this.base_x + this.width, this.base_y + this.height, 1, 1);
 
   var head_radius = 20;
-  ctx.font = "20px sans-serif";
-  ctx.fillStyle = "#FF0000";
-  ctx.fillText(this.id, this.base_x + this.width / 2 - 5, this.base_y + head_radius + 6);
   ctx.lineWidth=1.5;
 
   this.originaldraw(head_radius,segment);
+  var head_radius = 20;
+  ctx.font = "20px sans-serif";
+  ctx.fillStyle = "#FF0000";
+  ctx.fillText(this.id, this.base_x + this.width / 2 - 5, this.base_y -head_radius + 6);
 };
 Dancer.prototype.originaldraw = function(head_radius,segment) {
   //貓耳

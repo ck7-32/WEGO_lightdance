@@ -1,4 +1,4 @@
-const dancemovementstarttime=15.08
+const dancemovementstarttime=4.21
 
 
 function getScaledNormalVector2D(x, y, targetLength) {

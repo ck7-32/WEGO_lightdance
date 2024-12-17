@@ -767,7 +767,7 @@ Dancer.prototype.LeftLeg = function(NowMovement,segment,id,cX,cY){
   ctx.stroke();
 }
 Dancer.prototype.RightLeg = function(NowMovement,segment,id,cX,cY){
-  ctx.strokeStyle = getcolor(id, segment, 9);
+  ctx.strokeStyle = getcolor(id, segment, 10);
   mh=[(cX+NowMovement[16][0]+cX+NowMovement[15][0])/2,(cY+NowMovement[16][1]+cY+NowMovement[15][1])/2]
   Lhip=[cX+NowMovement[15][0],cY+NowMovement[15][1]];
   Rhip=[cX+NowMovement[16][0],cY+NowMovement[16][1]];

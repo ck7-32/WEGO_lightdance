@@ -177,7 +177,6 @@ int playh(int frameN)
         CRGB* currentString = LEDstrings[ledstring];
         int* currentParts = leds[ledstring];
         int numLeds = lednums[ledstring];
-        bool isGlove = (ledstring == 1 || ledstring == 2);
 
         for (int led = 0; led < numLeds; led++) {
             int currentpart = currentParts[led];

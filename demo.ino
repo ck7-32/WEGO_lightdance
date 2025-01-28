@@ -106,16 +106,17 @@ void loop()
 }
 
 void handleRoot() {
-    String html = "<html><body><h1>Color Picker</h1>";
-    html += "<div id='colorWheel'></div>";
+    String html = "<html><body style='background-color: black;'><h1 style='color: white; font-family: sans-serif;'></h1>";
+    html += "<div id='wegoText' style='font-size: 48px; color: white; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff, 0 0 50px #fff, 0 0 60px #fff, 0 0 70px #fff; font-family: sans-serif; font-weight: bold;'>WEGO LIGHTDANCE</div>";
     html += "<script src='https://cdn.jsdelivr.net/npm/@jaames/iro@5'></script>";
     html += "<script>";
-    html += "var colorPicker = new iro.ColorPicker('#colorWheel', { width: 320, color: '#f00' });";
-    html += "colorPicker.on('color:change', function(color) {";
+    html += "var colorPicker = new iro.ColorPicker('#wegoText', { width: 320, color: '#f00' });";
+    html += "setInterval(function() {";
+    html += "var color = colorPicker.color.hexString.substring(1);";
     html += "var xhr = new XMLHttpRequest();";
-    html += "xhr.open('GET', '/setcolor?color=' + color.hexString.substring(1), true);";
+    html += "xhr.open('GET', '/setcolor?color=' + color, true);";
     html += "xhr.send();";
-    html += "});";
+    html += "}, 500);"; // 每0.5秒更新一次顏色
     html += "</script></body></html>";
     server.send(200, "text/html", html);
 }

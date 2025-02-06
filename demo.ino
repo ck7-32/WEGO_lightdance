@@ -50,8 +50,8 @@ int LEDPART8[NUM_LEDS8]={};//
 
 int* leds[] = {LEDPART1, LEDPART2, LEDPART3, LEDPART4, LEDPART5, LEDPART6, LEDPART7, LEDPART8};
 
-const char* ssid = "Wong88";
-const char* password = "20070415";
+const char* ssid = "WEGOlightdance";
+const char* password = "Wgld2023wifi";
 
 WebServer server(80);
 

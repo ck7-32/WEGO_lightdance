@@ -116,7 +116,7 @@ void handleRoot() {
     html += "var xhr = new XMLHttpRequest();";
     html += "xhr.open('GET', '/setcolor?color=' + color, true);";
     html += "xhr.send();";
-    html += "}, 500);"; // 每0.5秒更新一次顏色
+    html += "}, 50);"; // 每0.5秒更新一次顏色
     html += "</script></body></html>";
     server.send(200, "text/html", html);
 }

@@ -4,6 +4,7 @@ print(os.getcwd())
 setting_jsonpath="data\setting.json"
 data_jsonpath="data\data.json"
 pos_jsonpath="data\pos.json"
+preset_jsonpath="data\presets.json"
 data={"color": [
         "#000000"
     ],
@@ -20,6 +21,10 @@ pos={
         
   "pos": [[]],
   "postimes": [0]
+}
+preset={
+    "presets": [],
+    "presetnames": []
 }
 
 with open(setting_jsonpath, 'r', encoding='utf-8') as file:
@@ -40,3 +45,5 @@ with open(data_jsonpath, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False)
 with open(pos_jsonpath, 'w', encoding='utf-8') as file:
             json.dump(pos, file, ensure_ascii=False)
+with open(preset_jsonpath, 'w', encoding='utf-8') as file:
+            json.dump(preset, file, ensure_ascii=False)

@@ -2,7 +2,9 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFi.h>
-
+#include <esp_pm.h>
+#include <esp_wifi.h>
+#include <esp_wifi_types.h>
 #define NUM_LEDS1 7 //貓耳帽子
 #define NUM_LEDS2 2 //左手套
 #define NUM_LEDS3 2 //右手套
@@ -14,12 +16,12 @@
 
 #define DATA_PIN1 17
 #define DATA_PIN2 16
-#define DATA_PIN3 4
-#define DATA_PIN4 5
-#define DATA_PIN5 6
-#define DATA_PIN6 7
-#define DATA_PIN7 8
-#define DATA_PIN8 3
+#define DATA_PIN3 32
+#define DATA_PIN4 33
+#define DATA_PIN5 25
+#define DATA_PIN6 26
+#define DATA_PIN7 14
+#define DATA_PIN8 27
 
 #define USEDPIN_NUM 7
 #define COLOR_COUNT 12
@@ -87,6 +89,7 @@ void setup()
 
     Serial.print("Connecting to ");
     Serial.println(ssid);
+    WiFi.mode (WIFI_STA);
 
     WiFi.begin(ssid, password);
 
@@ -94,6 +97,7 @@ void setup()
         delay(1000);
         Serial.println("Connecting to WiFi...");
     }
+    esp_wifi_set_ps(WIFI_PS_NONE);  
 
     udp.begin(localUdpPort);
     Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);

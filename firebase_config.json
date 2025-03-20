@@ -1,0 +1,11 @@
+{
+  "databaseURL": "https://wegolightdance-80701-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  "credentialPath": "config/firebase-creds.json",
+  "syncSettings": {
+    "dataDir": "data/",
+    "firebasePath": "wegolight/production",
+    "retryInterval": 5000,
+    "hashStore": ".sync_hashes",
+    "debounceTime": 350
+  }
+}

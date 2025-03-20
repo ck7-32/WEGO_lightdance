@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QStyledItemDelegate
 from PyQt6.QtGui import QShortcut,QStandardItemModel, QStandardItem,QColor , QPalette
 from PyQt6.QtCore import Qt,QTimer
 from UI.UI import Ui_MainWindow
+
 import sys
 import os
 import json
@@ -10,10 +11,10 @@ import socket
 import struct
 import math
 
-settingjson_path="data\setting.json"
-datajson_path="data\data.json"
-presetsjson_path="data\presets.json"
-pos_path="data\pos.json"
+settingjson_path=r"data/setting.json"
+datajson_path=r"data/data.json"
+presetsjson_path=r"data/presets.json"
+pos_path=r"data/pos.json"
 index_html_path="simulator/index.html"
 # 設定廣播地址和埠
 broadcast_address = '255.255.255.255'
@@ -29,13 +30,42 @@ def UDP(nowframe):
     print(f"UDP:{nowframe}幀")
 
 def loadjson(path):
-    with open(path, 'r', encoding='utf-8') as file:
-        out = json.load(file)
-    return out
+    try:
+        with open(path, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # 自動建立預設資料結構
+        default_data = {
+            "color": ["#000000"],
+            "colornames": ["黑色"],
+            "frames": [[[0]]],
+            "frametimes": [0]
+        } if "data.json" in path else {}
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as file:
+            json.dump(default_data, file, ensure_ascii=False)
+        return default_data
 
-def savejson(path,data):
-    with open(path, 'w', encoding='utf-8') as file:
+def savejson(path, data):
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False)
+    except Exception as e:
+        print(f"檔案儲存失敗: {str(e)}")
+        return
+    
+    # 同步到Firebase
+    from firebase import update_firebase_from_json
+    with open('firebase_config.json', encoding="utf-8") as f:
+        config = json.load(f)
+        try:
+            update_firebase_from_json(
+                config['syncSettings']['dataDir'],
+                config['syncSettings']['firebasePath']
+            )
+        except Exception as e:
+            print(f"Firebase同步失敗: {str(e)}")
 
 #用二分搜尋法取得當前是第幾幀，輸入:(時間點陣列,時間點)
 def get_time_index(time_segments, current_time):
@@ -90,9 +120,39 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.html=QtWebEngineWidgets.QWebEngineView(self.ui.html)
         self.html.move(0, 0)
         self.html.resize(930, 510)
+        
+        # 初始化 Firebase 監聽
+        from firebase import listen_to_firebase_and_update_json
+        import json
+        with open('firebase_config.json', encoding='utf-8') as f:
+            firebase_config = json.load(f)
+            syncSettings = firebase_config['syncSettings']
+        listen_to_firebase_and_update_json(
+            syncSettings['dataDir'],
+            syncSettings['firebasePath']
+        )
+        
+        # 設置定時刷新UI
+        self.setup_firebase_listener()
+        
         # 確保調用 setup_control 方法
         self.setup_control()
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+
+    def setup_firebase_listener(self):
+        with open('firebase_config.json') as f:
+            firebase_config = json.load(f)
+            syncSettings = firebase_config['syncSettings']
+
+        def reload_data():
+            self.data = loadjson(datajson_path)
+            self.Pos = loadjson(pos_path)
+            self.loaddancer()
+            self.update()
+        
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(reload_data)
+        self.timer.start(syncSettings['retryInterval'])
 #初始化
     def setup_control(self):
         #建立嵌入網頁視窗物件
@@ -361,7 +421,16 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         combo_box.setItemDelegate(ColorDelegate())
         
         # 設置當前幀的顏色索引
-        combo_box.setCurrentIndex(self.data["frames"][dancer_index][frame_index][part_index])
+        # 添加边界检查防止索引越界
+        if (
+            dancer_index < len(self.data["frames"]) and
+            frame_index < len(self.data["frames"][dancer_index]) and
+            part_index < len(self.data["frames"][dancer_index][frame_index])
+        ):
+            combo_box.setCurrentIndex(self.data["frames"][dancer_index][frame_index][part_index])
+        else:
+            print(f"警告：索引越界 dancer:{dancer_index} frame:{frame_index} part:{part_index}")
+            combo_box.setCurrentIndex(0)  # 設置默認值
         
         # 更新 QComboBox 的背景顏色
         index = combo_box.currentIndex()

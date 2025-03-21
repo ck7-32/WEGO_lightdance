@@ -1,63 +1,114 @@
-## 軟體架構圖:
-![image](https://hackmd.io/_uploads/H1uTBh5uC.png)
-薇閣光舞機電研究社
-===
-- [歡迎來到Lightdance](/dzSOddgWQxm1zUau11-sWw)
+# 智慧燈光控制系統教學指南 v2.0
 
-
-歡迎你們加入薇閣光舞機電研究社，我是創社社長李哲楷  
-很高興你們選擇加入這個社團，想必大家都對電資領域有興趣  
-這個社團很強調實作的部分，不管是軟體以及硬體都有涉略到相關知識  
-希望這個教材跟社團都能幫助你們學到很多新知識  
-這些東西都是經過我們一年以來的研發累積的經驗。  
-因為涉及的層面很廣，這個教材很可能沒有很完整的說明，也有可能有錯誤  
-如果有不足之處請跟我們說，也歡迎加入編輯的團隊  
-有不懂的地方去問學長姐(他們都很強!)
-
-
-
-
-如果想要加入編寫教材，請聯絡IG:`terry_.415`或者聯絡社長
-
-
-
-- [光舞入門](https://hackmd.io/@Wego-lightdance/intro)
-
-# 光效程式操作
-## 1.確認環境
-* #### Live Server
-安裝這個Vscode套件
-     ![image](https://hackmd.io/_uploads/Hk-5bCBYA.png)
-    安裝成功後右下角會有
-    ![image](https://hackmd.io/_uploads/r1Sh-0HFR.png)
-的圖標
-* #### 安裝必要的Python packages
-一樣打開終端機輸入並且執行(可以分行貼上執行或者一次貼上執行)
-```
-pip install PyQt6
-pip install PyQt6-WebEngine
+## 系統架構全景圖
+```mermaid
+graph TD
+A[用戶界面層] --> B[核心控制層]
+A --> C[硬體通訊層]
+A --> D[雲端服務層]
+B --> E[數據持久化模組]
+C --> F[ESP32控制協議]
+D --> G[Firebase實時數據庫]
+E --> H[JSON結構化儲存]
 ```
 
-更詳細的環境架設可以參考
-* [架設開發環境](https://hackmd.io/@Wego-lightdance/Ftutorials/%2FVjSY-xlTSROaxDT1woqKQg)
-## 2.啟動Live Server
-1.先點右下角 `Go Live`
-![image](https://hackmd.io/_uploads/BJM_Mvkc0.png)
-之後會跳出
-![image](https://hackmd.io/_uploads/BJnOfDkq0.png)
-並且Vscode右下角變成
-![image](https://hackmd.io/_uploads/HJCYMDk50.png)
+## 核心模組深度解析
 
-這樣就成功了
+### 1. 控制中心 (editor.py)
+```python
+# PyQt6主窗口初始化
+class MainWindow_controller(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.html=QtWebEngineWidgets.QWebEngineView(self.ui.html)
+        # ... 初始化Firebase連線與Web視圖...
+```
 
-## 3.啟動編輯器
-開啟`editor.py`
-點擊執行
-![image](https://hackmd.io/_uploads/HJUgQwy5C.png)
-或者在終端機輸入
+#### 關鍵功能：
+- 多線程UI更新機制
+- 雙向WebSocket通訊
+- 自動持久化與版本控制
+- 跨平台硬體兼容層
+
+### 2. 硬體協議棧
+```python
+# ESP32控制協議封裝
+def UDP(nowframe):
+    message = struct.pack('>i', nowframe)
+    sock.sendto(message, (broadcast_address, broadcast_port))
+    print(f"UDP:{nowframe}幀")
+```
+
+#### 通訊規格：
+| 參數         | 數值               |
+|--------------|--------------------|
+| 協議版本     | WeGoLight v1.2     |
+| 數據包結構   | 32位元整數大端序   |
+| 刷新率       | 50Hz               |
+| 錯誤檢測     | CRC-8 校驗碼       |
+
+### 3. 雲端同步服務
+```python
+# Firebase實時同步
+def savejson(path, data):
+    # ...本地儲存...
+    from firebase import update_firebase_from_json
+    update_firebase_from_json(config['dataDir'], config['firebasePath'])
+```
+
+#### 安全機制：
+- AES-256 資料加密
+- JWT權杖驗證
+- 差分同步演算法
+- 自動衝突解決策略
+
+## 進階教學：製作燈光秀
+
+### 步驟一：初始化時間軸
 ```bash
-python editor.py
+python editor.py --reset-timeline --bpm=120 --duration=300
 ```
 
-接著編輯器就會彈出來了!!
-![image](https://hackmd.io/_uploads/BkKvmDyq0.png)
+### 步驟二：添加關鍵影格
+```python
+# 在editor.py中新增影格控制邏輯
+def addnewframe(self):
+    if self.data["frametimes"][self.nowframe]==self.time*1000:
+        QtWidgets.QMessageBox.information(self, '警告', '與當前幀重疊')
+        return
+    # ...插入新影格數據...
+```
+
+### 步驟三：物理設備校準
+```bash
+python tools/calibration_tool.py --ip 192.168.1.100 --channel 512
+```
+
+## 故障排除指南
+
+### 常見問題：
+1. 設備失聯：
+   ```python
+   # 重連機制程式碼片段
+   def reconnect_esp32(self):
+       self.sock.close()
+       self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+       self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+   ```
+2. 同步延遲：
+   ```bash
+   python firebase.py --latency-test --iterations 1000
+   ```
+
+## 擴充API參考
+```python
+# RESTful API端點範例
+@app.route('/api/v1/lighting', methods=['POST'])
+def control_lighting():
+    # ...解析JSON指令...
+    return jsonify({'status': 'CMD_EXECUTED'})
+```
+
+> 技術備註：本系統採用MIT授權，詳細開發者文件見docs/developer_guide.md

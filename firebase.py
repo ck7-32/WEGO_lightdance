@@ -144,11 +144,9 @@ def listen_to_firebase_and_update_json(data_dir, firebase_base_path):
             if not base_name:
                 base_name = 'default_data'
             
-            # 強制加入時間戳記並驗證檔名
-            import time
-            timestamp = int(time.time())
-            base_part = os.path.splitext(base_name)[0] or f"unnamed_{timestamp}"
-            safe_filename = f"{base_part}_{timestamp}.json"
+            # 使用原始路徑結構作為檔名
+            base_part = os.path.splitext(base_name)[0] or "data"
+            safe_filename = f"{base_part}.json"
             file_path = os.path.join(data_dir, safe_filename)
             
             # 檢查資料大小並限制最大為1MB
@@ -174,6 +172,7 @@ def listen_to_firebase_and_update_json(data_dir, firebase_base_path):
             print(f"Firebase監聽寫入失敗: {str(e)}")
     
     ref.listen(listener)
+
 
 # Example usage:
 # update_firebase_from_json('path/to/your/local.json', 'path/in/firebase')

@@ -140,11 +140,8 @@ class MainWindow_controller(QtWidgets.QMainWindow):
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
     def setup_firebase_listener(self):
-        with open('firebase_config.json') as f:
-            firebase_config = json.load(f)
-            syncSettings = firebase_config['syncSettings']
-
-        def reload_data():
+        def async_reload():
+            # 非同步重新載入資料並刷新界面
             self.data = loadjson(datajson_path)
             self.Pos = loadjson(pos_path)
             self.setting = loadjson(settingjson_path)
@@ -152,11 +149,13 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             self.setcomboboxcolor()
             self.loaddancer()
             self.loadcolor()
-            self.html.page().runJavaScript(f"reloadDataAndRedraw();")
+            
+            # 使用定時器確保在主線程執行JS更新
+            QtCore.QTimer.singleShot(0, lambda: 
+                self.html.page().runJavaScript("reloadDataAndRedraw()")
+            )
         
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(reload_data)
-        self.timer.start(syncSettings['retryInterval'])
+        self.async_reload = async_reload  # 暴露方法供firebase回調使用
 #初始化
     def setup_control(self):
         #建立嵌入網頁視窗物件

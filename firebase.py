@@ -166,8 +166,14 @@ def listen_to_firebase_and_update_json(data_dir, firebase_base_path):
                 return
             os.makedirs(os.path.dirname(file_path), exist_ok=True)  # 建立完整目錄結構
             
+            # 快速模式寫入(無格式化)
             with open(file_path, 'w', encoding='utf-8') as json_file:
-                json.dump(event.data, json_file, indent=4)
+                json.dump(event.data, json_file, separators=(',', ':'))  # 移除不必要空白
+            
+            # 非同步觸發UI更新
+            from editor import MainWindow_controller
+            if hasattr(MainWindow_controller, 'instance'):
+                MainWindow_controller.instance.async_reload()
         except Exception as e:
             print(f"Firebase監聽寫入失敗: {str(e)}")
     

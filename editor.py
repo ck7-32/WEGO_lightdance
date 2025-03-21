@@ -145,9 +145,13 @@ class MainWindow_controller(QtWidgets.QMainWindow):
             syncSettings = firebase_config['syncSettings']
 
         def reload_data():
+            self.data = loadjson(datajson_path)
+            self.Pos = loadjson(pos_path)
+            self.setting = loadjson(settingjson_path)
+            self.presets = loadjson(presetsjson_path)
+            self.setcomboboxcolor()
             self.loaddancer()
             self.loadcolor()
-            self.colorupdate()
             self.html.page().runJavaScript(f"reloadDataAndRedraw();")
         
         self.timer = QtCore.QTimer()
